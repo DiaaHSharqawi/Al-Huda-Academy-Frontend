@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/view/language_screen.dart/language_screen.dart';
+import 'src/view/splash_screen_view/splash_screen.dart';
 
 void main() async {
-  await dotenv.load(fileName: "./../.env");
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load(fileName: 'assets/.env');
+    debugPrint("Loaded .env file successfully.");
+  } catch (e) {
+    debugPrint("Error loading .env file: ${e.runtimeType} - $e");
+  }
+
   runApp(const HolyQuranForum());
 }
 
@@ -11,14 +21,15 @@ class HolyQuranForum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.cyan[700],
-      ),
-      body: const Column(
-        children: [],
-      ),
-    ));
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+      getPages: [
+        GetPage(
+          name: '/language',
+          page: () => const LanguageScreen(),
+        ),
+      ],
+    );
   }
 }
