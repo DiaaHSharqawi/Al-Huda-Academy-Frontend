@@ -1,2 +1,2 @@
-const holyQuranForumArabicName = "ملتقى القرآن الكريم";
+const alHudaAcademyArabicName = "اكاديمية الهدى للقرآن الكريم";
 const pageIsLoadingArabic = " ... يجري تحميل الصفحة";

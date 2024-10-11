@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
-  final SplashViewModel viewModel = Get.put(SplashViewModel(4));
+  final SplashViewModel viewModel = Get.put(SplashViewModel(20));
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class SplashScreen extends StatelessWidget {
               height: 15.0,
             ),
             Text(
-              holyQuranForumArabicName,
+              alHudaAcademyArabicName,
               style: GoogleFonts.getFont(
                 'Readex Pro',
                 fontSize: 20.0,

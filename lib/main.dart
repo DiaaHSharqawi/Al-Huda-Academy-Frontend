@@ -13,11 +13,11 @@ void main() async {
     debugPrint("Error loading .env file: ${e.runtimeType} - $e");
   }
 
-  runApp(const HolyQuranForum());
+  runApp(const AlHudaAcademy());
 }
 
-class HolyQuranForum extends StatelessWidget {
-  const HolyQuranForum({super.key});
+class AlHudaAcademy extends StatelessWidget {
+  const AlHudaAcademy({super.key});
 
   @override
   Widget build(BuildContext context) {
