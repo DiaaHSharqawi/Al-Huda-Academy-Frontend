@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/view/language_screen.dart/language_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/language_screen/language_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/login_screen/login_screen.dart';
 import 'src/view/splash_screen_view/splash_screen.dart';
 
 void main() async {
@@ -33,7 +34,7 @@ class AlHudaAcademy extends StatelessWidget {
           name: '/language',
           page: () => const LanguageScreen(),
         ),
-        GetPage(name: '/auth/login', page: () => Container()),
+        GetPage(name: '/auth/login', page: () => const LoginScreen()),
       ],
     );
   }

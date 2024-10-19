@@ -32,10 +32,8 @@ class SplashScreen extends StatelessWidget {
             ),
             Text(
               alHudaAcademyArabicName,
-              style: GoogleFonts.getFont(
-                'Readex Pro',
-                fontSize: 20.0,
-              ),
+              style: GoogleFonts.getFont('Almarai',
+                  fontSize: 24.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 50.0,

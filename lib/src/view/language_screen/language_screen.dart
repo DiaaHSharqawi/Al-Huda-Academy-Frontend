@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/view_model/language_view_model/language_view_model.dart';
 
-import './../../constants/images_strings.dart';
-import './../../constants//arabic_constants.dart';
-import './../../constants/colors_constants.dart';
+import '../../constants/images_strings.dart';
+import '../../constants/arabic_constants.dart';
+import '../../constants/colors_constants.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
@@ -30,8 +30,8 @@ class LanguageScreen extends StatelessWidget {
               Text(
                 chooseLanguageArabic,
                 style: GoogleFonts.getFont(
-                  'Readex Pro',
-                  fontSize: 20.0,
+                  'Almarai',
+                  fontSize: 24.0,
                 ),
               ),
               const SizedBox(height: 30.0),
