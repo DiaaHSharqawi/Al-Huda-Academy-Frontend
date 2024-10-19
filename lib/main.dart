@@ -23,12 +23,17 @@ class AlHudaAcademy extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: SafeArea(
+        child: Scaffold(
+          body: SplashScreen(),
+        ),
+      ),
       getPages: [
         GetPage(
           name: '/language',
           page: () => const LanguageScreen(),
         ),
+        GetPage(name: '/auth/login', page: () => Container()),
       ],
     );
   }

@@ -17,6 +17,6 @@ class SplashViewModel extends GetxController {
   }
 
   void _navigateToLanguageSelection() {
-    Get.toNamed('/language');
+    Get.offNamed('/language');
   }
 }

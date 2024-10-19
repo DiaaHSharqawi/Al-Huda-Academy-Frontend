@@ -1,2 +1,3 @@
-const alHudaAcademyArabicName = "اكاديمية الهدى للقرآن الكريم";
-const pageIsLoadingArabic = " ... يجري تحميل الصفحة";
+const String alHudaAcademyArabicName = "اكاديمية الهدى للقرآن الكريم";
+const String pageIsLoadingArabic = " ... يجري تحميل الصفحة";
+const String chooseLanguageArabic = "اخْتَرْ اللُّغَة";

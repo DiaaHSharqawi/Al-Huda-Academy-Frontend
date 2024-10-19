@@ -6,15 +6,18 @@ import '../../view_model/splash_view_model.dart';
 
 import '../../constants/images_strings.dart';
 import '../../constants/arabic_constants.dart';
+import '../../constants/colors_constants.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
-  final SplashViewModel viewModel = Get.put(SplashViewModel(20));
+  final SplashViewModel viewModel = Get.put(SplashViewModel(10));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
