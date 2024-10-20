@@ -9,8 +9,34 @@ import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/c
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController userIdentifierController = new TextEditingController();
+  TextEditingController passowrdController = new TextEditingController();
+  GlobalKey<FormState> loginFormStates = new GlobalKey<FormState>();
+
+  signIn() {
+    var formData = loginFormStates.currentState;
+    if (formData!.validate()) {
+      debugPrint("valid");
+    } else {
+      debugPrint("Not valid");
+    }
+  }
+
+  String? validGlobal(String? val) {
+    if (val == null || val.isEmpty) {
+      return "field cannot be empty";
+    } else {
+      return null; // Return null for valid input
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +47,8 @@ class LoginScreen extends StatelessWidget {
     final TextDirection textDirection =
         isArabic ? TextDirection.rtl : TextDirection.ltr;
     debugPrint("$textDirection");
-    final String fontFamily = isArabic
-        ? AppFonts.arabicFont // Arabic font if locale is Arabic
-        : AppFonts.englishFont; // English font otherwise
+    final String fontFamily =
+        isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
 
     debugPrint(fontFamily);
     return SafeArea(
@@ -39,114 +64,127 @@ class LoginScreen extends StatelessWidget {
             child: SizedBox.expand(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CustomGoogleTextWidget(
-                      text: "login_screen.greeting".tr,
-                      color: AppColors.primaryColor,
-                      fontFamily: fontFamily,
-                      // textAlign: TextAlign.start,
-                    ),
-                    const SizedBox(
-                      height: 24.0,
-                    ),
-                    CustomGoogleTextWidget(
-                      text: "login_screen.welcome_back".tr,
-                      color: AppColors.primaryColor,
-                    ),
-                    FittedBox(
-                      child: Image.asset(
-                        AppImages.holyQuranLogo,
-                        width: 250,
-                        height: 250,
-                      ),
-                    ),
-                    Column(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: loginFormStates,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CustomAuthTextFormField(
-                          textFormLabelText:
-                              "login_screen.formFieldsInputs_email".tr,
-                          textFormHintText: "diaa@gmail.com",
-                          iconName: Icons.email,
-                          colorIcon: AppColors.primaryColor,
-                          hintTextDirection:
-                              isArabic ? TextDirection.rtl : TextDirection.ltr,
-                        ),
-                        const SizedBox(
-                          height: 12.0,
-                        ),
-                        CustomAuthTextFormField(
-                          obscureText: true,
-                          textFormLabelText:
-                              "login_screen.formFieldsInputs_password".tr,
-                          textFormHintText: "*********",
-                          iconName: Icons.remove_red_eye,
-                          colorIcon: AppColors.primaryColor,
-                          hintTextDirection:
-                              isArabic ? TextDirection.rtl : TextDirection.ltr,
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: CustomGoogleTextWidget(
-                            text:
-                                "login_screen.formFieldsInputs_forget_password"
-                                    .tr,
-                            color: AppColors.primaryColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: CustomAuthTextButton(
-                            foregroundColor: Colors.white,
-                            backgroundColor: AppColors.primaryColor,
-                            buttonText: "login_screen.button_text_login".tr,
-                            buttonTextColor: Colors.white,
-                            fontFamily: fontFamily,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        CustomGoogleTextWidget(
+                          text: "login_screen.greeting".tr,
+                          color: AppColors.primaryColor,
+                          fontFamily: fontFamily,
+                          // textAlign: TextAlign.start,
                         ),
                         const SizedBox(
                           height: 24.0,
                         ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                CustomGoogleTextWidget(
-                                  text: "login_screen.dont_have_an_account".tr,
-                                  fontFamily: fontFamily,
-                                  fontSize: 16.0,
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                const SizedBox(
-                                  width: 12.0,
-                                ),
-                                CustomGoogleTextWidget(
-                                  text: "login_screen.new_user".tr,
-                                  fontFamily: fontFamily,
-                                  fontSize: 16.0,
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ]),
+                        CustomGoogleTextWidget(
+                          text: "login_screen.welcome_back".tr,
+                          color: AppColors.primaryColor,
                         ),
+                        FittedBox(
+                          child: Image.asset(
+                            AppImages.holyQuranLogo,
+                            width: 250,
+                            height: 250,
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            CustomAuthTextFormField(
+                              textFormFieldValidator: validGlobal,
+                              controller: userIdentifierController,
+                              textFormLabelText:
+                                  "login_screen.formFieldsInputs_email".tr,
+                              textFormHintText: "diaa@gmail.com",
+                              iconName: Icons.email,
+                              colorIcon: AppColors.primaryColor,
+                              hintTextDirection: isArabic
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
+                            ),
+                            const SizedBox(
+                              height: 12.0,
+                            ),
+                            CustomAuthTextFormField(
+                              textFormFieldValidator: validGlobal,
+                              controller: passowrdController,
+                              obscureText: true,
+                              textFormLabelText:
+                                  "login_screen.formFieldsInputs_password".tr,
+                              textFormHintText: "*********",
+                              iconName: Icons.remove_red_eye,
+                              colorIcon: AppColors.primaryColor,
+                              hintTextDirection: isArabic
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
+                            ),
+                            const SizedBox(
+                              height: 16.0,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CustomGoogleTextWidget(
+                                text:
+                                    "login_screen.formFieldsInputs_forget_password"
+                                        .tr,
+                                color: AppColors.primaryColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16.0,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CustomAuthTextButton(
+                                onPressed: signIn,
+                                foregroundColor: Colors.white,
+                                backgroundColor: AppColors.primaryColor,
+                                buttonText: "login_screen.button_text_login".tr,
+                                buttonTextColor: Colors.white,
+                                fontFamily: fontFamily,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 24.0,
+                            ),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CustomGoogleTextWidget(
+                                      text: "login_screen.dont_have_an_account"
+                                          .tr,
+                                      fontFamily: fontFamily,
+                                      fontSize: 16.0,
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    const SizedBox(
+                                      width: 12.0,
+                                    ),
+                                    CustomGoogleTextWidget(
+                                      text: "login_screen.new_user".tr,
+                                      fontFamily: fontFamily,
+                                      fontSize: 16.0,
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ]),
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),

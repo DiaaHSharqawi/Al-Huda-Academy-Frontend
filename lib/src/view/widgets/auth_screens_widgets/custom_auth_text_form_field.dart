@@ -7,6 +7,8 @@ class CustomAuthTextFormField extends StatelessWidget {
   final IconData iconName;
   final Color colorIcon;
   final bool obscureText;
+  final TextEditingController controller;
+  final String? Function(String?)? textFormFieldValidator;
 
   const CustomAuthTextFormField(
       {super.key,
@@ -15,11 +17,16 @@ class CustomAuthTextFormField extends StatelessWidget {
       required this.iconName,
       required this.colorIcon,
       this.obscureText = false,
-      required this.hintTextDirection});
+      required this.hintTextDirection,
+      required this.controller,
+      required this.textFormFieldValidator});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: obscureText,
+      validator: textFormFieldValidator,
+      controller: controller,
       textAlign: TextAlign.end,
       decoration: InputDecoration(
         hintTextDirection: hintTextDirection,
