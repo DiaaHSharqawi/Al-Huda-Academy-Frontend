@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 
-class SplashViewModel extends GetxController {
+class SplashController extends GetxController {
   late int splashScreenDuration;
-  SplashViewModel(this.splashScreenDuration);
+
+  SplashController(this.splashScreenDuration);
   @override
   void onInit() {
     super.onInit();

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moltqa_al_quran_frontend/src/view_model/language_view_model/language_view_model.dart';
+import '../../../controllers/language_controller/language_controller.dart';
 
-import '../../constants/images_strings.dart';
-import '../../constants/arabic_constants.dart';
-import '../../constants/colors_constants.dart';
+import '../../../core/constants/app_images.dart';
+import './../../../core/constants/arabic_constants.dart';
+import './../../../core/constants/app_colors.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final LanguageViewModel languageViewModel = Get.put(LanguageViewModel());
+    final LanguageController languageController = Get.put(LanguageController());
     return Scaffold(
-      backgroundColor: primaryBackgroundColor,
+      backgroundColor: AppColors.primaryBackgroundColor,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -22,13 +22,13 @@ class LanguageScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                holyQuranLogo,
+                AppImages.holyQuranLogo,
                 width: 300,
                 height: 300,
               ),
               const SizedBox(height: 15.0),
               Text(
-                chooseLanguageArabic,
+                ArabicConstants.chooseLanguageArabic,
                 style: GoogleFonts.getFont(
                   'Almarai',
                   fontSize: 24.0,
@@ -38,7 +38,7 @@ class LanguageScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton.tonal(
-                  onPressed: () => {languageViewModel.navigateToLoginSceen()},
+                  onPressed: () => {languageController.navigateToLoginSceen()},
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.all(12.0),
                     elevation: 8,
@@ -59,7 +59,7 @@ class LanguageScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton.tonal(
-                  onPressed: () => {languageViewModel.navigateToLoginSceen()},
+                  onPressed: () => {languageController.navigateToLoginSceen()},
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.all(12.0),
                     elevation: 8,

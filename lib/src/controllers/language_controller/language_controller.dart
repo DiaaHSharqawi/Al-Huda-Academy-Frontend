@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class LanguageViewModel extends GetxController {
+class LanguageController extends GetxController {
   void navigateToLoginSceen() {
     Get.offNamed('/auth/login');
   }

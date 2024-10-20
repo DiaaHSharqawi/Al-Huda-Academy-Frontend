@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moltqa_al_quran_frontend/src/constants/colors_constants.dart';
 
-import 'package:moltqa_al_quran_frontend/src/constants/images_strings.dart';
+import './../../../../core/constants/app_colors.dart';
+import './../../../../core/constants/app_images.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     FittedBox(
                       child: Image.asset(
-                        holyQuranLogo,
+                        AppImages.holyQuranLogo,
                         width: 250,
                         height: 250,
                       ),
@@ -63,7 +63,7 @@ class LoginScreen extends StatelessWidget {
                               border: OutlineInputBorder(),
                               suffixIcon: Icon(
                                 Icons.email,
-                                color: primaryColor,
+                                color: AppColors.primaryColor,
                               ),
                             ),
                           ),
@@ -85,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                               border: OutlineInputBorder(),
                               suffixIcon: Icon(
                                 Icons.remove_red_eye,
-                                color: primaryColor,
+                                color: AppColors.primaryColor,
                               ),
                             ),
                           ),
@@ -100,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                             style: GoogleFonts.getFont(
                               'Almarai',
                               fontSize: 16.0,
-                              color: primaryColor,
+                              color: AppColors.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                             textAlign: TextAlign.right,
@@ -118,7 +118,7 @@ class LoginScreen extends StatelessWidget {
                               foregroundColor:
                                   WidgetStateProperty.all(Colors.white),
                               backgroundColor: WidgetStateProperty.all(
-                                primaryColor,
+                                AppColors.primaryColor,
                               ),
                               shape: WidgetStateProperty.all<
                                   RoundedRectangleBorder>(
@@ -145,7 +145,7 @@ class LoginScreen extends StatelessWidget {
                                   style: GoogleFonts.getFont(
                                     'Almarai',
                                     fontSize: 16.0,
-                                    color: primaryColor,
+                                    color: AppColors.primaryColor,
                                     fontWeight: FontWeight.bold,
                                   )),
                               const SizedBox(
