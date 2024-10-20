@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import './../../../../core/constants/app_colors.dart';
@@ -35,7 +36,8 @@ class LoginScreen extends StatelessWidget {
                       height: 24.0,
                     ),
                     Text(
-                      'مرحبا بك مجدداً',
+                      //'مرحبا بك مجدداً',
+                      "1".tr,
                       style: GoogleFonts.getFont(
                         'Almarai',
                         fontSize: 16.0,

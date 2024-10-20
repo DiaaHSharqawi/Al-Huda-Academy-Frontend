@@ -28,7 +28,8 @@ class LanguageScreen extends StatelessWidget {
               ),
               const SizedBox(height: 15.0),
               Text(
-                ArabicConstants.chooseLanguageArabic,
+                //ArabicConstants.chooseLanguageArabic,
+                "1".tr,
                 style: GoogleFonts.getFont(
                   'Almarai',
                   fontSize: 24.0,
@@ -38,7 +39,10 @@ class LanguageScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton.tonal(
-                  onPressed: () => {languageController.navigateToLoginSceen()},
+                  onPressed: () => {
+                    languageController.changeLanguage("ar"),
+                    languageController.navigateToLoginSceen()
+                  },
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.all(12.0),
                     elevation: 8,
@@ -59,7 +63,10 @@ class LanguageScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton.tonal(
-                  onPressed: () => {languageController.navigateToLoginSceen()},
+                  onPressed: () => {
+                    languageController.changeLanguage("en"),
+                    languageController.navigateToLoginSceen()
+                  },
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.all(12.0),
                     elevation: 8,
