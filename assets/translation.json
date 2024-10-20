@@ -1,0 +1,52 @@
+{
+    "splash_screen": {
+        "academy_name": {
+            "en": "Al-Huda Academy for the Holy Quran",
+            "ar": "اكاديمية الهدى للقران الكريم"
+        },
+        "page_is_loading": {
+            "en": "Page is loading ...",
+            "ar": "...يجري تحميل الصفحة"
+        }
+    },
+    "languge_screen":{
+        "choose_language":{
+            "en":"choose language",
+            "ar":"اختر اللغة "
+        }
+    },
+    "login_screen":{
+        "greeting":{
+            "en":"As-salamu alaykum",
+            "ar":"السلام عليكم"
+        },
+        "welcome_back":{
+            "en":"Welcome back",
+            "ar":"مرحباً بك مجدداً"
+        },
+        "formFieldsInputs_email":{
+            "en":"Email",
+            "ar":"البريد الالكتروني"
+        },
+        "formFieldsInputs_password":{
+            "en":"Password",
+            "ar":"كلمة السر"
+        },
+        "formFieldsInputs_forget_password":{
+            "en":"Forget password ?",
+            "ar":"نسيت كلمة المرور ؟ "
+        },
+        "button_text_login":{
+            "en":"Login",
+            "ar":"تسجيل الدخول"
+        },
+        "new_user":{
+            "en":"New user",
+            "ar":"مستخدم جديد"
+        },
+        "dont_have_an_account":{
+            "en":"Don't have an account?",
+            "ar":"ليس لديك حساب ؟"
+        }
+    }
+}

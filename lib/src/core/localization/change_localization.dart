@@ -16,14 +16,12 @@ class LocalizationController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // TODO: implement onInit
-
     String? savedLanguage = appService.languageStorage.read("language");
 
     if (savedLanguage != null) {
       initialLanguage = Locale(savedLanguage);
     } else {
-      Locale deviceLocale = Get.deviceLocale ?? const Locale('en');
+      Locale deviceLocale = Get.deviceLocale ?? const Locale('ar');
       initialLanguage = deviceLocale;
 
       appService.languageStorage.write("language", deviceLocale.languageCode);
