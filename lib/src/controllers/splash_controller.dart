@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 
 class SplashController extends GetxController {
   late int splashScreenDuration;
@@ -18,6 +19,6 @@ class SplashController extends GetxController {
   }
 
   void _navigateToLanguageSelection() {
-    Get.offNamed('/language');
+    Get.offNamed(AppRoutes.language);
   }
 }

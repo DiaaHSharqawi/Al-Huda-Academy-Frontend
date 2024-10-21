@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: CustomAuthTextButton(
                                     onPressed: () => {
                                       if (loginController.login())
-                                        {debugPrint("hiii")}
+                                        loginController.signIn()
                                     },
                                     foregroundColor: Colors.white,
                                     backgroundColor: AppColors.primaryColor,

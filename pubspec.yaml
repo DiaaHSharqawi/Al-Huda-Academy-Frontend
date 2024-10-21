@@ -41,6 +41,7 @@ dependencies:
   get_storage: ^2.0.3
 
   form_builder_validators: ^11.0.0
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
