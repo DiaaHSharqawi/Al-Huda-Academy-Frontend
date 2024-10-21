@@ -12,9 +12,6 @@ class LanguageController extends GetxController {
   }
 
   void changeLanguage(String languageCode) {
-    Locale language = Locale(languageCode);
-    Get.updateLocale(language);
-    appService.languageStorage
-        .write('language', languageCode); // Save the language
+    appService.changeLanguage(languageCode);
   }
 }

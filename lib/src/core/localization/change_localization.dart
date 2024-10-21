@@ -3,13 +3,16 @@ import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 
 class LocalizationController extends GetxController {
+  var isRtl = false.obs;
   Locale? initialLanguage;
   AppService appService = Get.find();
 
   changeLanguage(String language) {
-    Locale locale = Locale(language);
-    appService.languageStorage.write("language", language);
-    Get.updateLocale(locale);
+    // Locale locale = Locale(language);
+    //appService.languageStorage.write("language", language);
+    //Get.updateLocale(locale);
+    //isRtl.value = language == 'ar';
+    appService.changeLanguage(language);
   }
 
   @override

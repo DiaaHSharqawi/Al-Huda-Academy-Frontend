@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CustomAuthTextFormField extends StatelessWidget {
   final String textFormLabelText;
@@ -9,6 +10,7 @@ class CustomAuthTextFormField extends StatelessWidget {
   final bool obscureText;
   final TextEditingController controller;
   final String? Function(String?)? textFormFieldValidator;
+  final AutovalidateMode autovalidateMode;
 
   const CustomAuthTextFormField(
       {super.key,
@@ -19,11 +21,13 @@ class CustomAuthTextFormField extends StatelessWidget {
       this.obscureText = false,
       required this.hintTextDirection,
       required this.controller,
-      required this.textFormFieldValidator});
+      required this.textFormFieldValidator,
+      required this.autovalidateMode});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: autovalidateMode,
       obscureText: obscureText,
       validator: textFormFieldValidator,
       controller: controller,
@@ -41,6 +45,7 @@ class CustomAuthTextFormField extends StatelessWidget {
           color: colorIcon,
         ),
       ),
+      textDirection: TextDirection.rtl,
     );
   }
 }

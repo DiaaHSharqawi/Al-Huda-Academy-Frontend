@@ -47,6 +47,22 @@
         "dont_have_an_account":{
             "en":"Don't have an account?",
             "ar":"ليس لديك حساب ؟"
+        },
+        "user_Identifier_required":{
+            "en":"User Identifier is required",
+            "ar":"البريد الالكتروني مطلوب"
+        },
+        "enter_a_valid_email":{
+            "en":"Please enter a valid email address",
+            "ar":".الرجاء ادخال بريد الكتروني صحيح"
+        },
+        "user_password_required":{
+            "en":"User password is required",
+            "ar":"البريد الالكتروني مطلوب"
+        },
+        "enter_a_valid_password":{
+            "en":"Password must be at least 6 characters",
+            "ar":"يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل"
         }
     }
 }
