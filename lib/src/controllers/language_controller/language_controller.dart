@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 

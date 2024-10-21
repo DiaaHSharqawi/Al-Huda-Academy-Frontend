@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import '../../../controllers/splash_controller.dart';
 
 import '../../../core/constants/app_images.dart';
 import '../../../core/constants/app_colors.dart';
-
-import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
@@ -30,14 +30,9 @@ class SplashScreen extends StatelessWidget {
               const SizedBox(
                 height: 15.0,
               ),
-              Text(
-                "splash_screen.academy_name".tr,
-                style: GoogleFonts.getFont(
-                  'Cairo',
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+              CustomGoogleTextWidget(
+                text: SplashScreenLanguageConstants.academyName.tr,
+                fontWeight: FontWeight.bold,
               ),
               const SizedBox(
                 height: 50.0,
@@ -46,12 +41,13 @@ class SplashScreen extends StatelessWidget {
               const SizedBox(
                 height: 30.0,
               ),
-              Text(
-                "splash_screen.page_is_loading".tr,
-                style: const TextStyle(
-                  color: Colors.grey,
-                ),
-              )
+              CustomGoogleTextWidget(
+                text: SplashScreenLanguageConstants.pageIsLoading.tr,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+                color: Colors.grey,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),

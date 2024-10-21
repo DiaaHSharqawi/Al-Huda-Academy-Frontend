@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/entry_screens_widgets/language_screen_widgets.dart';
 import '../../../controllers/language_controller/language_controller.dart';
 
@@ -32,7 +33,7 @@ class LanguageScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: CustomLanguageButton(
-                    buttonText: "ar",
+                    buttonText: LangugeScreenLanguageConstants.arabicText,
                     onPressed: () {
                       languageController.changeLanguage("ar");
                       languageController.navigateToLoginSceen();
@@ -42,7 +43,7 @@ class LanguageScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: CustomLanguageButton(
-                    buttonText: "en",
+                    buttonText: LangugeScreenLanguageConstants.englishText,
                     onPressed: () {
                       languageController.changeLanguage("en");
                       languageController.navigateToLoginSceen();
@@ -56,13 +57,8 @@ class LanguageScreen extends StatelessWidget {
   }
 
   Widget _buildTitle() {
-    return Text(
-      "languge_screen.choose_language".tr,
-      style: GoogleFonts.getFont(
-        'Almarai',
-        fontSize: 24.0,
-      ),
-      textAlign: TextAlign.center,
+    return CustomGoogleTextWidget(
+      text: LangugeScreenLanguageConstants.chooseLanguage.tr,
     );
   }
 }

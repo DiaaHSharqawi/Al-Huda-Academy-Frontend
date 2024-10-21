@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/login_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
@@ -24,10 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final appService = Get.find<AppService>();
 
-    ///  final isArabic = appService.languageStorage.read('language') ==
-    //    'ar'; // Accessing language setting
-
-    //debugPrint(fontFamily);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -43,13 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Obx(
                   () {
                     final isArabic = appService.isRtl.value;
-                    debugPrint("$isArabic");
+
                     final TextDirection textDirection =
                         isArabic ? TextDirection.rtl : TextDirection.ltr;
-                    debugPrint("$textDirection");
+
+                    final TextDirection textFormDirection =
+                        isArabic ? TextDirection.ltr : TextDirection.rtl;
+                    final TextDirection hintTextDirection = textFormDirection;
+
                     final String fontFamily =
                         isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
-                    const hintTextDirection = TextDirection.rtl;
+
                     return Directionality(
                       textDirection: textDirection,
                       child: Form(
@@ -58,16 +59,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CustomGoogleTextWidget(
-                              text: "login_screen.greeting".tr,
+                              text: LoginScreenLanguageConstants.greeting.tr,
                               color: AppColors.primaryColor,
                               fontFamily: fontFamily,
-                              // textAlign: TextAlign.start,
                             ),
                             const SizedBox(
                               height: 24.0,
                             ),
                             CustomGoogleTextWidget(
-                              text: "login_screen.welcome_back".tr,
+                              text: LoginScreenLanguageConstants.welcomeBack.tr,
                               color: AppColors.primaryColor,
                             ),
                             FittedBox(
@@ -80,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Column(
                               children: [
                                 CustomAuthTextFormField(
+                                  textFormDirection: textFormDirection,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   textFormFieldValidator:
@@ -87,8 +88,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller:
                                       loginController.userIdentifierController,
                                   textFormLabelText:
-                                      "login_screen.formFieldsInputs_email".tr,
-                                  textFormHintText: "diaa@gmail.com",
+                                      LoginScreenLanguageConstants
+                                          .formFieldsInputsEmail.tr,
+                                  textFormHintText: LoginScreenLanguageConstants
+                                      .hintTextAuthEmail,
                                   iconName: Icons.email,
                                   colorIcon: AppColors.primaryColor,
                                   hintTextDirection: hintTextDirection,
@@ -97,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 12.0,
                                 ),
                                 CustomAuthTextFormField(
+                                  textFormDirection: textFormDirection,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   textFormFieldValidator:
@@ -105,9 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       loginController.passwordController,
                                   obscureText: true,
                                   textFormLabelText:
-                                      "login_screen.formFieldsInputs_password"
-                                          .tr,
-                                  textFormHintText: "*********",
+                                      LoginScreenLanguageConstants
+                                          .formFieldsInputsPassword.tr.tr,
+                                  textFormHintText: LoginScreenLanguageConstants
+                                      .hintTextAuthPassword,
                                   iconName: Icons.remove_red_eye,
                                   colorIcon: AppColors.primaryColor,
                                   hintTextDirection: hintTextDirection,
@@ -118,9 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: CustomGoogleTextWidget(
-                                    text:
-                                        "login_screen.formFieldsInputs_forget_password"
-                                            .tr,
+                                    text: LoginScreenLanguageConstants
+                                        .formFieldsInputsForgetPassword.tr,
                                     color: AppColors.primaryColor,
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
@@ -138,8 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     foregroundColor: Colors.white,
                                     backgroundColor: AppColors.primaryColor,
-                                    buttonText:
-                                        "login_screen.button_text_login".tr,
+                                    buttonText: LoginScreenLanguageConstants
+                                        .buttonTextLogin.tr,
                                     buttonTextColor: Colors.white,
                                     fontFamily: fontFamily,
                                     fontSize: 18.0,
@@ -152,31 +156,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        CustomGoogleTextWidget(
-                                          text:
-                                              "login_screen.dont_have_an_account"
-                                                  .tr,
-                                          fontFamily: fontFamily,
-                                          fontSize: 16.0,
-                                          color: AppColors.primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        const SizedBox(
-                                          width: 12.0,
-                                        ),
-                                        CustomGoogleTextWidget(
-                                          text: "login_screen.new_user".tr,
-                                          fontFamily: fontFamily,
-                                          fontSize: 16.0,
-                                          color: AppColors.primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ]),
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      CustomGoogleTextWidget(
+                                        text: LoginScreenLanguageConstants
+                                            .dontHaveAnAccount.tr,
+                                        fontFamily: fontFamily,
+                                        fontSize: 16.0,
+                                        color: AppColors.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      const SizedBox(
+                                        width: 12.0,
+                                      ),
+                                      CustomGoogleTextWidget(
+                                        text: LoginScreenLanguageConstants
+                                            .newUser.tr,
+                                        fontFamily: fontFamily,
+                                        fontSize: 16.0,
+                                        color: AppColors.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             )

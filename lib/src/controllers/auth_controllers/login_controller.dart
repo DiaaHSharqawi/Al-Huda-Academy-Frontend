@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 
 class LoginController {
   final TextEditingController userIdentifierController =
@@ -10,19 +11,19 @@ class LoginController {
   String? validateEmail(String? email) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
-        errorText: "login_screen.user_Identifier_required".tr,
+        errorText: LoginScreenLanguageConstants.userIdentifierRequired.tr,
       ),
       FormBuilderValidators.email(
-          errorText: "login_screen.enter_a_valid_email".tr),
+          errorText: LoginScreenLanguageConstants.enterAValidEmail.tr),
     ])(email);
   }
 
   String? validatePassword(String? password) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
-          errorText: "login_screen.user_password_required".tr),
+          errorText: LoginScreenLanguageConstants.userPasswordRequired.tr),
       FormBuilderValidators.minLength(6,
-          errorText: "login_screen.enter_a_valid_password".tr)
+          errorText: LoginScreenLanguageConstants.enterAValidPassword.tr)
     ])(password);
   }
 

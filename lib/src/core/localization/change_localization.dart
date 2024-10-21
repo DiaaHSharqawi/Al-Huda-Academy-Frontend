@@ -8,10 +8,6 @@ class LocalizationController extends GetxController {
   AppService appService = Get.find();
 
   changeLanguage(String language) {
-    // Locale locale = Locale(language);
-    //appService.languageStorage.write("language", language);
-    //Get.updateLocale(locale);
-    //isRtl.value = language == 'ar';
     appService.changeLanguage(language);
   }
 
