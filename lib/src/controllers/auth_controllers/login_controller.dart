@@ -1,8 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/auth/login_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/user_model.dart';
 
 class LoginController {
@@ -14,6 +17,9 @@ class LoginController {
   var user = Rxn<UserModel>();
 
   final LoginService _loginService = LoginService();
+
+  void Function(BuildContext context, DialogType dialogType, String title,
+      String description)? showDialog;
 
   String? validateEmail(String? email) {
     return FormBuilderValidators.compose([
@@ -34,43 +40,34 @@ class LoginController {
     ])(password);
   }
 
-  bool login() {
-    debugPrint(userIdentifierController.text);
-    debugPrint(passwordController.text);
+  Future<String> signIn(BuildContext context) async {
     final emailError = validateEmail(userIdentifierController.text);
     final passwordError = validatePassword(passwordController.text);
 
-    if (emailError != null || passwordError != null) {
-      debugPrint('Validation failed');
-      return false;
+    bool isValidationFailed = (emailError != null || passwordError != null);
+
+    if (isValidationFailed) {
+      return " Validation failed, Please enter a valid username and email.";
     }
-
-    debugPrint('Login successful with email: ${userIdentifierController.text}');
-    return true;
-  }
-
-  Future<void> signIn() async {
-    if (GetUtils.isEmail(userIdentifierController.text) &&
-        passwordController.text.isNotEmpty) {
+    try {
       isLoading(true);
 
-      try {
-        final loggedInUser = await _loginService.login(
-            userIdentifierController.text, passwordController.text);
-        if (loggedInUser != null) {
-          user.value = loggedInUser;
-          Get.snackbar("Success", "Login successful!");
-        } else {
-          Get.snackbar("Error", "Invalid credentials");
-        }
-      } catch (e) {
-        Get.snackbar("Error", e.toString());
-        debugPrint(e.toString());
-      } finally {
-        isLoading(false);
+      final LoginResponse? loginResponse = await _loginService.login(
+          userIdentifierController.text, passwordController.text);
+      if (loginResponse!.success) {
+        return "Login successful!";
+      } else {
+        return loginResponse.message!;
       }
-    } else {
-      Get.snackbar("Validation Error", "Please enter valid email and password");
+    } catch (e) {
+      debugPrint(e.toString());
+      return e.toString();
+    } finally {
+      isLoading(false);
     }
+  }
+
+  void navigateToHomeSceen() {
+    Get.toNamed(AppRoutes.home);
   }
 }

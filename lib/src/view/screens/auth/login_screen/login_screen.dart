@@ -1,9 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/login_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
@@ -20,6 +22,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   LoginController loginController = LoginController();
+
+  @override
+  void initState() {
+    super.initState();
+    loginController.showDialog = CustomAwesomeDialog.showAwesomeDialog;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +144,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: CustomAuthTextButton(
-                                    onPressed: () => {
-                                      if (loginController.login())
-                                        loginController.signIn()
+                                    onPressed: <Future>() async {
+                                      if (!context.mounted) return;
+                                      String loginResult =
+                                          await loginController.signIn(context);
+                                      if (loginResult == "Login successful!") {
+                                        if (!context.mounted) return;
+                                        await CustomAwesomeDialog
+                                            .showAwesomeDialog(
+                                                context,
+                                                DialogType.success,
+                                                "Success",
+                                                "succes login");
+                                        loginController.navigateToHomeSceen();
+                                      } else {
+                                        if (!context.mounted) return;
+
+                                        await CustomAwesomeDialog
+                                            .showAwesomeDialog(
+                                                context,
+                                                DialogType.error,
+                                                "failed",
+                                                loginResult);
+                                      }
                                     },
                                     foregroundColor: Colors.white,
                                     backgroundColor: AppColors.primaryColor,
@@ -148,6 +176,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontFamily: fontFamily,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
+                                    loadingWidget:
+                                        loginController.isLoading.value
+                                            ? const CircularProgressIndicator(
+                                                color: Colors.white,
+                                              )
+                                            : null,
                                   ),
                                 ),
                                 const SizedBox(

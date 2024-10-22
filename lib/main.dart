@@ -7,6 +7,8 @@ import 'package:moltqa_al_quran_frontend/src/core/localization/translation.dart'
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/entry_screens/language_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/auth/login_screen/login_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/home_screen.dart';
+import 'package:toastification/toastification.dart';
 import 'src/view/screens/entry_screens/splash_screen.dart';
 
 void main() async {
@@ -31,25 +33,34 @@ class AlHudaAcademy extends StatelessWidget {
   Widget build(BuildContext context) {
     LocalizationController localizationController =
         Get.put(LocalizationController());
-    return GetMaterialApp(
-      locale: localizationController.initialLanguage,
-      translations: AppTranslation(),
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          body: SplashScreen(),
+    return ToastificationWrapper(
+      child: GetMaterialApp(
+        locale: localizationController.initialLanguage,
+        translations: AppTranslation(),
+        debugShowCheckedModeBanner: false,
+        home: SafeArea(
+          child: Scaffold(
+            body: SplashScreen(),
+          ),
         ),
+        getPages: [
+          GetPage(
+            name: AppRoutes.language,
+            page: () => const LanguageScreen(),
+          ),
+          GetPage(
+            name: AppRoutes.login,
+            page: () => const LoginScreen(),
+          ),
+          GetPage(
+            name: AppRoutes.home,
+            page: () => const HomeScreen(),
+            transition: Transition.leftToRightWithFade,
+            transitionDuration: const Duration(milliseconds: 500),
+            // Define the transition here
+          )
+        ],
       ),
-      getPages: [
-        GetPage(
-          name: AppRoutes.language,
-          page: () => const LanguageScreen(),
-        ),
-        GetPage(
-          name: AppRoutes.login,
-          page: () => const LoginScreen(),
-        ),
-      ],
     );
   }
 }

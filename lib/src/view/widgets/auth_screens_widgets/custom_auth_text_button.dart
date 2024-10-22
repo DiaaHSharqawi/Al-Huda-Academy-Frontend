@@ -12,6 +12,9 @@ class CustomAuthTextButton extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final VoidCallback onPressed;
+  final double padding;
+  final Widget? loadingWidget;
+
   const CustomAuthTextButton(
       {super.key,
       required this.foregroundColor,
@@ -22,7 +25,9 @@ class CustomAuthTextButton extends StatelessWidget {
       this.fontFamily = AppFonts.arabicFont,
       required this.fontSize,
       required this.fontWeight,
-      required this.onPressed});
+      required this.onPressed,
+      this.padding = 4,
+      this.loadingWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +47,16 @@ class CustomAuthTextButton extends StatelessWidget {
           ),
         ),
       ),
-      child: CustomGoogleTextWidget(
-        text: buttonText,
-        color: buttonTextColor,
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
+      child: Padding(
+        padding: EdgeInsets.all(padding),
+        child: loadingWidget ??
+            CustomGoogleTextWidget(
+              text: buttonText,
+              color: buttonTextColor,
+              fontFamily: fontFamily,
+              fontSize: fontSize,
+              fontWeight: fontWeight,
+            ),
       ),
     );
   }
