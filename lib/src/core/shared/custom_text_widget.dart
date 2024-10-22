@@ -11,29 +11,36 @@ class CustomGoogleTextWidget extends StatelessWidget {
   final TextDecoration? textDecoration;
   final String fontFamily;
   final TextAlign textAlign;
+  final VoidCallback? onTap;
 
-  const CustomGoogleTextWidget(
-      {super.key,
-      required this.text,
-      this.fontSize = 24.0,
-      this.color,
-      this.fontWeight = FontWeight.normal,
-      this.letterSpacing = 0.0,
-      this.textDecoration,
-      this.fontFamily = AppFonts.arabicFont,
-      this.textAlign = TextAlign.center});
+  const CustomGoogleTextWidget({
+    super.key,
+    required this.text,
+    this.fontSize = 24.0,
+    this.color,
+    this.fontWeight = FontWeight.normal,
+    this.letterSpacing = 0.0,
+    this.textDecoration,
+    this.fontFamily = AppFonts.arabicFont,
+    this.textAlign = TextAlign.center,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.getFont(
-        fontFamily,
-        fontSize: fontSize,
-        color: color,
-        fontWeight: fontWeight,
-        letterSpacing: letterSpacing,
-        decoration: textDecoration,
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.blue.withAlpha(30),
+      child: Text(
+        text,
+        style: GoogleFonts.getFont(
+          fontFamily,
+          fontSize: fontSize,
+          color: color,
+          fontWeight: fontWeight,
+          letterSpacing: letterSpacing,
+          decoration: textDecoration,
+        ),
       ),
     );
   }

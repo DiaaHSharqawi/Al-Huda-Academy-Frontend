@@ -19,36 +19,29 @@ class SplashScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(AppImages.bismillahAlRahmanAlRahimImage),
-              const SizedBox(
-                height: 15.0,
-              ),
-              Image.asset(AppImages.splashScreenImage),
-              const SizedBox(
-                height: 15.0,
-              ),
-              CustomGoogleTextWidget(
-                text: SplashScreenLanguageConstants.academyName.tr,
-                fontWeight: FontWeight.bold,
-              ),
-              const SizedBox(
-                height: 50.0,
-              ),
-              _buildLoader(context),
-              const SizedBox(
-                height: 30.0,
-              ),
-              CustomGoogleTextWidget(
-                text: SplashScreenLanguageConstants.pageIsLoading.tr,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-                color: Colors.grey,
-                textAlign: TextAlign.center,
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildImage(AppImages.bismillahAlRahmanAlRahimImage),
+                const SizedBox(
+                  height: 15.0,
+                ),
+                _buildImage(AppImages.splashScreenImage),
+                const SizedBox(
+                  height: 15.0,
+                ),
+                _buildAcademyNameText(),
+                const SizedBox(
+                  height: 50.0,
+                ),
+                _buildLoader(context),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                _buildPageIsLoadingText(),
+              ],
+            ),
           ),
         ),
       ),
@@ -59,5 +52,26 @@ class SplashScreen extends StatelessWidget {
     return Theme.of(context).platform == TargetPlatform.iOS
         ? const CupertinoActivityIndicator(color: Colors.black, radius: 20.0)
         : const CircularProgressIndicator(color: Colors.black);
+  }
+
+  Widget _buildImage(String imagePath) {
+    return Image.asset(imagePath);
+  }
+
+  Widget _buildAcademyNameText() {
+    return CustomGoogleTextWidget(
+      text: SplashScreenLanguageConstants.academyName.tr,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
+  Widget _buildPageIsLoadingText() {
+    return CustomGoogleTextWidget(
+      text: SplashScreenLanguageConstants.pageIsLoading.tr,
+      fontWeight: FontWeight.bold,
+      fontSize: 16.0,
+      color: Colors.grey,
+      textAlign: TextAlign.center,
+    );
   }
 }

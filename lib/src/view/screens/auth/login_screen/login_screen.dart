@@ -26,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    loginController.showDialog = CustomAwesomeDialog.showAwesomeDialog;
   }
 
   @override
@@ -66,156 +65,42 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            CustomGoogleTextWidget(
-                              text: LoginScreenLanguageConstants.greeting.tr,
-                              color: AppColors.primaryColor,
-                              fontFamily: fontFamily,
-                            ),
+                            _buildGreetingText(),
                             const SizedBox(
                               height: 24.0,
                             ),
-                            CustomGoogleTextWidget(
-                              text: LoginScreenLanguageConstants.welcomeBack.tr,
-                              color: AppColors.primaryColor,
-                            ),
-                            FittedBox(
-                              child: Image.asset(
-                                AppImages.holyQuranLogo,
-                                width: 250,
-                                height: 250,
-                              ),
-                            ),
+                            _buildWelcomeBackText(),
+                            _buildProjectLogo(),
                             Column(
                               children: [
-                                CustomAuthTextFormField(
-                                  textFormDirection: textFormDirection,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  textFormFieldValidator:
-                                      loginController.validateEmail,
-                                  controller:
-                                      loginController.userIdentifierController,
-                                  textFormLabelText:
-                                      LoginScreenLanguageConstants
-                                          .formFieldsInputsEmail.tr,
-                                  textFormHintText: LoginScreenLanguageConstants
-                                      .hintTextAuthEmail,
-                                  iconName: Icons.email,
-                                  colorIcon: AppColors.primaryColor,
-                                  hintTextDirection: hintTextDirection,
-                                ),
+                                _buildEmailField(
+                                    textFormDirection, hintTextDirection),
                                 const SizedBox(
                                   height: 12.0,
                                 ),
-                                CustomAuthTextFormField(
-                                  textFormDirection: textFormDirection,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  textFormFieldValidator:
-                                      loginController.validatePassword,
-                                  controller:
-                                      loginController.passwordController,
-                                  obscureText: true,
-                                  textFormLabelText:
-                                      LoginScreenLanguageConstants
-                                          .formFieldsInputsPassword.tr.tr,
-                                  textFormHintText: LoginScreenLanguageConstants
-                                      .hintTextAuthPassword,
-                                  iconName: Icons.remove_red_eye,
-                                  colorIcon: AppColors.primaryColor,
-                                  hintTextDirection: hintTextDirection,
-                                ),
+                                _buildPasswordField(
+                                    textFormDirection, hintTextDirection),
                                 const SizedBox(
                                   height: 16.0,
                                 ),
                                 SizedBox(
                                   width: double.infinity,
-                                  child: CustomGoogleTextWidget(
-                                    text: LoginScreenLanguageConstants
-                                        .formFieldsInputsForgetPassword.tr,
-                                    color: AppColors.primaryColor,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  child: _buildForgetPasswordText(),
                                 ),
                                 const SizedBox(
                                   height: 16.0,
                                 ),
                                 SizedBox(
-                                  width: double.infinity,
-                                  child: CustomAuthTextButton(
-                                    onPressed: <Future>() async {
-                                      if (!context.mounted) return;
-                                      String loginResult =
-                                          await loginController.signIn(context);
-                                      if (loginResult == "Login successful!") {
-                                        if (!context.mounted) return;
-                                        await CustomAwesomeDialog
-                                            .showAwesomeDialog(
-                                                context,
-                                                DialogType.success,
-                                                "Success",
-                                                "succes login");
-                                        loginController.navigateToHomeSceen();
-                                      } else {
-                                        if (!context.mounted) return;
-
-                                        await CustomAwesomeDialog
-                                            .showAwesomeDialog(
-                                                context,
-                                                DialogType.error,
-                                                "failed",
-                                                loginResult);
-                                      }
-                                    },
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: AppColors.primaryColor,
-                                    buttonText: LoginScreenLanguageConstants
-                                        .buttonTextLogin.tr,
-                                    buttonTextColor: Colors.white,
-                                    fontFamily: fontFamily,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    loadingWidget:
-                                        loginController.isLoading.value
-                                            ? const CircularProgressIndicator(
-                                                color: Colors.white,
-                                              )
-                                            : null,
-                                  ),
-                                ),
+                                    width: double.infinity,
+                                    child:
+                                        _buildLoginButton(context, fontFamily)),
                                 const SizedBox(
                                   height: 24.0,
                                 ),
                                 Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      CustomGoogleTextWidget(
-                                        text: LoginScreenLanguageConstants
-                                            .dontHaveAnAccount.tr,
-                                        fontFamily: fontFamily,
-                                        fontSize: 16.0,
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      const SizedBox(
-                                        width: 12.0,
-                                      ),
-                                      CustomGoogleTextWidget(
-                                        text: LoginScreenLanguageConstants
-                                            .newUser.tr,
-                                        fontFamily: fontFamily,
-                                        fontSize: 16.0,
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    alignment: Alignment.topLeft,
+                                    child:
+                                        _buildDontHaveAccountText(fontFamily)),
                               ],
                             )
                           ],
@@ -229,6 +114,134 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildGreetingText() {
+    return CustomGoogleTextWidget(
+      text: LoginScreenLanguageConstants.greeting.tr,
+      color: AppColors.primaryColor,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
+  Widget _buildWelcomeBackText() {
+    return CustomGoogleTextWidget(
+      text: LoginScreenLanguageConstants.welcomeBack.tr,
+      color: AppColors.primaryColor,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
+  Widget _buildProjectLogo() {
+    return FittedBox(
+      child: Image.asset(
+        AppImages.holyQuranLogo,
+        width: 250,
+        height: 250,
+      ),
+    );
+  }
+
+  Widget _buildEmailField(
+      TextDirection textFormDirection, TextDirection hintTextDirection) {
+    return CustomAuthTextFormField(
+      textFormDirection: textFormDirection,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      textFormFieldValidator: loginController.validateEmail,
+      controller: loginController.userIdentifierController,
+      textFormLabelText: LoginScreenLanguageConstants.formFieldsInputsEmail.tr,
+      textFormHintText: LoginScreenLanguageConstants.hintTextAuthEmail,
+      iconName: Icons.email,
+      colorIcon: AppColors.primaryColor,
+      hintTextDirection: hintTextDirection,
+    );
+  }
+
+  Widget _buildPasswordField(
+      TextDirection textFormDirection, TextDirection hintTextDirection) {
+    return CustomAuthTextFormField(
+      textFormDirection: textFormDirection,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      textFormFieldValidator: loginController.validatePassword,
+      controller: loginController.passwordController,
+      obscureText: true,
+      textFormLabelText:
+          LoginScreenLanguageConstants.formFieldsInputsPassword.tr.tr,
+      textFormHintText: LoginScreenLanguageConstants.hintTextAuthPassword,
+      iconName: Icons.remove_red_eye,
+      colorIcon: AppColors.primaryColor,
+      hintTextDirection: hintTextDirection,
+    );
+  }
+
+  Widget _buildForgetPasswordText() {
+    return CustomGoogleTextWidget(
+      text: LoginScreenLanguageConstants.formFieldsInputsForgetPassword.tr,
+      color: AppColors.primaryColor,
+      fontSize: 16.0,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
+  Widget _buildLoginButton(BuildContext context, String fontFamily) {
+    return CustomAuthTextButton(
+      onPressed: <Future>() async {
+        if (!context.mounted) return;
+        String loginResult = await loginController.signIn(context);
+        if (loginResult == "Login successful!") {
+          if (!context.mounted) return;
+          await CustomAwesomeDialog.showAwesomeDialog(
+              context, DialogType.success, "Success", "succes login");
+          loginController.navigateToHomeSceen();
+        } else {
+          if (!context.mounted) return;
+
+          await CustomAwesomeDialog.showAwesomeDialog(
+              context, DialogType.error, "failed", loginResult);
+        }
+      },
+      foregroundColor: Colors.white,
+      backgroundColor: AppColors.primaryColor,
+      buttonText: LoginScreenLanguageConstants.buttonTextLogin.tr,
+      buttonTextColor: Colors.white,
+      fontFamily: fontFamily,
+      fontSize: 18.0,
+      fontWeight: FontWeight.bold,
+      loadingWidget: loginController.isLoading.value
+          ? const CircularProgressIndicator(
+              color: Colors.white,
+            )
+          : null,
+    );
+  }
+
+  Widget _buildDontHaveAccountText(String fontFamily) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CustomGoogleTextWidget(
+          text: LoginScreenLanguageConstants.dontHaveAnAccount.tr,
+          fontFamily: fontFamily,
+          fontSize: 16.0,
+          color: AppColors.primaryColor,
+          fontWeight: FontWeight.bold,
+        ),
+        const SizedBox(
+          width: 12.0,
+        ),
+        CustomGoogleTextWidget(
+          text: LoginScreenLanguageConstants.newUser.tr,
+          fontFamily: fontFamily,
+          fontSize: 16.0,
+          color: AppColors.primaryColor,
+          fontWeight: FontWeight.bold,
+          onTap: () {
+            loginController.navigateToRegisterSceen();
+          },
+        ),
+      ],
     );
   }
 }
