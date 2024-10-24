@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import './../../../src/core/constants/app_fonts.dart';
 
 class CustomGoogleTextWidget extends StatelessWidget {
   final String text;
@@ -21,8 +20,8 @@ class CustomGoogleTextWidget extends StatelessWidget {
     this.fontWeight = FontWeight.normal,
     this.letterSpacing = 0.0,
     this.textDecoration,
-    this.fontFamily = AppFonts.arabicFont,
-    this.textAlign = TextAlign.center,
+    required this.fontFamily,
+    this.textAlign = TextAlign.right,
     this.onTap,
   });
 
@@ -33,10 +32,10 @@ class CustomGoogleTextWidget extends StatelessWidget {
       splashColor: Colors.blue.withAlpha(30),
       child: Text(
         text,
+        textAlign: textAlign,
         style: GoogleFonts.getFont(
           fontFamily,
           fontSize: fontSize,
-          color: color,
           fontWeight: fontWeight,
           letterSpacing: letterSpacing,
           decoration: textDecoration,

@@ -7,11 +7,12 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.d
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_images.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_images.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,7 +22,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  LoginController loginController = LoginController();
+  final AppService appService = Get.find<AppService>();
+  final LoginController loginController = Get.find();
 
   @override
   void initState() {
@@ -30,8 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appService = Get.find<AppService>();
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -65,11 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            _buildGreetingText(),
+                            _buildGreetingText(fontFamily),
                             const SizedBox(
                               height: 24.0,
                             ),
-                            _buildWelcomeBackText(),
+                            _buildWelcomeBackText(fontFamily),
                             _buildProjectLogo(),
                             Column(
                               children: [
@@ -85,22 +85,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 SizedBox(
                                   width: double.infinity,
-                                  child: _buildForgetPasswordText(),
+                                  child: _buildForgetPasswordText(fontFamily),
                                 ),
                                 const SizedBox(
                                   height: 16.0,
                                 ),
                                 SizedBox(
-                                    width: double.infinity,
-                                    child:
-                                        _buildLoginButton(context, fontFamily)),
+                                  width: double.infinity,
+                                  child: _buildLoginButton(context, fontFamily),
+                                ),
                                 const SizedBox(
                                   height: 24.0,
                                 ),
                                 Container(
-                                    alignment: Alignment.topLeft,
-                                    child:
-                                        _buildDontHaveAccountText(fontFamily)),
+                                  alignment: Alignment.topLeft,
+                                  child: _buildDontHaveAccountText(fontFamily),
+                                ),
                               ],
                             )
                           ],
@@ -117,16 +117,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildGreetingText() {
+  Widget _buildGreetingText(String fontFamily) {
     return CustomGoogleTextWidget(
+      fontFamily: fontFamily,
       text: LoginScreenLanguageConstants.greeting.tr,
       color: AppColors.primaryColor,
       fontWeight: FontWeight.bold,
     );
   }
 
-  Widget _buildWelcomeBackText() {
+  Widget _buildWelcomeBackText(String fontFamily) {
     return CustomGoogleTextWidget(
+      fontFamily: fontFamily,
       text: LoginScreenLanguageConstants.welcomeBack.tr,
       color: AppColors.primaryColor,
       fontWeight: FontWeight.bold,
@@ -148,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return CustomAuthTextFormField(
       textFormDirection: textFormDirection,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      textFormFieldValidator: loginController.validateEmail,
+      textFormFieldValidator: AuthValidations.validateEmail,
       controller: loginController.userIdentifierController,
       textFormLabelText: LoginScreenLanguageConstants.formFieldsInputsEmail.tr,
       textFormHintText: LoginScreenLanguageConstants.hintTextAuthEmail,
@@ -163,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return CustomAuthTextFormField(
       textFormDirection: textFormDirection,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      textFormFieldValidator: loginController.validatePassword,
+      textFormFieldValidator: AuthValidations.validatePassword,
       controller: loginController.passwordController,
       obscureText: true,
       textFormLabelText:
@@ -175,12 +177,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgetPasswordText() {
-    return CustomGoogleTextWidget(
-      text: LoginScreenLanguageConstants.formFieldsInputsForgetPassword.tr,
-      color: AppColors.primaryColor,
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold,
+  Widget _buildForgetPasswordText(String fontFamily) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: CustomGoogleTextWidget(
+        text: LoginScreenLanguageConstants.formFieldsInputsForgetPassword.tr,
+        color: AppColors.primaryColor,
+        fontSize: 18.0,
+        textDecoration: TextDecoration.underline,
+        fontFamily: fontFamily,
+      ),
     );
   }
 
@@ -232,6 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 12.0,
         ),
         CustomGoogleTextWidget(
+          textDecoration: TextDecoration.underline,
           text: LoginScreenLanguageConstants.newUser.tr,
           fontFamily: fontFamily,
           fontSize: 16.0,

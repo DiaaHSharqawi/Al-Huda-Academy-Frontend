@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -11,14 +10,13 @@ class AppService extends GetxService {
     languageStorage = GetStorage();
 
     String? lang = languageStorage.read('language');
+    debugPrint("lang device : $lang");
     lang == 'ar' ? isRtl.value = true : isRtl.value = false;
 
     return this;
   }
 
   void changeLanguage(String langCode) {
-    //  languageStorage.write('language', langCode);
-    //isRtl.value = (langCode == 'ar');
     Locale language = Locale(langCode);
     Get.updateLocale(language);
     languageStorage.write('language', langCode);

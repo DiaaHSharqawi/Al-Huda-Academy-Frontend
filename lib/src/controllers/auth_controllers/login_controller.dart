@@ -7,7 +7,7 @@ import 'package:moltqa_al_quran_frontend/src/core/services/auth/login_service.da
 import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/user_model.dart';
 
-class LoginController {
+class LoginController extends GetxController {
   final TextEditingController userIdentifierController =
       TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -69,5 +69,12 @@ class LoginController {
 
   void navigateToRegisterSceen() {
     Get.toNamed(AppRoutes.register);
+  }
+
+  @override
+  void onClose() {
+    userIdentifierController.dispose();
+    passwordController.dispose();
+    super.onClose();
   }
 }

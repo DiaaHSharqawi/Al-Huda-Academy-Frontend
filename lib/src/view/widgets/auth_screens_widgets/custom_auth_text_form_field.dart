@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomAuthTextFormField extends StatelessWidget {
-  final String textFormLabelText;
+  final String? textFormLabelText;
   final String textFormHintText;
   final TextDirection hintTextDirection;
   final IconData iconName;
@@ -14,7 +14,7 @@ class CustomAuthTextFormField extends StatelessWidget {
 
   const CustomAuthTextFormField(
       {super.key,
-      required this.textFormLabelText,
+      this.textFormLabelText,
       required this.textFormHintText,
       required this.iconName,
       required this.colorIcon,
@@ -40,7 +40,9 @@ class CustomAuthTextFormField extends StatelessWidget {
         hintStyle: const TextStyle(
           color: Colors.grey,
         ),
-        border: const OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         prefixIcon: Icon(
           iconName,
           color: colorIcon,

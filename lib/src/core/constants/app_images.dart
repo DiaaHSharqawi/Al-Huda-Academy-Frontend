@@ -6,4 +6,6 @@ class AppImages {
   static const String bismillahAlRahmanAlRahimImage =
       "$rootImages/bismillah_al_rahman_al_rahim.png";
   static const holyQuranLogo = "$rootImages/holyQuranLogo.png";
+
+  static const userAvatarImage = "$rootImages/userAvatar.png";
 }
