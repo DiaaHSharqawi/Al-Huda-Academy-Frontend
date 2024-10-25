@@ -72,7 +72,6 @@ class AlHudaAcademy extends StatelessWidget {
             page: () => const HomeScreen(),
             transition: Transition.leftToRightWithFade,
             transitionDuration: const Duration(milliseconds: 500),
-            // Define the transition here
           ),
         ],
       ),

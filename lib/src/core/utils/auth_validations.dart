@@ -57,4 +57,55 @@ class AuthValidations {
           errorText: "اسمك الكامل يجب ان يكون اكثر من حرفين"),
     ])(fullName);
   }
+
+  static String? validateAge(String? age) {
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(errorText: "من فضلك ادخل عمرك"),
+      FormBuilderValidators.integer(
+          errorText: "العمر يجب أن يكون عددًا صحيحًا"),
+      FormBuilderValidators.min(6, errorText: "العمر يجب أن يكون أكبر من 6"),
+      FormBuilderValidators.max(100, errorText: "العمر يجب أن يكون أقل من 100"),
+    ])(age);
+  }
+
+  static Map<String, String?>? validateAll(Map<String, String?> values) {
+    Map<String, String?> errors = {};
+
+    if (values['email'] != null) {
+      final emailError = validateEmail(values['email']);
+      if (emailError != null) errors['email'] = emailError;
+    }
+
+    if (values['password'] != null) {
+      final passwordError = validatePassword(values['password']);
+      if (passwordError != null) errors['password'] = passwordError;
+    }
+
+    if (values['phone'] != null) {
+      final phoneError = validatePhoneNumber(values['phone']);
+      if (phoneError != null) errors['phone'] = phoneError;
+    }
+
+    if (values['country'] != null) {
+      final countryError = validateCountry(values['country']);
+      if (countryError != null) errors['country'] = countryError;
+    }
+
+    if (values['city'] != null) {
+      final cityError = validateCity(values['city']);
+      if (cityError != null) errors['city'] = cityError;
+    }
+
+    if (values['fullName'] != null) {
+      final fullNameError = validateFullName(values['fullName']);
+      if (fullNameError != null) errors['fullName'] = fullNameError;
+    }
+
+    if (values['age'] != null) {
+      final ageError = validateAge(values['age']);
+      if (ageError != null) errors['age'] = ageError;
+    }
+
+    return errors.isNotEmpty ? errors : null;
+  }
 }

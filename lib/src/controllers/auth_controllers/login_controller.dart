@@ -50,6 +50,7 @@ class LoginController extends GetxController {
 
       final LoginResponse? loginResponse = await _loginService.login(
           userIdentifierController.text, passwordController.text);
+
       if (loginResponse!.success) {
         return "Login successful!";
       } else {
