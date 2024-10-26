@@ -25,34 +25,36 @@ class SplashScreen extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildImage(
-                  AppImages.splashScreenImage,
-                ),
-                Obx(() {
-                  final isArabic = appService.isRtl.value;
-
-                  final String fontFamily =
-                      isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
-                  return SizedBox(
-                    height: 64.0,
-                    child: _buildAcademyNameText(fontFamily),
-                  );
-                }),
-                const SizedBox(
-                  height: 50.0,
-                ),
-                SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: _buildLoader(
-                    context,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildImage(
+                    AppImages.splashScreenImage,
                   ),
-                ),
-              ],
+                  Obx(() {
+                    final isArabic = appService.isRtl.value;
+
+                    final String fontFamily =
+                        isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
+                    return SizedBox(
+                      height: 64.0,
+                      child: _buildAcademyNameText(fontFamily),
+                    );
+                  }),
+                  const SizedBox(
+                    height: 50.0,
+                  ),
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: _buildLoader(
+                      context,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -86,7 +88,7 @@ class SplashScreen extends StatelessWidget {
       alignment: Alignment.center,
       child: CustomGoogleTextWidget(
         fontSize: 24.0,
-        color: Colors.white,
+        color: Colors.black,
         textAlign: TextAlign.center,
         fontFamily: fontFamily,
         text: SplashScreenLanguageConstants.academyName.tr,

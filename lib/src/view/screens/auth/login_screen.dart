@@ -24,6 +24,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final AppService appService = Get.find<AppService>();
   final LoginController loginController = Get.find();
+  late String _fontFamily;
+
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -47,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Obx(
                   () {
                     final isArabic = appService.isRtl.value;
+                    debugPrint(isArabic.toString());
 
                     final TextDirection textDirection =
                         isArabic ? TextDirection.rtl : TextDirection.ltr;
@@ -57,7 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     final String fontFamily =
                         isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
-
+                    _fontFamily = fontFamily;
+                    debugPrint(_fontFamily);
                     return Directionality(
                       textDirection: textDirection,
                       child: Form(
@@ -149,7 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
       TextDirection textFormDirection, TextDirection hintTextDirection) {
     return CustomAuthTextFormField(
       textFormDirection: textFormDirection,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: _isSubmitting
+          ? AutovalidateMode.always
+          : AutovalidateMode.onUserInteraction,
       textFormFieldValidator: AuthValidations.validateEmail,
       controller: loginController.userIdentifierController,
       textFormLabelText: LoginScreenLanguageConstants.formFieldsInputsEmail.tr,
@@ -157,14 +164,18 @@ class _LoginScreenState extends State<LoginScreen> {
       iconName: Icons.email,
       colorIcon: AppColors.primaryColor,
       hintTextDirection: hintTextDirection,
+      fontFamily: _fontFamily,
     );
   }
 
   Widget _buildPasswordField(
       TextDirection textFormDirection, TextDirection hintTextDirection) {
     return CustomAuthTextFormField(
+      fontFamily: _fontFamily,
       textFormDirection: textFormDirection,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: _isSubmitting
+          ? AutovalidateMode.always
+          : AutovalidateMode.onUserInteraction,
       textFormFieldValidator: AuthValidations.validatePassword,
       controller: loginController.passwordController,
       obscureText: true,
@@ -193,19 +204,47 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLoginButton(BuildContext context, String fontFamily) {
     return CustomAuthTextButton(
       onPressed: <Future>() async {
+        setState(() {
+          _isSubmitting = false;
+        });
         if (!context.mounted) return;
         String loginResult = await loginController.signIn(context);
+        debugPrint(loginResult);
+
         if (loginResult == "Login successful!") {
           if (!context.mounted) return;
           await CustomAwesomeDialog.showAwesomeDialog(
-              context, DialogType.success, "Success", "succes login");
+            context,
+            DialogType.success,
+            LoginScreenLanguageConstants.successLoginMessage.tr,
+            loginResult,
+            fontFamily,
+          );
           loginController.navigateToHomeSceen();
+        } else if (loginResult ==
+            "Validation failed, Please enter a valid username and email.") {
+          if (!context.mounted) return;
+          await CustomAwesomeDialog.showAwesomeDialog(
+            context,
+            DialogType.error,
+            LoginScreenLanguageConstants.loginFailedMessage.tr,
+            LoginScreenLanguageConstants.invalidInputs.tr,
+            fontFamily,
+          );
         } else {
           if (!context.mounted) return;
 
           await CustomAwesomeDialog.showAwesomeDialog(
-              context, DialogType.error, "failed", loginResult);
+            context,
+            DialogType.error,
+            LoginScreenLanguageConstants.loginFailedMessage.tr,
+            loginResult,
+            fontFamily,
+          );
         }
+        setState(() {
+          _isSubmitting = false;
+        });
       },
       foregroundColor: Colors.white,
       backgroundColor: AppColors.primaryColor,

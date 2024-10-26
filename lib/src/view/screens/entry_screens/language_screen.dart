@@ -61,6 +61,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
     return CustomGoogleTextWidget(
       fontFamily: fontFamily,
       text: LangugeScreenLanguageConstants.chooseLanguage.tr,
+      fontWeight: FontWeight.bold,
     );
   }
 

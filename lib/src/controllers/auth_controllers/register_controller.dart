@@ -20,7 +20,7 @@ class RegisterController extends GetxController {
   final TextEditingController countryController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
 
-  Rx<Gender?> selectedGender = Rx<Gender?>(null);
+  Rx<Gender?> selectedGender = Rx<Gender?>(Gender.notSelected);
 
   final RegisterService _registerService;
 
@@ -44,16 +44,16 @@ class RegisterController extends GetxController {
       'phone': phoneController.text,
       'city': cityController.text,
       'country': countryController.text,
-      'gender': selectedGender.value?.name ?? 'other',
+      'gender': selectedGender.value?.name,
     });
+    if (err != null) {
+      return 'Please make sure to fill all fields!';
+    }
     if (profileImage == null) {
       return 'Please make sure to upload your profile image.';
     }
-    if (err != null) {
-      return 'Please fill all the fields';
-    }
 
-    final genderString = selectedGender.value?.name ?? 'other';
+    final genderString = selectedGender.value?.name ?? '';
     final registerData = RegisterModel(
       fullName: fullNameController.text,
       email: emailController.text,

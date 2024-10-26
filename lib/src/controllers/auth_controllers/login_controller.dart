@@ -43,7 +43,7 @@ class LoginController extends GetxController {
     bool isValidationFailed = (emailError != null || passwordError != null);
 
     if (isValidationFailed) {
-      return " Validation failed, Please enter a valid username and email.";
+      return "Validation failed, Please enter a valid username and email.";
     }
     try {
       isLoading(true);

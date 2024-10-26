@@ -11,7 +11,7 @@
     },
     "languge_screen":{
         "choose_language":{
-            "en":"choose language",
+            "en":"Choose language",
             "ar":"اختر اللغة "
         }
     },
@@ -63,6 +63,157 @@
         "enter_a_valid_password":{
             "en":"Password must be at least 6 characters",
             "ar":"يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل"
+        },
+        "success_login_message":{
+            "en":"login successfully",
+            "ar":"تم تسجيل الدخول بنجاح"
+        },
+        "login_failed_message":{
+            "en":"login failed",
+            "ar":"فشل تسجيل الدخول"
+        },
+        "invalid_credentials_server_error_message":{
+            "en":"Invalid credentials. Please check your email and password, then try again. translate to ar",
+            "ar":"البيانات غير صحيحة. يرجى التحقق من البريد الإلكتروني وكلمة المرور، ثم المحاولة مرة أخرى."
+        },
+        "invalid_inputs":{
+            "en":"Invalid inputs, Please make sure to enter a valid email and password.",
+            "ar":"مدخلات غير صحيحة ، من فضلك ادخل بريد الكتروني وكلمة سر صحيحان."
+        }
+
+
+    },
+    "register_screen":{
+        "create_a_new_account":{
+            "en":"Create a new account",
+            "ar":"إنشاء حساب جديد"
+        },
+        "full_name":{
+            "en":"Full name",
+            "ar":"الاسم كاملاً"
+        },
+        "enter_a_full_name":{
+            "en":"Enter a full name",
+            "ar":"ادخل اسماً كاملاً"
+        },
+        "email":{
+            "en":"Email",
+            "ar":"البقريد الالكتروني"
+        },
+        "phone_number":{
+            "en":"Phone Number",
+            "ar":"رقم الهاتف"
+        },
+        "password":{
+            "en":"Password",
+            "ar":"كلمة السر"
+        },
+        "save_data":{
+            "en":"Save Data",
+            "ar":"حفظ البيانات"
+        },
+        "residence":{
+            "en":"Residence",
+            "ar":"مكان الاقامة"
+        },
+        "enter_a_country":{
+            "en":"Enter a country",
+            "ar":"الدولة"
+        },
+        "enter_a_city":{
+            "en":"Enter a city",
+            "ar":"ادخل المدينة"
+        },
+        "enter_the_gender":{
+            "en":"Gender",
+            "ar": "الجنس"
+        },
+        "gender_male":{
+            "en":"male",
+            "ar":"ذكر"
+        },
+        "gender_female":{
+            "en":"female",
+            "ar":"انثى"
+        },
+        "please_choose_the_gender":{
+            "en":"Plesae choose the gender",
+            "ar":"الرجاء اختيار الجنس"
+        },
+        "age":{
+            "en":"age",
+            "ar":"العمر"
+        },
+        "enter_the_age":{
+            "en":"Enter the age",
+            "ar":"ادخل عمرك"
+        },
+        "please_make_sure_to_fill_all_fields":{
+            "en":"Please make sure to fill all fields",
+            "ar":"من فضلك تأكد من ملئ جميع الحقول"
+        },
+        "please_make_sure_to_upload_your_profile_image":{
+            "en":"Please make sure to upload your profile image",
+            "ar":"من فضلك تأكد من تحميل صورة الملف الشخصي الخاصة بك"
+        }
+    },
+    "auth_validations":{
+        "phone_number_is_required":{
+            "en":"Phone number is required",
+            "ar":"رقم الهاتف مطلوب"
+        },
+        "enter_valid_phone_number": {
+            "en": "Please enter a valid phone number",
+            "ar": "من فضلك ادخل رقم هاتف صحيح"
+        },
+        "enter_country": {
+            "en": "Please enter your country",
+            "ar": "من فضلك ادخل دولتك"
+        },
+        "country_name_min_length": {
+            "en": "The country name must be more than two characters",
+            "ar": "اسم الدولة يجب ان يكون اكثر من حرفين"
+        },
+        "enter_city": {
+            "en": "Please enter your city",
+            "ar": "من فضلك ادخل مدينتك"
+        },
+        "city_name_min_length": {
+            "en": "The city name must be more than two characters",
+            "ar": "اسم المدينة يجب ان يكون اكثر من حرفين"
+        },
+        "enter_full_name": {
+            "en": "Please enter your full name",
+            "ar": "من فضلك ادخل اسمك الكامل"
+        },
+        "enter_full_name_min_length": {
+            "en": "Your full name must be more than two characters",
+            "ar": "اسمك الكامل يجب ان يكون اكثر من حرفين"
+        },
+        "enter_age": {
+            "en": "Please enter your age",
+            "ar": "من فضلك ادخل عمرك"
+        },
+        "age_must_be_integer": {
+            "en": "Age must be an integer",
+            "ar": "العمر يجب أن يكون عددًا صحيحًا"
+        },
+        "age_must_be_greater_than_six": {
+            "en": "Age must be greater than 6",
+            "ar": "العمر يجب أن يكون أكبر من 6"
+        },
+        "age_must_be_less_than_one_hundred": {
+            "en": "Age must be less than 100",
+            "ar": "العمر يجب أن يكون أقل من 100"
+        },
+        "error":{
+            "en":"Error",
+            "ar":"خطأ"
+        },
+        "success":{
+            "en":"Success",
+            "ar":"تم بنجاح"
         }
     }
+
 }

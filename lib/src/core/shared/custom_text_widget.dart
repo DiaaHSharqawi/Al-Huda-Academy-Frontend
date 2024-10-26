@@ -39,6 +39,7 @@ class CustomGoogleTextWidget extends StatelessWidget {
           fontWeight: fontWeight,
           letterSpacing: letterSpacing,
           decoration: textDecoration,
+          color: color,
         ),
       ),
     );

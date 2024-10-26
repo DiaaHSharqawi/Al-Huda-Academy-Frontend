@@ -17,17 +17,21 @@ class AuthValidations {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
           errorText: LoginScreenLanguageConstants.userPasswordRequired.tr),
-      FormBuilderValidators.minLength(6,
-          errorText: LoginScreenLanguageConstants.enterAValidPassword.tr)
+      FormBuilderValidators.minLength(
+        6,
+        errorText: LoginScreenLanguageConstants.enterAValidPassword.tr,
+      )
     ])(password);
   }
 
   static String? validatePhoneNumber(String? phone) {
     return FormBuilderValidators.compose([
-      FormBuilderValidators.required(errorText: "!رقم الهاتف مطلوب"),
+      FormBuilderValidators.required(
+        errorText: AuthValidationsLanguageConstants.phoneNumberIsRequired.tr,
+      ),
       FormBuilderValidators.match(
         RegExp(r'^\+?[0-9]{10,15}$'),
-        errorText: "من فضلك ادخل رقم هاتف صحيح",
+        errorText: AuthValidationsLanguageConstants.enterValidPhoneNumber.tr,
       ),
     ])(phone);
   }
@@ -35,36 +39,56 @@ class AuthValidations {
   static String? validateCountry(String? country) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
-        errorText: "من فضلك ادخل دولتك",
+        errorText: AuthValidationsLanguageConstants.enterCountry.tr,
       ),
-      FormBuilderValidators.minLength(2,
-          errorText: "اسم الدولة يجب ان يكون اكثر من حرفين"),
+      FormBuilderValidators.minLength(
+        2,
+        errorText: AuthValidationsLanguageConstants.countryMinLength.tr,
+      ),
     ])(country);
   }
 
   static String? validateCity(String? city) {
     return FormBuilderValidators.compose([
-      FormBuilderValidators.required(errorText: "من فضلك ادخل مدينتك"),
-      FormBuilderValidators.minLength(2,
-          errorText: "اسم المدينة يجب ان يكون اكثر من حرفين"),
+      FormBuilderValidators.required(
+        errorText: AuthValidationsLanguageConstants.enterACity.tr,
+      ),
+      FormBuilderValidators.minLength(
+        2,
+        errorText: AuthValidationsLanguageConstants.cityNameMinLength.tr,
+      ),
     ])(city);
   }
 
   static String? validateFullName(String? fullName) {
     return FormBuilderValidators.compose([
-      FormBuilderValidators.required(errorText: "من فضلك ادخل اسمك الكامل"),
-      FormBuilderValidators.minLength(2,
-          errorText: "اسمك الكامل يجب ان يكون اكثر من حرفين"),
+      FormBuilderValidators.required(
+        errorText: AuthValidationsLanguageConstants.enterFullName.tr,
+      ),
+      FormBuilderValidators.minLength(
+        2,
+        errorText: AuthValidationsLanguageConstants.enterFullNameMinLength.tr,
+      ),
     ])(fullName);
   }
 
   static String? validateAge(String? age) {
     return FormBuilderValidators.compose([
-      FormBuilderValidators.required(errorText: "من فضلك ادخل عمرك"),
+      FormBuilderValidators.required(
+        errorText: AuthValidationsLanguageConstants.enterAge.tr,
+      ),
       FormBuilderValidators.integer(
-          errorText: "العمر يجب أن يكون عددًا صحيحًا"),
-      FormBuilderValidators.min(6, errorText: "العمر يجب أن يكون أكبر من 6"),
-      FormBuilderValidators.max(100, errorText: "العمر يجب أن يكون أقل من 100"),
+        errorText: AuthValidationsLanguageConstants.ageMustBeInteger.tr,
+      ),
+      FormBuilderValidators.min(
+        6,
+        errorText: AuthValidationsLanguageConstants.ageMustBeGreaterThanSix.tr,
+      ),
+      FormBuilderValidators.max(
+        100,
+        errorText:
+            AuthValidationsLanguageConstants.ageMustBeLessThanOneHundred.tr,
+      ),
     ])(age);
   }
 
