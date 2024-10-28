@@ -42,6 +42,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   const SizedBox(
                     height: 16.0,
                   ),
+                  _buildOTPVerificationField(),
                 ],
               ),
             ),

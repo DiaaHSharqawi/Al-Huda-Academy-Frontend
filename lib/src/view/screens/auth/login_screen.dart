@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final LoginController loginController = Get.find();
 
   bool _isSubmitting = false;
+  bool _isEnabled = true;
 
   @override
   void initState() {
@@ -185,7 +186,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return CustomAuthTextButton(
       onPressed: <Future>() async {
         setState(() {
-          _isSubmitting = false;
+          _isSubmitting = true;
+          _isEnabled = false;
         });
         if (!context.mounted) return;
         String loginResult = await loginController.signIn(context);
@@ -221,6 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         setState(() {
           _isSubmitting = false;
+          _isEnabled = true;
         });
       },
       foregroundColor: Colors.white,
@@ -234,6 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.white,
             )
           : null,
+      isEnabled: _isEnabled,
     );
   }
 

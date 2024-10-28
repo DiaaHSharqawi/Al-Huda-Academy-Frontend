@@ -14,6 +14,7 @@ class CustomAuthTextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double padding;
   final Widget? loadingWidget;
+  final bool isEnabled;
 
   const CustomAuthTextButton(
       {super.key,
@@ -27,12 +28,13 @@ class CustomAuthTextButton extends StatelessWidget {
       required this.fontWeight,
       required this.onPressed,
       this.padding = 4,
-      this.loadingWidget});
+      this.loadingWidget,
+      this.isEnabled = true});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onPressed,
+      onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         foregroundColor: WidgetStateProperty.all(
           foregroundColor,

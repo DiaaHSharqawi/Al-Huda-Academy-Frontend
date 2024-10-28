@@ -26,6 +26,8 @@ class RegisterController extends GetxController {
 
   RegisterController(this._registerService);
 
+  var isLoading = false.obs;
+
   void setGender(Gender? gender) {
     selectedGender.value = gender;
   }
@@ -67,6 +69,7 @@ class RegisterController extends GetxController {
     );
 
     try {
+      isLoading(true);
       final RegisterResponse registerResponse =
           await _registerService.registerUser(registerData);
       if (registerResponse.success) {
@@ -81,6 +84,8 @@ class RegisterController extends GetxController {
 
       Get.snackbar('Error', e.toString());
       return e.toString();
+    } finally {
+      isLoading(false);
     }
   }
 

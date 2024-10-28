@@ -7,7 +7,7 @@ import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
 class SendPasswordResetCodeController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final SendPasswordResetCodeService _forgetPasswordService;
-
+  var isLoading = false.obs;
   SendPasswordResetCodeController(this._forgetPasswordService);
 
   String? message;
@@ -20,6 +20,7 @@ class SendPasswordResetCodeController extends GetxController {
       return 'Please make sure to fill all fields correctly!';
     }
     try {
+      isLoading(true);
       final response =
           await _forgetPasswordService.forgetPassword(emailController.text);
       debugPrint(response.toString());
@@ -34,6 +35,8 @@ class SendPasswordResetCodeController extends GetxController {
     } catch (error) {
       debugPrint(error.toString());
       return error.toString();
+    } finally {
+      isLoading(false);
     }
   }
 

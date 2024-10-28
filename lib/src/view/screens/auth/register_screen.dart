@@ -30,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
   bool hasInteracted = false;
+  bool _isEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         onPressed: () async {
           setState(() {
             _isSubmitting = true;
+            _isEnabled = false;
           });
           try {
             String message = await registerController.submitForm();
@@ -206,8 +208,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
           setState(() {
             _isSubmitting = false;
+            _isEnabled = true;
           });
         },
+        loadingWidget: registerController.isLoading.value
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : null,
+        isEnabled: _isEnabled,
       ),
     );
   }

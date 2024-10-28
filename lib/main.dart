@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/auth_screens_binding/send_password_reset_code_binding.dart';
@@ -21,7 +20,7 @@ import 'package:toastification/toastification.dart';
 import 'src/view/screens/entry_screens/splash_screen.dart';
 
 void main() async {
-  debugPaintSizeEnabled = true;
+//  debugPaintSizeEnabled = true;
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
   await AppTranslation.loadTranslations();
@@ -49,7 +48,7 @@ class AlHudaAcademy extends StatelessWidget {
         locale: localizationController.initialLanguage,
         translations: AppTranslation(),
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.resetPassword,
+        initialRoute: AppRoutes.splachRoute,
         getPages: [
           GetPage(
             name: AppRoutes.splachRoute,

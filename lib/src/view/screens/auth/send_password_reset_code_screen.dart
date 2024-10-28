@@ -30,6 +30,7 @@ class _SendPasswordResetCodeScreenState
   final _formKey = GlobalKey<FormState>();
 
   bool _isSubmitting = false;
+  bool _isEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +175,7 @@ class _SendPasswordResetCodeScreenState
         onPressed: () async {
           setState(() {
             _isSubmitting = true;
+            _isEnabled = false;
           });
 
           String? responseMessage;
@@ -188,9 +190,16 @@ class _SendPasswordResetCodeScreenState
             await _showDialog(context, DialogType.error, error.toString());
           }
           setState(() {
-            _isSubmitting = true;
+            _isSubmitting = false;
+            _isEnabled = true;
           });
         },
+        loadingWidget: sendPasswordResetCodeController.isLoading.value
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : null,
+        isEnabled: _isEnabled,
       ),
     );
   }
