@@ -2,10 +2,10 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/login_controller.dart';
-import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
@@ -24,7 +24,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final AppService appService = Get.find<AppService>();
   final LoginController loginController = Get.find();
-  late String _fontFamily;
 
   bool _isSubmitting = false;
 
@@ -49,67 +48,54 @@ class _LoginScreenState extends State<LoginScreen> {
               child: SingleChildScrollView(
                 child: Obx(
                   () {
-                    final isArabic = appService.isRtl.value;
-                    debugPrint(isArabic.toString());
-
-                    final TextDirection textDirection =
-                        isArabic ? TextDirection.rtl : TextDirection.ltr;
-
-                    final TextDirection textFormDirection =
-                        isArabic ? TextDirection.ltr : TextDirection.rtl;
-                    final TextDirection hintTextDirection = textFormDirection;
-
-                    final String fontFamily =
-                        isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
-                    _fontFamily = fontFamily;
-                    debugPrint(_fontFamily);
-                    return Directionality(
-                      textDirection: textDirection,
-                      child: Form(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _buildGreetingText(fontFamily),
-                            const SizedBox(
-                              height: 24.0,
-                            ),
-                            _buildWelcomeBackText(fontFamily),
-                            _buildProjectLogo(),
-                            Column(
-                              children: [
-                                _buildEmailField(
-                                    textFormDirection, hintTextDirection),
-                                const SizedBox(
-                                  height: 12.0,
-                                ),
-                                _buildPasswordField(
-                                    textFormDirection, hintTextDirection),
-                                const SizedBox(
-                                  height: 16.0,
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: _buildForgetPasswordText(fontFamily),
-                                ),
-                                const SizedBox(
-                                  height: 16.0,
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: _buildLoginButton(context, fontFamily),
-                                ),
-                                const SizedBox(
-                                  height: 24.0,
-                                ),
-                                Container(
-                                  alignment: Alignment.topLeft,
-                                  child: _buildDontHaveAccountText(fontFamily),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
+                    return Form(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _buildGreetingText(),
+                          const SizedBox(
+                            height: 24.0,
+                          ),
+                          _buildWelcomeBackText(),
+                          Container(
+                            alignment: Alignment.topCenter,
+                            child: _buildProjectLogo(),
+                          ),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          Column(
+                            children: [
+                              _buildEmailField(),
+                              const SizedBox(
+                                height: 12.0,
+                              ),
+                              _buildPasswordField(),
+                              const SizedBox(
+                                height: 16.0,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: _buildForgetPasswordText(),
+                              ),
+                              const SizedBox(
+                                height: 16.0,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: _buildLoginButton(context),
+                              ),
+                              const SizedBox(
+                                height: 24.0,
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: _buildDontHaveAccountText(),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     );
                   },
@@ -122,18 +108,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildGreetingText(String fontFamily) {
+  Widget _buildGreetingText() {
     return CustomGoogleTextWidget(
-      fontFamily: fontFamily,
       text: LoginScreenLanguageConstants.greeting.tr,
       color: AppColors.primaryColor,
       fontWeight: FontWeight.bold,
     );
   }
 
-  Widget _buildWelcomeBackText(String fontFamily) {
+  Widget _buildWelcomeBackText() {
     return CustomGoogleTextWidget(
-      fontFamily: fontFamily,
       text: LoginScreenLanguageConstants.welcomeBack.tr,
       color: AppColors.primaryColor,
       fontWeight: FontWeight.bold,
@@ -141,19 +125,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildProjectLogo() {
-    return FittedBox(
-      child: Image.asset(
-        AppImages.holyQuranLogo,
-        width: 250,
-        height: 250,
+    return SizedBox(
+      width: 240,
+      height: 240,
+      child: CustomProjectLogo(
+        imagePath: AppImages.holyQuranLogo,
+        width: 250.0,
+        height: 250.0,
+        text: SharedLanguageConstants.academyName.tr,
+        fontSize: 18.0,
       ),
     );
   }
 
-  Widget _buildEmailField(
-      TextDirection textFormDirection, TextDirection hintTextDirection) {
+  Widget _buildEmailField() {
     return CustomAuthTextFormField(
-      textFormDirection: textFormDirection,
       autovalidateMode: _isSubmitting
           ? AutovalidateMode.always
           : AutovalidateMode.onUserInteraction,
@@ -163,16 +149,11 @@ class _LoginScreenState extends State<LoginScreen> {
       textFormHintText: LoginScreenLanguageConstants.hintTextAuthEmail,
       iconName: Icons.email,
       colorIcon: AppColors.primaryColor,
-      hintTextDirection: hintTextDirection,
-      fontFamily: _fontFamily,
     );
   }
 
-  Widget _buildPasswordField(
-      TextDirection textFormDirection, TextDirection hintTextDirection) {
+  Widget _buildPasswordField() {
     return CustomAuthTextFormField(
-      fontFamily: _fontFamily,
-      textFormDirection: textFormDirection,
       autovalidateMode: _isSubmitting
           ? AutovalidateMode.always
           : AutovalidateMode.onUserInteraction,
@@ -184,11 +165,10 @@ class _LoginScreenState extends State<LoginScreen> {
       textFormHintText: LoginScreenLanguageConstants.hintTextAuthPassword,
       iconName: Icons.remove_red_eye,
       colorIcon: AppColors.primaryColor,
-      hintTextDirection: hintTextDirection,
     );
   }
 
-  Widget _buildForgetPasswordText(String fontFamily) {
+  Widget _buildForgetPasswordText() {
     return Container(
       alignment: Alignment.centerRight,
       child: CustomGoogleTextWidget(
@@ -196,12 +176,12 @@ class _LoginScreenState extends State<LoginScreen> {
         color: AppColors.primaryColor,
         fontSize: 18.0,
         textDecoration: TextDecoration.underline,
-        fontFamily: fontFamily,
+        onTap: loginController.navigateToForgetPasswordScreen,
       ),
     );
   }
 
-  Widget _buildLoginButton(BuildContext context, String fontFamily) {
+  Widget _buildLoginButton(BuildContext context) {
     return CustomAuthTextButton(
       onPressed: <Future>() async {
         setState(() {
@@ -218,9 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
             DialogType.success,
             LoginScreenLanguageConstants.successLoginMessage.tr,
             loginResult,
-            fontFamily,
           );
-          loginController.navigateToHomeSceen();
+          loginController.navigateToHomeScreen();
         } else if (loginResult ==
             "Validation failed, Please enter a valid username and email.") {
           if (!context.mounted) return;
@@ -229,7 +208,6 @@ class _LoginScreenState extends State<LoginScreen> {
             DialogType.error,
             LoginScreenLanguageConstants.loginFailedMessage.tr,
             LoginScreenLanguageConstants.invalidInputs.tr,
-            fontFamily,
           );
         } else {
           if (!context.mounted) return;
@@ -239,7 +217,6 @@ class _LoginScreenState extends State<LoginScreen> {
             DialogType.error,
             LoginScreenLanguageConstants.loginFailedMessage.tr,
             loginResult,
-            fontFamily,
           );
         }
         setState(() {
@@ -250,7 +227,6 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.primaryColor,
       buttonText: LoginScreenLanguageConstants.buttonTextLogin.tr,
       buttonTextColor: Colors.white,
-      fontFamily: fontFamily,
       fontSize: 18.0,
       fontWeight: FontWeight.bold,
       loadingWidget: loginController.isLoading.value
@@ -261,14 +237,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildDontHaveAccountText(String fontFamily) {
+  Widget _buildDontHaveAccountText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomGoogleTextWidget(
           text: LoginScreenLanguageConstants.dontHaveAnAccount.tr,
-          fontFamily: fontFamily,
           fontSize: 16.0,
           color: AppColors.primaryColor,
           fontWeight: FontWeight.bold,
@@ -279,12 +254,11 @@ class _LoginScreenState extends State<LoginScreen> {
         CustomGoogleTextWidget(
           textDecoration: TextDecoration.underline,
           text: LoginScreenLanguageConstants.newUser.tr,
-          fontFamily: fontFamily,
           fontSize: 16.0,
           color: AppColors.primaryColor,
           fontWeight: FontWeight.bold,
           onTap: () {
-            loginController.navigateToRegisterSceen();
+            loginController.navigateToRegisterScreen();
           },
         ),
       ],

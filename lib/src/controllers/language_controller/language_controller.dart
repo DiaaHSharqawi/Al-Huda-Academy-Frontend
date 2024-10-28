@@ -4,7 +4,7 @@ import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 
 class LanguageController extends GetxController {
   final AppService appService = Get.find<AppService>();
-  void navigateToLoginSceen() {
+  void navigateToLoginScreen() {
     //Get.offNamed('/auth/login');
     Get.toNamed(AppRoutes.login);
   }

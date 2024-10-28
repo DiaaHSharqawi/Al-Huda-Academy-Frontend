@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 
 class CustomLanguageButton extends StatelessWidget {
   final String buttonText;
+  final double fontSize;
   final VoidCallback onPressed;
 
   const CustomLanguageButton({
     super.key,
     required this.buttonText,
     required this.onPressed,
+    this.fontSize = 24.0,
   });
 
   @override
@@ -26,13 +29,10 @@ class CustomLanguageButton extends StatelessWidget {
           side: const BorderSide(color: Colors.white, width: 2),
         ),
       ),
-      child: Text(
-        buttonText,
-        style: const TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-        ),
+      child: CustomGoogleTextWidget(
+        text: buttonText,
+        fontWeight: FontWeight.bold,
+        fontSize: fontSize,
       ),
     );
   }

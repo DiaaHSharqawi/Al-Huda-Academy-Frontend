@@ -72,7 +72,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         AuthValidations.validateFullName,
                         textFormDirection,
                         hintTextDirection,
-                        fontFamily,
                       ),
                       const SizedBox(
                         height: 30.0,
@@ -85,30 +84,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         AuthValidations.validateEmail,
                         textFormDirection,
                         hintTextDirection,
-                        fontFamily,
                       ),
                       const SizedBox(height: 30.0),
                       _buildTextInputField(
-                          RegisterScreenLanguageConstants.phoneNumber.tr,
-                          RegisterScreenLanguageConstants.phoneNumberHint,
-                          Icons.phone_android_outlined,
-                          registerController.phoneController,
-                          AuthValidations.validatePhoneNumber,
-                          textFormDirection,
-                          hintTextDirection,
-                          fontFamily),
+                        RegisterScreenLanguageConstants.phoneNumber.tr,
+                        RegisterScreenLanguageConstants.phoneNumberHint,
+                        Icons.phone_android_outlined,
+                        registerController.phoneController,
+                        AuthValidations.validatePhoneNumber,
+                        textFormDirection,
+                        hintTextDirection,
+                      ),
                       const SizedBox(
                         height: 30.0,
                       ),
                       _buildResidenceFields(
                         textFormDirection,
                         hintTextDirection,
-                        fontFamily,
                       ),
                       const SizedBox(
                         height: 42.0,
                       ),
-                      _buildGenderSelection(fontFamily),
+                      _buildGenderSelection(),
                       const SizedBox(
                         height: 30.0,
                       ),
@@ -121,15 +118,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 30.0,
                       ),
                       _buildTextInputField(
-                          RegisterScreenLanguageConstants.password.tr,
-                          RegisterScreenLanguageConstants.passwordHint,
-                          Icons.lock_outline,
-                          registerController.passwordController,
-                          AuthValidations.validatePassword,
-                          textFormDirection,
-                          hintTextDirection,
-                          obscureText: true,
-                          fontFamily),
+                        RegisterScreenLanguageConstants.password.tr,
+                        RegisterScreenLanguageConstants.passwordHint,
+                        Icons.lock_outline,
+                        registerController.passwordController,
+                        AuthValidations.validatePassword,
+                        textFormDirection,
+                        hintTextDirection,
+                        obscureText: true,
+                      ),
                       const SizedBox(
                         height: 30.0,
                       ),
@@ -167,7 +164,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 DialogType.success,
                 AuthValidationsLanguageConstants.success.tr,
                 message,
-                'Almarai',
               );
               registerController.navigateToLoginScreen();
             } else if (message == "Please make sure to fill all fields!") {
@@ -178,7 +174,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AuthValidationsLanguageConstants.error.tr,
                 RegisterScreenLanguageConstants
                     .pleaseMakeSureToFillAllFields.tr,
-                fontFamily,
               );
             } else if (message ==
                 "Please make sure to upload your profile image.") {
@@ -189,7 +184,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AuthValidationsLanguageConstants.error.tr,
                 RegisterScreenLanguageConstants
                     .pleaseMakeSureToUploadYourProfileImage.tr,
-                fontFamily,
               );
             } else {
               if (!context.mounted) return;
@@ -198,7 +192,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 DialogType.error,
                 AuthValidationsLanguageConstants.error.tr,
                 message,
-                fontFamily,
               );
             }
           } catch (err) {
@@ -209,7 +202,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               DialogType.error,
               AuthValidationsLanguageConstants.error.tr,
               err.toString(),
-              fontFamily,
             );
           }
           setState(() {
@@ -223,14 +215,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _buildAgeField(TextDirection textDirection,
       TextDirection hintTextDirection, String fontFamily) {
     return _buildTextInputField(
-        RegisterScreenLanguageConstants.age.tr,
-        RegisterScreenLanguageConstants.enterTheAge.tr,
-        Icons.calendar_today,
-        registerController.ageController,
-        AuthValidations.validateAge,
-        hintTextDirection,
-        textDirection,
-        fontFamily);
+      RegisterScreenLanguageConstants.age.tr,
+      RegisterScreenLanguageConstants.enterTheAge.tr,
+      Icons.calendar_today,
+      registerController.ageController,
+      AuthValidations.validateAge,
+      hintTextDirection,
+      textDirection,
+    );
   }
 
   Widget _buildCreateNewAccountText(String fontFamily) {
@@ -249,7 +241,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       String? Function(String?) validator,
       TextDirection textFormDirection,
       TextDirection hintTextDirection,
-      String fontFamily,
       {bool obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,24 +253,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 12.0),
         CustomAuthTextFormField(
           textFormHintText: hint,
-          fontFamily: fontFamily,
           iconName: icon,
           colorIcon: AppColors.primaryColor,
-          hintTextDirection: hintTextDirection,
           controller: controller,
           textFormFieldValidator: validator,
           autovalidateMode: _isSubmitting
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
-          textFormDirection: textFormDirection,
           obscureText: obscureText,
         ),
       ],
     );
   }
 
-  Widget _buildResidenceFields(TextDirection textFormDirection,
-      TextDirection hintTextDirection, String fontFamily) {
+  Widget _buildResidenceFields(
+      TextDirection textFormDirection, TextDirection hintTextDirection) {
     return Column(
       children: [
         SizedBox(
@@ -294,17 +282,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           height: 16.0,
         ),
         CustomAuthTextFormField(
-          fontFamily: fontFamily,
           textFormHintText: RegisterScreenLanguageConstants.enterACountry.tr,
           iconName: Icons.public,
           colorIcon: AppColors.primaryColor,
-          hintTextDirection: hintTextDirection,
           controller: registerController.countryController,
           textFormFieldValidator: AuthValidations.validateCountry,
           autovalidateMode: _isSubmitting
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
-          textFormDirection: textFormDirection,
           obscureText: false,
         ),
         const SizedBox(height: 24.0),
@@ -312,21 +297,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           textFormHintText: RegisterScreenLanguageConstants.enterACity.tr,
           iconName: Icons.home,
           colorIcon: AppColors.primaryColor,
-          hintTextDirection: hintTextDirection,
           controller: registerController.cityController,
           textFormFieldValidator: AuthValidations.validateCity,
           autovalidateMode: _isSubmitting
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
-          textFormDirection: textFormDirection,
           obscureText: false,
-          fontFamily: fontFamily,
         ),
       ],
     );
   }
 
-  Widget _buildGenderSelection(String fontFamily) {
+  Widget _buildGenderSelection() {
     return Container(
       alignment: Alignment.topLeft,
       width: double.infinity,
@@ -351,7 +333,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               CustomGoogleTextWidget(
                 text: RegisterScreenLanguageConstants.enterTheGender.tr,
-                fontFamily: fontFamily,
                 fontSize: 16.0,
               ),
               Obx(() {
@@ -412,7 +393,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       RegisterScreenLanguageConstants.pleaseChooseTheGender.tr,
                   fontSize: 14.0,
                   color: Colors.red,
-                  fontFamily: fontFamily,
                 ),
               ),
             ),

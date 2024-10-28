@@ -64,12 +64,16 @@ class LoginController extends GetxController {
     }
   }
 
-  void navigateToHomeSceen() {
+  void navigateToHomeScreen() {
     Get.toNamed(AppRoutes.home);
   }
 
-  void navigateToRegisterSceen() {
+  void navigateToRegisterScreen() {
     Get.toNamed(AppRoutes.register);
+  }
+
+  void navigateToForgetPasswordScreen() {
+    Get.toNamed(AppRoutes.sendPasswordResetCode);
   }
 
   @override

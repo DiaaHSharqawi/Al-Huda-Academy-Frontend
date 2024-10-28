@@ -5,8 +5,10 @@ class SplashScreenLanguageConstants {
 
 class LangugeScreenLanguageConstants {
   static String chooseLanguage = "languge_screen.choose_language";
-  static String arabicText = "Arabic";
-  static String englishText = "English";
+  static String arabicText = "languge_screen.arabic_text";
+  static String englishText = "languge_screen.english_text";
+  static String engLanguageCode = "en";
+  static String arLanguageCode = "ar";
 }
 
 class LoginScreenLanguageConstants {
@@ -108,4 +110,31 @@ class AuthValidationsLanguageConstants {
   static String country = "auth_validations.country";
   static String gender = "auth_validations.gender";
   static String profileImage = "auth_validations.profile_image";*/
+}
+
+class SharedLanguageConstants {
+  static String academyName = "shared.academy_name";
+  static String email = "shared.email";
+}
+
+class SendPasswordResetCodeScreenLanguageConstants {
+  static String forgetPassword =
+      "send_password_reset_code_screen.forget_password";
+  static String forgetPasswordInstructions =
+      "send_password_reset_code_screen.forget_password_instructions";
+
+  static String email = "send_password_reset_code_screen.email";
+  static String hintEmailText = "name@example.com";
+
+  static String sendCode = "send_password_reset_code_screen.send_code";
+  static String passwordResetCodeSentToYourEmail =
+      "send_password_reset_code_screen.password_reset_code_sent_to_your_email";
+  static String codeAlreadySent =
+      "send_password_reset_code_screen.code_already_sent";
+
+  static String invalidCredentials =
+      "send_password_reset_code_screen.invalid_credentials";
+
+  static String pleaseMakeSureToFillAllFields =
+      "send_password_reset_code_screen.please_make_sure_to_fill_all_fields";
 }
