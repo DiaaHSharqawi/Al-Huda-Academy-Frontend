@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
@@ -6,20 +7,20 @@ class AuthValidations {
   static String? validateEmail(String? email) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
-        errorText: LoginScreenLanguageConstants.userIdentifierRequired.tr,
+        errorText: AuthValidationsLanguageConstants.userIdentifierRequired.tr,
       ),
       FormBuilderValidators.email(
-          errorText: LoginScreenLanguageConstants.enterAValidEmail.tr),
+          errorText: AuthValidationsLanguageConstants.enterAValidEmail.tr),
     ])(email);
   }
 
   static String? validatePassword(String? password) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
-          errorText: LoginScreenLanguageConstants.userPasswordRequired.tr),
+          errorText: AuthValidationsLanguageConstants.userPasswordRequired.tr),
       FormBuilderValidators.minLength(
         6,
-        errorText: LoginScreenLanguageConstants.enterAValidPassword.tr,
+        errorText: AuthValidationsLanguageConstants.enterAValidPassword.tr,
       )
     ])(password);
   }
@@ -92,6 +93,27 @@ class AuthValidations {
     ])(age);
   }
 
+  static String? validateVerificationCode(String? code) {
+    debugPrint("${code!.length} $code");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: AuthValidationsLanguageConstants.validationCodeRequired.tr,
+      ),
+      FormBuilderValidators.minLength(
+        4,
+        errorText: AuthValidationsLanguageConstants
+            .verificationCodeMustBeFourCharacters.tr,
+      ),
+      FormBuilderValidators.match(
+        RegExp(
+          r'^[^\s]{4}$',
+        ),
+        errorText: AuthValidationsLanguageConstants
+            .verificationCodeMustBeExactlyFourCharactersAndNoSpaces.tr,
+      ),
+    ])(code);
+  }
+
   static Map<String, String?>? validateAll(Map<String, String?> values) {
     Map<String, String?> errors = {};
 
@@ -129,7 +151,14 @@ class AuthValidations {
       final ageError = validateAge(values['age']);
       if (ageError != null) errors['age'] = ageError;
     }
-
+    if (values['verificationCode'] != null) {
+      final verificationCodeError =
+          validateVerificationCode(values['verificationCode']);
+      if (verificationCodeError != null) {
+        errors['verificationCode'] = verificationCodeError;
+      }
+    }
+    debugPrint(errors.toString());
     return errors.isNotEmpty ? errors : null;
   }
 }

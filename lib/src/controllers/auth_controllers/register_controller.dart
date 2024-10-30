@@ -14,7 +14,6 @@ class RegisterController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController birthdateController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
@@ -27,6 +26,12 @@ class RegisterController extends GetxController {
   RegisterController(this._registerService);
 
   var isLoading = false.obs;
+
+  var isSubmitting = false.obs;
+  var hasInteracted = false.obs;
+  var isEnabled = true.obs;
+
+  var isObscureText = true.obs;
 
   void setGender(Gender? gender) {
     selectedGender.value = gender;
@@ -90,6 +95,7 @@ class RegisterController extends GetxController {
   }
 
   void navigateToLoginScreen() {
-    Get.toNamed(AppRoutes.login);
+    // TODO : 1. Make it later Navigate to Home screen,
+    Get.offAllNamed(AppRoutes.login);
   }
 }

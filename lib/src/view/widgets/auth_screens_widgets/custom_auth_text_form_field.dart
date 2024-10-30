@@ -13,6 +13,7 @@ class CustomAuthTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? textFormFieldValidator;
   final AutovalidateMode autovalidateMode;
+  final VoidCallback? onTap;
 
   const CustomAuthTextFormField({
     super.key,
@@ -24,6 +25,7 @@ class CustomAuthTextFormField extends StatelessWidget {
     required this.controller,
     required this.textFormFieldValidator,
     required this.autovalidateMode,
+    this.onTap,
   });
 
   @override
@@ -56,9 +58,12 @@ class CustomAuthTextFormField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        prefixIcon: Icon(
-          iconName,
-          color: colorIcon,
+        prefixIcon: InkWell(
+          onTap: onTap,
+          child: Icon(
+            iconName,
+            color: colorIcon,
+          ),
         ),
       ),
       textDirection: textFormDirection,

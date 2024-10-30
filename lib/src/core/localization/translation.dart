@@ -8,9 +8,9 @@ class AppTranslation extends Translations {
 
   static Future<void> loadTranslations() async {
     try {
-      String jsonContent = await rootBundle.loadString(
-          'assets/translation.json'); // Updated path to match your asset declaration
-      debugPrint("Raw JSON Content: $jsonContent"); // Debugging output
+      String jsonContent =
+          await rootBundle.loadString('assets/translation.json');
+      debugPrint("Raw JSON Content: $jsonContent");
 
       Map<String, dynamic> jsonMap = jsonDecode(jsonContent);
       translations['en'] = _extractTranslations(jsonMap, 'en');
@@ -31,7 +31,6 @@ class AppTranslation extends Translations {
       if (value is Map) {
         value.forEach((subKey, subValue) {
           if (subValue is Map && subValue.containsKey(lang)) {
-            // Create a key in the format 'parent_key.child_key'
             langMap['$key.$subKey'] = subValue[lang];
           }
         });

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/binding/auth_screens_binding/send_password_reset_code_binding.dart';
+import 'package:moltqa_al_quran_frontend/src/binding/auth_screens_binding/reset_password_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/auth_screens_binding/login_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/auth_screens_binding/register_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/entry_screens_binding/language_binding.dart';
@@ -48,10 +48,10 @@ class AlHudaAcademy extends StatelessWidget {
         locale: localizationController.initialLanguage,
         translations: AppTranslation(),
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.splachRoute,
+        initialRoute: AppRoutes.splach,
         getPages: [
           GetPage(
-            name: AppRoutes.splachRoute,
+            name: AppRoutes.splach,
             page: () => SplashScreen(),
             binding: SplashBinding(),
           ),
@@ -77,7 +77,9 @@ class AlHudaAcademy extends StatelessWidget {
           GetPage(
             name: AppRoutes.sendPasswordResetCode,
             page: () => const SendPasswordResetCodeScreen(),
-            binding: SendPasswordResetCodeBinding(),
+            binding: ResetPasswordBinding(),
+            transition: Transition.rightToLeftWithFade,
+            transitionDuration: const Duration(milliseconds: 1000),
           ),
           GetPage(
             name: AppRoutes.home,
@@ -88,6 +90,9 @@ class AlHudaAcademy extends StatelessWidget {
           GetPage(
             name: AppRoutes.resetPassword,
             page: () => const ResetPasswordScreen(),
+            binding: ResetPasswordBinding(),
+            transition: Transition.upToDown,
+            transitionDuration: const Duration(milliseconds: 1000),
           ),
         ],
       ),

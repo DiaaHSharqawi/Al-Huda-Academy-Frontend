@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 
@@ -12,10 +13,14 @@ class SplashController extends GetxController {
   }
 
   void _navigateAfterDelay() async {
-    await Future.delayed(
-      Duration(seconds: splashScreenDuration),
-    );
-    _navigateToLanguageSelection();
+    try {
+      await Future.delayed(
+        Duration(seconds: splashScreenDuration),
+      );
+      _navigateToLanguageSelection();
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
   void _navigateToLanguageSelection() {

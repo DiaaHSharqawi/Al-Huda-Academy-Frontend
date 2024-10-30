@@ -62,7 +62,7 @@ class LanguageScreen extends GetView<LanguageController> {
 
   Widget _buildLanguageButton(String buttonText, String languageCode) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 32.0),
       child: CustomLanguageButton(
         buttonText: buttonText,
         fontSize: 20.0,

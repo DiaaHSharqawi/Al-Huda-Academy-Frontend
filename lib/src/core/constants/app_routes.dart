@@ -1,5 +1,5 @@
 class AppRoutes {
-  static String splachRoute = "/";
+  static String splach = "/";
 
   static String language = "/language";
 

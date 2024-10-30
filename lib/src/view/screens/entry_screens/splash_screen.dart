@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
-import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import '../../../controllers/splash_controller.dart';
 
 import '../../../core/constants/app_images.dart';
@@ -28,10 +27,10 @@ class SplashScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildImage(),
                   SizedBox(
-                    height: 64.0,
-                    child: _buildAcademyNameText(),
+                    width: 400,
+                    height: 400,
+                    child: _buildImage(),
                   ),
                   const SizedBox(
                     height: 50.0,
@@ -55,33 +54,20 @@ class SplashScreen extends StatelessWidget {
   Widget _buildLoader(BuildContext context) {
     return Theme.of(context).platform == TargetPlatform.iOS
         ? const CupertinoActivityIndicator(
-            color: Colors.black,
+            color: AppColors.primaryColor,
             radius: 20.0,
           )
         : const CircularProgressIndicator(
-            color: Colors.black,
+            color: AppColors.primaryColor,
           );
   }
 
   Widget _buildImage() {
-    return const CustomProjectLogo(
+    return CustomProjectLogo(
       imagePath: AppImages.holyQuranLogo,
       width: 350.0,
       height: 350.0,
-    );
-  }
-
-  Widget _buildAcademyNameText() {
-    return Container(
-      height: 24.0,
-      alignment: Alignment.center,
-      child: CustomGoogleTextWidget(
-        fontSize: 24.0,
-        color: Colors.black,
-        textAlign: TextAlign.center,
-        text: SplashScreenLanguageConstants.academyName.tr,
-        fontWeight: FontWeight.bold,
-      ),
+      text: SharedLanguageConstants.academyName.tr,
     );
   }
 }

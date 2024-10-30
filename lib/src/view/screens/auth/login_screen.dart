@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/login_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
-import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
@@ -14,29 +13,14 @@ import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/c
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_images.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final AppService appService = Get.find<AppService>();
-  final LoginController loginController = Get.find();
-
-  bool _isSubmitting = false;
-  bool _isEnabled = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.white,
@@ -47,59 +31,63 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
-                child: Obx(
-                  () {
-                    return Form(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                child: Form(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildGreetingText(),
+                      const SizedBox(
+                        height: 24.0,
+                      ),
+                      _buildWelcomeBackText(),
+                      Container(
+                        alignment: Alignment.topCenter,
+                        child: _buildProjectLogo(),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Column(
                         children: [
-                          _buildGreetingText(),
-                          const SizedBox(
-                            height: 24.0,
+                          Obx(
+                            () {
+                              return Column(
+                                children: [
+                                  _buildEmailField(),
+                                  const SizedBox(
+                                    height: 12.0,
+                                  ),
+                                  _buildPasswordField(),
+                                  const SizedBox(
+                                    height: 16.0,
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                          _buildWelcomeBackText(),
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: _buildProjectLogo(),
+                          SizedBox(
+                            width: double.infinity,
+                            child: _buildForgetPasswordText(),
                           ),
                           const SizedBox(
                             height: 16.0,
                           ),
-                          Column(
-                            children: [
-                              _buildEmailField(),
-                              const SizedBox(
-                                height: 12.0,
-                              ),
-                              _buildPasswordField(),
-                              const SizedBox(
-                                height: 16.0,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: _buildForgetPasswordText(),
-                              ),
-                              const SizedBox(
-                                height: 16.0,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: _buildLoginButton(context),
-                              ),
-                              const SizedBox(
-                                height: 24.0,
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: _buildDontHaveAccountText(),
-                              ),
-                            ],
-                          )
+                          SizedBox(
+                            width: double.infinity,
+                            child: _buildLoginButton(context),
+                          ),
+                          const SizedBox(
+                            height: 24.0,
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: _buildDontHaveAccountText(),
+                          ),
                         ],
-                      ),
-                    );
-                  },
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -141,11 +129,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildEmailField() {
     return CustomAuthTextFormField(
-      autovalidateMode: _isSubmitting
+      autovalidateMode: controller.isSubmitting.value
           ? AutovalidateMode.always
           : AutovalidateMode.onUserInteraction,
       textFormFieldValidator: AuthValidations.validateEmail,
-      controller: loginController.userIdentifierController,
+      controller: controller.userIdentifierController,
       textFormLabelText: LoginScreenLanguageConstants.formFieldsInputsEmail.tr,
       textFormHintText: LoginScreenLanguageConstants.hintTextAuthEmail,
       iconName: Icons.email,
@@ -154,19 +142,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildPasswordField() {
-    return CustomAuthTextFormField(
-      autovalidateMode: _isSubmitting
-          ? AutovalidateMode.always
-          : AutovalidateMode.onUserInteraction,
-      textFormFieldValidator: AuthValidations.validatePassword,
-      controller: loginController.passwordController,
-      obscureText: true,
-      textFormLabelText:
-          LoginScreenLanguageConstants.formFieldsInputsPassword.tr.tr,
-      textFormHintText: LoginScreenLanguageConstants.hintTextAuthPassword,
-      iconName: Icons.remove_red_eye,
-      colorIcon: AppColors.primaryColor,
-    );
+    return Obx(() {
+      return CustomAuthTextFormField(
+        autovalidateMode: controller.isSubmitting.value
+            ? AutovalidateMode.always
+            : AutovalidateMode.onUserInteraction,
+        textFormFieldValidator: AuthValidations.validatePassword,
+        controller: controller.passwordController,
+        obscureText: controller.isObscureText.value,
+        textFormLabelText:
+            LoginScreenLanguageConstants.formFieldsInputsPassword.tr.tr,
+        textFormHintText: LoginScreenLanguageConstants.hintTextAuthPassword,
+        iconName: controller.isObscureText.value
+            ? Icons.visibility_off_rounded
+            : Icons.remove_red_eye,
+        colorIcon: AppColors.primaryColor,
+        onTap: () {
+          controller.isObscureText.value = !controller.isObscureText.value;
+        },
+      );
+    });
   }
 
   Widget _buildForgetPasswordText() {
@@ -177,68 +172,77 @@ class _LoginScreenState extends State<LoginScreen> {
         color: AppColors.primaryColor,
         fontSize: 18.0,
         textDecoration: TextDecoration.underline,
-        onTap: loginController.navigateToForgetPasswordScreen,
+        onTap: controller.navigateToForgetPasswordScreen,
       ),
     );
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    return CustomAuthTextButton(
-      onPressed: <Future>() async {
-        setState(() {
-          _isSubmitting = true;
-          _isEnabled = false;
-        });
-        if (!context.mounted) return;
-        String loginResult = await loginController.signIn(context);
-        debugPrint(loginResult);
+    return Obx(() {
+      return CustomAuthTextButton(
+        onPressed: <Future>() async {
+          controller.isSubmitting.value = true;
+          controller.isEnabled.value = false;
+          debugPrint("===> ${controller.isSubmitting.value}");
+          if (!context.mounted) return;
+          String loginResult = await controller.signIn(context);
+          debugPrint(loginResult);
 
-        if (loginResult == "Login successful!") {
-          if (!context.mounted) return;
-          await CustomAwesomeDialog.showAwesomeDialog(
-            context,
-            DialogType.success,
-            LoginScreenLanguageConstants.successLoginMessage.tr,
-            loginResult,
-          );
-          loginController.navigateToHomeScreen();
-        } else if (loginResult ==
-            "Validation failed, Please enter a valid username and email.") {
-          if (!context.mounted) return;
-          await CustomAwesomeDialog.showAwesomeDialog(
-            context,
-            DialogType.error,
-            LoginScreenLanguageConstants.loginFailedMessage.tr,
-            LoginScreenLanguageConstants.invalidInputs.tr,
-          );
-        } else {
-          if (!context.mounted) return;
+          if (loginResult == "Login successful!") {
+            if (!context.mounted) return;
+            await CustomAwesomeDialog.showAwesomeDialog(
+              context,
+              DialogType.success,
+              AuthValidationsLanguageConstants.success.tr,
+              LoginScreenLanguageConstants.successLoginMessage.tr,
+            );
+            controller.navigateToHomeScreen();
+          } else if (loginResult ==
+              "Validation failed, Please enter a valid username and email.") {
+            if (!context.mounted) return;
+            await CustomAwesomeDialog.showAwesomeDialog(
+              context,
+              DialogType.error,
+              LoginScreenLanguageConstants.loginFailedMessage.tr,
+              LoginScreenLanguageConstants.invalidInputs.tr,
+            );
+          } else if (loginResult ==
+              "Invalid credentials. Please check your email and password, then try again.") {
+            if (!context.mounted) return;
+            await CustomAwesomeDialog.showAwesomeDialog(
+              context,
+              DialogType.error,
+              AuthValidationsLanguageConstants.error.tr,
+              LoginScreenLanguageConstants.invalidCredentials.tr,
+            );
+          } else {
+            if (!context.mounted) return;
 
-          await CustomAwesomeDialog.showAwesomeDialog(
-            context,
-            DialogType.error,
-            LoginScreenLanguageConstants.loginFailedMessage.tr,
-            loginResult,
-          );
-        }
-        setState(() {
-          _isSubmitting = false;
-          _isEnabled = true;
-        });
-      },
-      foregroundColor: Colors.white,
-      backgroundColor: AppColors.primaryColor,
-      buttonText: LoginScreenLanguageConstants.buttonTextLogin.tr,
-      buttonTextColor: Colors.white,
-      fontSize: 18.0,
-      fontWeight: FontWeight.bold,
-      loadingWidget: loginController.isLoading.value
-          ? const CircularProgressIndicator(
-              color: Colors.white,
-            )
-          : null,
-      isEnabled: _isEnabled,
-    );
+            await CustomAwesomeDialog.showAwesomeDialog(
+              context,
+              DialogType.error,
+              LoginScreenLanguageConstants.loginFailedMessage.tr,
+              loginResult,
+            );
+          }
+
+          controller.isSubmitting.value = false;
+          controller.isEnabled.value = true;
+        },
+        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primaryColor,
+        buttonText: LoginScreenLanguageConstants.buttonTextLogin.tr,
+        buttonTextColor: Colors.white,
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        loadingWidget: controller.isLoading.value
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : null,
+        isEnabled: controller.isEnabled.value,
+      );
+    });
   }
 
   Widget _buildDontHaveAccountText() {
@@ -262,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
           color: AppColors.primaryColor,
           fontWeight: FontWeight.bold,
           onTap: () {
-            loginController.navigateToRegisterScreen();
+            controller.navigateToRegisterScreen();
           },
         ),
       ],

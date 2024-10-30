@@ -13,6 +13,12 @@ class LoginController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
 
   var isLoading = false.obs;
+  var isSubmitting = false.obs;
+
+  var isEnabled = true.obs;
+
+  var isObscureText = true.obs;
+
   var user = Rxn<UserModel>();
 
   final LoginService _loginService = LoginService();
@@ -74,12 +80,5 @@ class LoginController extends GetxController {
 
   void navigateToForgetPasswordScreen() {
     Get.toNamed(AppRoutes.sendPasswordResetCode);
-  }
-
-  @override
-  void onClose() {
-    userIdentifierController.dispose();
-    passwordController.dispose();
-    super.onClose();
   }
 }

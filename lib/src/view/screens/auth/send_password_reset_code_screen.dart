@@ -1,11 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/send_password_reset_code_controller.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/reset_password_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
-import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
@@ -13,29 +12,14 @@ import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 
-class SendPasswordResetCodeScreen extends StatefulWidget {
+class SendPasswordResetCodeScreen extends GetView<ResetPasswordController> {
   const SendPasswordResetCodeScreen({super.key});
-
-  @override
-  State<SendPasswordResetCodeScreen> createState() =>
-      _SendPasswordResetCodeScreenState();
-}
-
-class _SendPasswordResetCodeScreenState
-    extends State<SendPasswordResetCodeScreen> {
-  final SendPasswordResetCodeController sendPasswordResetCodeController =
-      Get.find();
-
-  final AppService appService = Get.find<AppService>();
-  final _formKey = GlobalKey<FormState>();
-
-  bool _isSubmitting = false;
-  bool _isEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           toolbarHeight: 50,
           backgroundColor: AppColors.primaryBackgroundColor,
@@ -53,29 +37,19 @@ class _SendPasswordResetCodeScreenState
                   const SizedBox(
                     height: 48.0,
                   ),
-                  Obx(() {
-                    final isArabic = appService.isRtl.value;
-                    debugPrint(isArabic.toString());
-                    final TextDirection textDirection =
-                        isArabic ? TextDirection.rtl : TextDirection.ltr;
-
-                    return Directionality(
-                      textDirection: textDirection,
-                      child: Column(
-                        children: [
-                          _buildForgetPasswordText(),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          _buildPasswordResetInstructionsText(),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          _buildEmailForm(),
-                        ],
+                  Column(
+                    children: [
+                      _buildForgetPasswordText(),
+                      const SizedBox(
+                        height: 16.0,
                       ),
-                    );
-                  }),
+                      _buildPasswordResetInstructionsText(),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      _buildEmailForm(context),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -118,9 +92,8 @@ class _SendPasswordResetCodeScreenState
     );
   }
 
-  Widget _buildEmailForm() {
+  Widget _buildEmailForm(BuildContext context) {
     return Form(
-      key: _formKey,
       child: Column(
         children: [
           _buildEmailText(),
@@ -154,54 +127,54 @@ class _SendPasswordResetCodeScreenState
       iconName: Icons.email,
       colorIcon: AppColors.primaryColor,
       obscureText: false,
-      controller: sendPasswordResetCodeController.emailController,
+      controller: controller.emailController,
       textFormFieldValidator: AuthValidations.validateEmail,
-      autovalidateMode: _isSubmitting
+      autovalidateMode: controller.isSubmitting.value
           ? AutovalidateMode.always
           : AutovalidateMode.onUserInteraction,
     );
   }
 
   Widget _buildSendCodeButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: CustomAuthTextButton(
-        foregroundColor: Colors.white,
-        backgroundColor: AppColors.primaryColor,
-        buttonText: SendPasswordResetCodeScreenLanguageConstants.sendCode.tr,
-        buttonTextColor: Colors.white,
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-        onPressed: () async {
-          setState(() {
-            _isSubmitting = true;
-            _isEnabled = false;
-          });
+    return Obx(() {
+      return SizedBox(
+        width: double.infinity,
+        child: CustomAuthTextButton(
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primaryColor,
+          buttonText: SendPasswordResetCodeScreenLanguageConstants.sendCode.tr,
+          buttonTextColor: Colors.white,
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          onPressed: () async {
+            // controller.navigateToResetPasswordScreen();
 
-          String? responseMessage;
-          try {
-            responseMessage =
-                await sendPasswordResetCodeController.sendPasswordResetCode();
-            if (!context.mounted) return;
-            await _handleResponse(responseMessage, context);
-          } catch (error) {
-            debugPrint(error.toString());
-            if (!context.mounted) return;
-            await _showDialog(context, DialogType.error, error.toString());
-          }
-          setState(() {
-            _isSubmitting = false;
-            _isEnabled = true;
-          });
-        },
-        loadingWidget: sendPasswordResetCodeController.isLoading.value
-            ? const CircularProgressIndicator(
-                color: Colors.white,
-              )
-            : null,
-        isEnabled: _isEnabled,
-      ),
-    );
+            controller.isSubmitting.value = true;
+            controller.isEnabled.value = false;
+
+            String? responseMessage;
+            try {
+              responseMessage = await controller.sendPasswordResetCode();
+              if (!context.mounted) return;
+              await _handleResponse(responseMessage, context);
+            } catch (error) {
+              debugPrint(error.toString());
+              if (!context.mounted) return;
+              await _showDialog(context, DialogType.error, error.toString());
+            }
+
+            controller.isSubmitting.value = false;
+            controller.isEnabled.value = true;
+          },
+          loadingWidget: controller.isLoading.value
+              ? const CircularProgressIndicator(
+                  color: Colors.white,
+                )
+              : null,
+          isEnabled: controller.isEnabled.value,
+        ),
+      );
+    });
   }
 
   Future<void> _handleResponse(
@@ -217,7 +190,7 @@ class _SendPasswordResetCodeScreenState
             SendPasswordResetCodeScreenLanguageConstants
                 .passwordResetCodeSentToYourEmail.tr,
           );
-          sendPasswordResetCodeController.navigateToResetPasswordScreen();
+          controller.navigateToResetPasswordScreen();
           break;
         }
       case "A password reset code has already been sent to your email. Please check your inbox or request a new code after a few minutes.":
@@ -226,6 +199,7 @@ class _SendPasswordResetCodeScreenState
           DialogType.error,
           SendPasswordResetCodeScreenLanguageConstants.codeAlreadySent.tr,
         );
+        controller.navigateToResetPasswordScreen();
         break;
       case "Invalid credentials. Please check your email, then try again.":
         await _showDialog(

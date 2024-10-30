@@ -38,6 +38,9 @@ class LoginScreenLanguageConstants {
   static String successLoginMessage = "login_screen.success_login_message";
   static String loginFailedMessage = "login_screen.login_failed_message";
   static String invalidInputs = "login_screen.invalid_inputs";
+
+  static String invalidCredentials =
+      "login_screen.invalid_credentials_server_error_message";
 }
 
 class RegisterScreenLanguageConstants {
@@ -73,6 +76,9 @@ class RegisterScreenLanguageConstants {
 
   static String pleaseMakeSureToUploadYourProfileImage =
       "register_screen.please_make_sure_to_upload_your_profile_image";
+
+  static String userRegisteredSuccessfully =
+      "register_screen.user_registered_successfully";
 }
 
 class AuthValidationsLanguageConstants {
@@ -101,15 +107,22 @@ class AuthValidationsLanguageConstants {
   static String error = "auth_validations.error";
   static String success = "auth_validations.success";
 
-/*  static String fullName = "auth_validations.full_name";
-  static String email = "auth_validations.email";
-  static String password = "auth_validations.password";
-  static String age = "auth_validations.age";
-  static String phone = "auth_validations.phone";
-  static String city = "auth_validations.city";
-  static String country = "auth_validations.country";
-  static String gender = "auth_validations.gender";
-  static String profileImage = "auth_validations.profile_image";*/
+  static String enterAValidPassword = "auth_validations.enter_a_valid_password";
+  static String userPasswordRequired =
+      "auth_validations.user_password_required";
+
+  static String userIdentifierRequired =
+      "auth_validations.user_Identifier_required";
+
+  static String enterAValidEmail = "auth_validations.enter_a_valid_email";
+
+  static String validationCodeRequired =
+      "reset_password_screen.validation_code_required";
+
+  static String verificationCodeMustBeFourCharacters =
+      "auth_validations.verification_code_must_be_four_characters";
+  static String verificationCodeMustBeExactlyFourCharactersAndNoSpaces =
+      "reset_password_screen.verification_code_must_be_exactly_four_characters_and_no_spaces";
 }
 
 class SharedLanguageConstants {
@@ -137,4 +150,15 @@ class SendPasswordResetCodeScreenLanguageConstants {
 
   static String pleaseMakeSureToFillAllFields =
       "send_password_reset_code_screen.please_make_sure_to_fill_all_fields";
+}
+
+class ResetPasswordScreenLanguageConstants {
+  static String passowrd = "reset_password_screen.password";
+  static String passwordHintText = "******";
+
+  static String verifyCode = "reset_password_screen.verify_code";
+  static String invalidOrExpiredCode =
+      "reset_password_screen.invalid_or_expired_code";
+  static String passwordResetSuccessfully =
+      "reset_password_screen.password_reset_successfully";
 }

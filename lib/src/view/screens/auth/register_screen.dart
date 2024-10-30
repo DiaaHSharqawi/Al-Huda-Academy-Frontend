@@ -8,7 +8,6 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
-import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_image_picker.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
@@ -17,239 +16,185 @@ import 'package:moltqa_al_quran_frontend/src/data/model/gender.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends GetView<RegisterController> {
   const RegisterScreen({super.key});
-
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
-  final RegisterController registerController = Get.find();
-  final AppService appService = Get.find<AppService>();
-  final _formKey = GlobalKey<FormState>();
-  bool _isSubmitting = false;
-  bool hasInteracted = false;
-  bool _isEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Obx(() {
-      final isArabic = appService.isRtl.value;
-      debugPrint(isArabic.toString());
-      final TextDirection textDirection =
-          isArabic ? TextDirection.rtl : TextDirection.ltr;
-
-      final TextDirection textFormDirection =
-          isArabic ? TextDirection.ltr : TextDirection.rtl;
-
-      debugPrint(textDirection.toString());
-      final TextDirection hintTextDirection = textFormDirection;
-
-      final String fontFamily =
-          isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
-      return Directionality(
-        textDirection: textDirection,
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 100,
-            backgroundColor: AppColors.primaryBackgroundColor,
-            title: _buildCreateNewAccountText(fontFamily),
-          ),
+      return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 100,
           backgroundColor: AppColors.primaryBackgroundColor,
-          body: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: SingleChildScrollView(
-              child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      _buildProfileImagePicker(),
-                      _buildTextInputField(
-                        RegisterScreenLanguageConstants.fullName.tr,
-                        RegisterScreenLanguageConstants.enterAFullName.tr,
-                        Icons.perm_identity,
-                        registerController.fullNameController,
-                        AuthValidations.validateFullName,
-                        textFormDirection,
-                        hintTextDirection,
-                      ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildTextInputField(
-                        RegisterScreenLanguageConstants.email.tr,
-                        RegisterScreenLanguageConstants.hintEmail,
-                        Icons.email,
-                        registerController.emailController,
-                        AuthValidations.validateEmail,
-                        textFormDirection,
-                        hintTextDirection,
-                      ),
-                      const SizedBox(height: 30.0),
-                      _buildTextInputField(
-                        RegisterScreenLanguageConstants.phoneNumber.tr,
-                        RegisterScreenLanguageConstants.phoneNumberHint,
-                        Icons.phone_android_outlined,
-                        registerController.phoneController,
-                        AuthValidations.validatePhoneNumber,
-                        textFormDirection,
-                        hintTextDirection,
-                      ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildResidenceFields(
-                        textFormDirection,
-                        hintTextDirection,
-                      ),
-                      const SizedBox(
-                        height: 42.0,
-                      ),
-                      _buildGenderSelection(),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildAgeField(
-                        textFormDirection,
-                        hintTextDirection,
-                        fontFamily,
-                      ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildTextInputField(
-                        RegisterScreenLanguageConstants.password.tr,
-                        RegisterScreenLanguageConstants.passwordHint,
-                        Icons.lock_outline,
-                        registerController.passwordController,
-                        AuthValidations.validatePassword,
-                        textFormDirection,
-                        hintTextDirection,
-                        obscureText: true,
-                      ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildSaveDataButton(context, fontFamily),
-                    ],
-                  )),
-            ),
+          title: _buildCreateNewAccountText(),
+        ),
+        backgroundColor: AppColors.primaryBackgroundColor,
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SingleChildScrollView(
+            child: Form(
+                child: Column(
+              children: [
+                _buildProfileImagePicker(),
+                _buildTextInputField(
+                  RegisterScreenLanguageConstants.fullName.tr,
+                  RegisterScreenLanguageConstants.enterAFullName.tr,
+                  Icons.perm_identity,
+                  controller.fullNameController,
+                  AuthValidations.validateFullName,
+                ),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                _buildTextInputField(
+                  RegisterScreenLanguageConstants.email.tr,
+                  RegisterScreenLanguageConstants.hintEmail,
+                  Icons.email,
+                  controller.emailController,
+                  AuthValidations.validateEmail,
+                ),
+                const SizedBox(height: 30.0),
+                _buildTextInputField(
+                  RegisterScreenLanguageConstants.phoneNumber.tr,
+                  RegisterScreenLanguageConstants.phoneNumberHint,
+                  Icons.phone_android_outlined,
+                  controller.phoneController,
+                  AuthValidations.validatePhoneNumber,
+                ),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                _buildResidenceFields(),
+                const SizedBox(
+                  height: 42.0,
+                ),
+                _buildGenderSelection(),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                _buildAgeField(),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                _buildPasswordField(
+                  RegisterScreenLanguageConstants.password.tr,
+                  RegisterScreenLanguageConstants.passwordHint,
+                  Icons.lock_outline,
+                  controller.passwordController,
+                  AuthValidations.validatePassword,
+                  obscureText: true,
+                ),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                _buildSaveDataButton(context),
+              ],
+            )),
           ),
         ),
       );
     }));
   }
 
-  Widget _buildSaveDataButton(BuildContext context, String fontFamily) {
-    hasInteracted = true;
+  Widget _buildSaveDataButton(BuildContext context) {
+    controller.hasInteracted.value = true;
     return SizedBox(
       width: double.infinity,
-      child: CustomAuthTextButton(
-        foregroundColor: Colors.white,
-        backgroundColor: AppColors.primaryColor,
-        buttonText: RegisterScreenLanguageConstants.saveData.tr,
-        buttonTextColor: Colors.white,
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-        onPressed: () async {
-          setState(() {
-            _isSubmitting = true;
-            _isEnabled = false;
-          });
-          try {
-            String message = await registerController.submitForm();
-            if (message == 'User registered successfully') {
+      child: Obx(() {
+        return CustomAuthTextButton(
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primaryColor,
+          buttonText: RegisterScreenLanguageConstants.saveData.tr,
+          buttonTextColor: Colors.white,
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          onPressed: () async {
+            controller.isSubmitting.value = true;
+            controller.isEnabled.value = false;
+
+            try {
+              String message = await controller.submitForm();
+              if (message == 'User registered successfully') {
+                if (!context.mounted) return;
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.success,
+                  AuthValidationsLanguageConstants.success.tr,
+                  RegisterScreenLanguageConstants.userRegisteredSuccessfully.tr,
+                );
+                controller.navigateToLoginScreen();
+              } else if (message == "Please make sure to fill all fields!") {
+                if (!context.mounted) return;
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.error,
+                  AuthValidationsLanguageConstants.error.tr,
+                  RegisterScreenLanguageConstants
+                      .pleaseMakeSureToFillAllFields.tr,
+                );
+              } else if (message ==
+                  "Please make sure to upload your profile image.") {
+                if (!context.mounted) return;
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.error,
+                  AuthValidationsLanguageConstants.error.tr,
+                  RegisterScreenLanguageConstants
+                      .pleaseMakeSureToUploadYourProfileImage.tr,
+                );
+              } else {
+                if (!context.mounted) return;
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.error,
+                  AuthValidationsLanguageConstants.error.tr,
+                  message,
+                );
+              }
+            } catch (err) {
               if (!context.mounted) return;
-              await CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.success,
-                AuthValidationsLanguageConstants.success.tr,
-                message,
-              );
-              registerController.navigateToLoginScreen();
-            } else if (message == "Please make sure to fill all fields!") {
-              if (!context.mounted) return;
-              await CustomAwesomeDialog.showAwesomeDialog(
+              debugPrint(err.toString());
+              CustomAwesomeDialog.showAwesomeDialog(
                 context,
                 DialogType.error,
                 AuthValidationsLanguageConstants.error.tr,
-                RegisterScreenLanguageConstants
-                    .pleaseMakeSureToFillAllFields.tr,
-              );
-            } else if (message ==
-                "Please make sure to upload your profile image.") {
-              if (!context.mounted) return;
-              await CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.error,
-                AuthValidationsLanguageConstants.error.tr,
-                RegisterScreenLanguageConstants
-                    .pleaseMakeSureToUploadYourProfileImage.tr,
-              );
-            } else {
-              if (!context.mounted) return;
-              await CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.error,
-                AuthValidationsLanguageConstants.error.tr,
-                message,
+                err.toString(),
               );
             }
-          } catch (err) {
-            if (!context.mounted) return;
-            debugPrint(err.toString());
-            CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.error,
-              AuthValidationsLanguageConstants.error.tr,
-              err.toString(),
-            );
-          }
-          setState(() {
-            _isSubmitting = false;
-            _isEnabled = true;
-          });
-        },
-        loadingWidget: registerController.isLoading.value
-            ? const CircularProgressIndicator(
-                color: Colors.white,
-              )
-            : null,
-        isEnabled: _isEnabled,
-      ),
+
+            controller.isSubmitting.value = false;
+            controller.isEnabled.value = true;
+          },
+          loadingWidget: controller.isLoading.value
+              ? const CircularProgressIndicator(
+                  color: Colors.white,
+                )
+              : null,
+          isEnabled: controller.isEnabled.value,
+        );
+      }),
     );
   }
 
-  Widget _buildAgeField(TextDirection textDirection,
-      TextDirection hintTextDirection, String fontFamily) {
+  Widget _buildAgeField() {
     return _buildTextInputField(
       RegisterScreenLanguageConstants.age.tr,
       RegisterScreenLanguageConstants.enterTheAge.tr,
       Icons.calendar_today,
-      registerController.ageController,
+      controller.ageController,
       AuthValidations.validateAge,
-      hintTextDirection,
-      textDirection,
     );
   }
 
-  Widget _buildCreateNewAccountText(String fontFamily) {
+  Widget _buildCreateNewAccountText() {
     return CustomGoogleTextWidget(
       text: RegisterScreenLanguageConstants.createANewAccount.tr,
-      fontFamily: fontFamily,
       fontSize: 20,
     );
   }
 
-  Widget _buildTextInputField(
-      String label,
-      String hint,
-      IconData icon,
-      TextEditingController controller,
-      String? Function(String?) validator,
-      TextDirection textFormDirection,
-      TextDirection hintTextDirection,
+  Widget _buildTextInputField(String label, String hint, IconData icon,
+      TextEditingController controller, String? Function(String?) validator,
       {bool obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           colorIcon: AppColors.primaryColor,
           controller: controller,
           textFormFieldValidator: validator,
-          autovalidateMode: _isSubmitting
+          autovalidateMode: this.controller.isSubmitting.value
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
           obscureText: obscureText,
@@ -275,8 +220,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildResidenceFields(
-      TextDirection textFormDirection, TextDirection hintTextDirection) {
+  Widget _buildPasswordField(String label, String hint, IconData icon,
+      TextEditingController controller, String? Function(String?) validator,
+      {bool obscureText = false}) {
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomGoogleTextWidget(
+            text: label,
+            fontFamily: AppFonts.arabicFont,
+            fontSize: 16.0,
+          ),
+          const SizedBox(height: 12.0),
+          CustomAuthTextFormField(
+            textFormHintText: hint,
+            iconName: this.controller.isObscureText.value
+                ? Icons.visibility_off_rounded
+                : Icons.remove_red_eye,
+            colorIcon: AppColors.primaryColor,
+            controller: controller,
+            textFormFieldValidator: validator,
+            autovalidateMode: this.controller.isSubmitting.value
+                ? AutovalidateMode.always
+                : AutovalidateMode.onUserInteraction,
+            obscureText: this.controller.isObscureText.value,
+            onTap: () {
+              this.controller.isObscureText.value =
+                  !this.controller.isObscureText.value;
+            },
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildResidenceFields() {
     return Column(
       children: [
         SizedBox(
@@ -294,9 +273,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           textFormHintText: RegisterScreenLanguageConstants.enterACountry.tr,
           iconName: Icons.public,
           colorIcon: AppColors.primaryColor,
-          controller: registerController.countryController,
+          controller: controller.countryController,
           textFormFieldValidator: AuthValidations.validateCountry,
-          autovalidateMode: _isSubmitting
+          autovalidateMode: controller.isSubmitting.value
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
           obscureText: false,
@@ -306,9 +285,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           textFormHintText: RegisterScreenLanguageConstants.enterACity.tr,
           iconName: Icons.home,
           colorIcon: AppColors.primaryColor,
-          controller: registerController.cityController,
+          controller: controller.cityController,
           textFormFieldValidator: AuthValidations.validateCity,
-          autovalidateMode: _isSubmitting
+          autovalidateMode: controller.isSubmitting.value
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
           obscureText: false,
@@ -324,8 +303,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         border: Border.all(
-          color: hasInteracted
-              ? (registerController.selectedGender.value == Gender.notSelected)
+          color: controller.hasInteracted.value
+              ? (controller.selectedGender.value == Gender.notSelected)
                   ? Colors.red
                   : Colors.grey
               : Colors.grey,
@@ -354,12 +333,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Text(RegisterScreenLanguageConstants.genderMale.tr),
                     ],
                   ),
-                  selected:
-                      registerController.selectedGender.value == Gender.male,
+                  selected: controller.selectedGender.value == Gender.male,
                   onSelected: (isSelected) {
-                    hasInteracted = true;
+                    controller.hasInteracted.value = true;
                     if (isSelected) {
-                      registerController.selectedGender.value = Gender.male;
+                      controller.selectedGender.value = Gender.male;
                     }
                   },
                   selectedColor: Colors.blue.withOpacity(0.2),
@@ -376,12 +354,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Text(RegisterScreenLanguageConstants.genderFemale.tr),
                     ],
                   ),
-                  selected:
-                      registerController.selectedGender.value == Gender.female,
+                  selected: controller.selectedGender.value == Gender.female,
                   onSelected: (isSelected) {
-                    hasInteracted = true;
+                    controller.hasInteracted.value = true;
                     if (isSelected) {
-                      registerController.selectedGender.value = Gender.female;
+                      controller.selectedGender.value = Gender.female;
                     }
                   },
                   selectedColor: Colors.pink.withOpacity(0.2),
@@ -390,9 +367,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               }),
             ],
           ),
-          // Show error message if gender is not selected and user has interacted
-          if (hasInteracted &&
-              registerController.selectedGender.value == Gender.notSelected)
+          if (controller.hasInteracted.value &&
+              controller.selectedGender.value == Gender.notSelected)
             Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: SizedBox(
@@ -415,8 +391,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         CircleAvatar(
           radius: 64.0,
-          backgroundImage: registerController.profileImage != null
-              ? MemoryImage(registerController.profileImage!)
+          backgroundImage: controller.profileImage != null
+              ? MemoryImage(controller.profileImage!)
               : const AssetImage(AppImages.userAvatarImage),
         ),
         Positioned(
@@ -434,7 +410,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _selectImage() async {
     Uint8List? img = await CustomImagePicker.pickImage(ImageSource.gallery);
     if (img != null) {
-      registerController.updateProfileImage(img);
+      controller.updateProfileImage(img);
     }
   }
 }

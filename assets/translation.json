@@ -66,7 +66,7 @@
         },
         "user_password_required":{
             "en":"User password is required",
-            "ar":"البريد الالكتروني مطلوب"
+           "ar":"كلمة السر مطلوبة"
         },
         "enter_a_valid_password":{
             "en":"Password must be at least 6 characters",
@@ -106,7 +106,7 @@
         },
         "email":{
             "en":"Email",
-            "ar":"البقريد الالكتروني"
+            "ar":"البريد الالكتروني"
         },
         "phone_number":{
             "en":"Phone Number",
@@ -163,8 +163,12 @@
         "please_make_sure_to_upload_your_profile_image":{
             "en":"Please make sure to upload your profile image",
             "ar":"من فضلك تأكد من تحميل صورة الملف الشخصي الخاصة بك"
+        },
+        "user_registered_successfully":{
+            "en":"User registered successfully",
+            "ar":"تم تسجيل المستخدم بنجاح"
         }
-    },
+    }, 
     "send_password_reset_code_screen":{
         "forget_password":{
             "en":"Forget password ?",
@@ -198,6 +202,24 @@
             "en":"Please make sure to fill all fields correctly!",
             "ar":"من فضلك تأكد من ملئ جميع الحقول بشكل صحيح"
         }
+    },
+    "reset_password_screen":{
+        "password":{
+            "en":"Password",
+            "ar":"كلمة السر الجديدة"
+        },
+        "verify_code":{
+            "en":"Verify Code",
+            "ar":"التحقق من الرمز"
+        },
+        "invalid_or_expired_code":{
+            "en":"Invalid or expired code",
+            "ar":"رمز غير صحيح أو قد انتهت صلاحيته"
+        },
+        "password_reset_successfully":{
+            "en":"Password reset successfully",
+            "ar":"تم إعادة تعيين كلمة المرور بنجاح"
+       }
     },
     "shared":{
         "academy_name": {
@@ -265,7 +287,34 @@
         "success":{
             "en":"Success",
             "ar":"تم بنجاح"
+        },
+        "enter_a_valid_password":{
+            "en":"Password must be at least 6 characters",
+            "ar":"يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل"
+        },
+        "user_Identifier_required":{
+            "en":"User Identifier is required",
+            "ar":"البريد الالكتروني مطلوب"
+        },
+        "enter_a_valid_email":{
+            "en":"Please enter a valid email address",
+            "ar":".الرجاء ادخال بريد الكتروني صحيح"
+        },
+        "user_password_required":{
+            "en":"User password is required",
+           "ar":"كلمة السر مطلوبة"
+        },
+        "validation_code_required":{
+            "en":"Validation code is required",
+            "ar":"رمز التحقق مطلوب"
+        },
+        "verification_code_must_be_four_characters":{
+            "en":"Verification code must be four characters",
+            "ar":"رمز التحقق يجب أن يكون أربع أحرف"
+        },
+        "verification_code_must_be_exactly_four_characters_and_no_spaces":{
+            "en":"Verification code must be exactly four characters and no spaces",
+            "ar":"رمز التحقق يجب أن يكون أربع أحرف وبدون فراغات"
         }
     }
-
 }
