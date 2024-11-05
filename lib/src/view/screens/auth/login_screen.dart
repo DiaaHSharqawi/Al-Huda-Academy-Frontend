@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +9,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.d
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 
@@ -180,54 +183,25 @@ class LoginScreen extends GetView<LoginController> {
   Widget _buildLoginButton(BuildContext context) {
     return Obx(() {
       return CustomAuthTextButton(
-        onPressed: <Future>() async {
+        onPressed: () async {
           controller.isSubmitting.value = true;
           controller.isEnabled.value = false;
-          debugPrint("===> ${controller.isSubmitting.value}");
           if (!context.mounted) return;
-          String loginResult = await controller.signIn(context);
-          debugPrint(loginResult);
 
-          if (loginResult == "Login successful!") {
-            if (!context.mounted) return;
-            await CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.success,
-              AuthValidationsLanguageConstants.success.tr,
-              LoginScreenLanguageConstants.successLoginMessage.tr,
-            );
-            controller.navigateToHomeScreen();
-          } else if (loginResult ==
-              "Validation failed, Please enter a valid username and email.") {
-            if (!context.mounted) return;
-            await CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.error,
-              LoginScreenLanguageConstants.loginFailedMessage.tr,
-              LoginScreenLanguageConstants.invalidInputs.tr,
-            );
-          } else if (loginResult ==
-              "Invalid credentials. Please check your email and password, then try again.") {
-            if (!context.mounted) return;
-            await CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.error,
-              AuthValidationsLanguageConstants.error.tr,
-              LoginScreenLanguageConstants.invalidCredentials.tr,
-            );
-          } else {
-            if (!context.mounted) return;
+          try {
+            LoginResponse? loginResponse = await controller.signIn(context);
+            _logLoginResponse(loginResponse);
 
-            await CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.error,
-              LoginScreenLanguageConstants.loginFailedMessage.tr,
-              loginResult,
-            );
+            if (!context.mounted) return;
+            await _handleLoginResponse(context, loginResponse);
+          } catch (e) {
+            debugPrint(e.toString());
+            if (!context.mounted) return;
+            await _showErrorDialog(context, e.toString());
+          } finally {
+            controller.isSubmitting.value = false;
+            controller.isEnabled.value = true;
           }
-
-          controller.isSubmitting.value = false;
-          controller.isEnabled.value = true;
         },
         foregroundColor: Colors.white,
         backgroundColor: AppColors.primaryColor,
@@ -236,13 +210,48 @@ class LoginScreen extends GetView<LoginController> {
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
         loadingWidget: controller.isLoading.value
-            ? const CircularProgressIndicator(
-                color: Colors.white,
-              )
+            ? const CircularProgressIndicator(color: Colors.white)
             : null,
         isEnabled: controller.isEnabled.value,
       );
     });
+  }
+
+  void _logLoginResponse(LoginResponse? loginResponse) {
+    debugPrint("==========================");
+    debugPrint(jsonEncode(loginResponse?.toJson()));
+    debugPrint("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
+    debugPrint(jsonEncode(loginResponse?.accessToken));
+    debugPrint("==========================");
+    debugPrint("Login Response: ${loginResponse?.statusCode}");
+  }
+
+  Future<void> _handleLoginResponse(
+      BuildContext context, LoginResponse? loginResponse) async {
+    if (loginResponse?.statusCode == 200) {
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context,
+        DialogType.success,
+        AuthValidationsLanguageConstants.success.tr,
+        loginResponse?.message ?? 'Success Login !',
+      );
+      controller.navigateToHomeScreen();
+    } else if (loginResponse?.statusCode == 422) {
+      await _showErrorDialog(
+          context, loginResponse?.message ?? 'Invalid inputs');
+    } else {
+      await _showErrorDialog(
+          context, loginResponse?.message ?? 'Unknown error');
+    }
+  }
+
+  Future<void> _showErrorDialog(BuildContext context, String message) async {
+    await CustomAwesomeDialog.showAwesomeDialog(
+      context,
+      DialogType.error,
+      LoginScreenLanguageConstants.loginFailedMessage.tr,
+      message,
+    );
   }
 
   Widget _buildDontHaveAccountText() {

@@ -9,6 +9,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.d
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/reset_password_response.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_otp_verification_field.dart';
@@ -18,7 +19,6 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint("email : ${controller.emailController.text}");
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -78,8 +78,8 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
   }
 
   Widget _buildEnterVerificationCodeText() {
-    return const CustomGoogleTextWidget(
-      text: "ادخل رمز التحقق",
+    return CustomGoogleTextWidget(
+      text: ResetPasswordScreenLanguageConstants.enterVerificationCode.tr,
       fontSize: 18.0,
       color: AppColors.primaryColor,
       fontWeight: FontWeight.bold,
@@ -167,17 +167,17 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
             backgroundColor: AppColors.primaryColor,
             buttonText: ResetPasswordScreenLanguageConstants.verifyCode.tr,
             buttonTextColor: Colors.white,
-            fontSize: 18.0,
+            fontSize: 18.0, 
             fontWeight: FontWeight.bold,
             onPressed: () async {
               controller.isSubmitting.value = true;
               controller.isEnabled.value = false;
 
-              String? responseMessage;
+              ResetPasswordResponse? resetPasswordResponse;
               try {
-                responseMessage = await controller.resetPassword();
+                resetPasswordResponse = await controller.resetPassword();
                 if (!context.mounted) return;
-                await _handleResponse(responseMessage, context);
+                await _handleResponse(resetPasswordResponse, context);
               } catch (error) {
                 debugPrint(error.toString());
                 if (!context.mounted) return;
@@ -199,37 +199,22 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
     );
   }
 
-  Future<void> _handleResponse(
-      String? responseMessage, BuildContext context) async {
+  Future<void> _handleResponse(ResetPasswordResponse? resetPasswordResponse,
+      BuildContext context) async {
     if (!context.mounted) return;
-    debugPrint(responseMessage);
-    switch (responseMessage) {
-      case "Password has been reset successfully":
+    debugPrint(resetPasswordResponse.toString());
+    switch (resetPasswordResponse!.statusCode) {
+      case (200):
         {
           await _showDialog(
             context,
             DialogType.success,
-            ResetPasswordScreenLanguageConstants.passwordResetSuccessfully.tr,
+            resetPasswordResponse.message!,
           );
           controller.navigateToLoginScreen();
           break;
         }
-      case "Invalid or expired code":
-        await _showDialog(
-          context,
-          DialogType.error,
-          ResetPasswordScreenLanguageConstants.invalidOrExpiredCode.tr,
-        );
-        break;
-      case "Invalid credentials. Please check your email, then try again.":
-        await _showDialog(
-          context,
-          DialogType.error,
-          SendPasswordResetCodeScreenLanguageConstants.invalidCredentials.tr,
-        );
-        break;
-
-      case "Please make sure to fill all fields correctly!":
+      case 422:
         await _showDialog(
           context,
           DialogType.error,
@@ -238,7 +223,11 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
         );
         break;
       default:
-        await _showDialog(context, DialogType.error, responseMessage!);
+        await _showDialog(
+          context,
+          DialogType.error,
+          resetPasswordResponse.message!,
+        );
         break;
     }
   }

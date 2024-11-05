@@ -35,7 +35,6 @@ class LoginScreenLanguageConstants {
   static String userPasswordRequired = "login_screen.user_password_required";
   static String enterAValidPassword = "login_screen.enter_a_valid_password";
 
-  static String successLoginMessage = "login_screen.success_login_message";
   static String loginFailedMessage = "login_screen.login_failed_message";
   static String invalidInputs = "login_screen.invalid_inputs";
 
@@ -161,4 +160,7 @@ class ResetPasswordScreenLanguageConstants {
       "reset_password_screen.invalid_or_expired_code";
   static String passwordResetSuccessfully =
       "reset_password_screen.password_reset_successfully";
+
+  static String enterVerificationCode =
+      "reset_password_screen.enter_the_verification_code_sent_to_your_email";
 }
