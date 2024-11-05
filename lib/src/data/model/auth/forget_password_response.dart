@@ -1,6 +1,11 @@
 class ForgetPasswordResponse {
   final String? message;
-  final bool success;
+  final bool? success;
+  final int statusCode;
 
-  ForgetPasswordResponse({this.message, required this.success});
+  ForgetPasswordResponse({
+    required this.statusCode,
+    this.message,
+    this.success,
+  });
 }

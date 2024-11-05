@@ -1,16 +1,19 @@
 class ResetPasswordResponse {
   final bool success;
-  final String message;
+  final String? message;
+  final int? statusCode;
 
   ResetPasswordResponse({
+    this.statusCode,
     required this.success,
-    required this.message,
+    this.message,
   });
 
   factory ResetPasswordResponse.fromJson(Map<String, dynamic> json) {
     return ResetPasswordResponse(
-      success: json['success'] as bool,
-      message: json['message'] as String,
+      statusCode: json['statusCode'],
+      success: json['success'],
+      message: json['message'],
     );
   }
 

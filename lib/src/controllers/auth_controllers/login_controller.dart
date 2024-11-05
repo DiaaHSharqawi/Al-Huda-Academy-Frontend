@@ -42,29 +42,38 @@ class LoginController extends GetxController {
     ])(password);
   }
 
-  Future<String> signIn(BuildContext context) async {
+  Future<LoginResponse> signIn(BuildContext context) async {
+    LoginResponse? loginResponse;
     final emailError = validateEmail(userIdentifierController.text);
     final passwordError = validatePassword(passwordController.text);
 
     bool isValidationFailed = (emailError != null || passwordError != null);
 
     if (isValidationFailed) {
-      return "Validation failed, Please enter a valid username and email.";
+      loginResponse = LoginResponse(
+        statusCode: 422,
+        success: false,
+        message: LoginScreenLanguageConstants.invalidInputs.tr,
+      );
+      return loginResponse;
     }
     try {
       isLoading(true);
 
-      final LoginResponse? loginResponse = await _loginService.login(
-          userIdentifierController.text, passwordController.text);
+      loginResponse = await _loginService.login(
+        userIdentifierController.text,
+        passwordController.text,
+      );
 
-      if (loginResponse!.success) {
-        return "Login successful!";
-      } else {
-        return loginResponse.message!;
-      }
+      return loginResponse!;
     } catch (e) {
       debugPrint(e.toString());
-      return e.toString();
+      loginResponse = LoginResponse(
+        statusCode: 500,
+        success: false,
+        message: "An error occurred while logging in, Please try again.",
+      );
+      return loginResponse;
     } finally {
       isLoading(false);
     }

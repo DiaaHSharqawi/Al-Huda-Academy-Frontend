@@ -12,6 +12,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.d
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_image_picker.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/gender.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
@@ -113,57 +114,34 @@ class RegisterScreen extends GetView<RegisterController> {
             controller.isEnabled.value = false;
 
             try {
-              String message = await controller.submitForm();
-              if (message == 'User registered successfully') {
-                if (!context.mounted) return;
-                await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.success,
-                  AuthValidationsLanguageConstants.success.tr,
-                  RegisterScreenLanguageConstants.userRegisteredSuccessfully.tr,
-                );
-                controller.navigateToLoginScreen();
-              } else if (message == "Please make sure to fill all fields!") {
-                if (!context.mounted) return;
-                await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  AuthValidationsLanguageConstants.error.tr,
-                  RegisterScreenLanguageConstants
-                      .pleaseMakeSureToFillAllFields.tr,
-                );
-              } else if (message ==
-                  "Please make sure to upload your profile image.") {
-                if (!context.mounted) return;
-                await CustomAwesomeDialog.showAwesomeDialog(
+              RegisterResponse registerResponse =
+                  await controller.registerUser();
+
+              debugPrint("==============================================");
+              debugPrint(
+                  "RegisterResponse status code: ${registerResponse.statusCode}");
+              debugPrint(
+                  "RegisterResponse message: ${registerResponse.message}");
+              debugPrint("RegisterResponse user: ${registerResponse.user}");
+              debugPrint(
+                  "RegisterResponse accessToken: ${registerResponse.accessToken}");
+              debugPrint("==============================================");
+              if (!context.mounted) return;
+              await _handleRegisterResponse(context, registerResponse);
+            } catch (error) {
+              debugPrint(error.toString());
+              if (context.mounted) {
+                await _showDialog(
                   context,
                   DialogType.error,
                   AuthValidationsLanguageConstants.error.tr,
-                  RegisterScreenLanguageConstants
-                      .pleaseMakeSureToUploadYourProfileImage.tr,
-                );
-              } else {
-                if (!context.mounted) return;
-                await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  AuthValidationsLanguageConstants.error.tr,
-                  message,
+                  error.toString(),
                 );
               }
-            } catch (err) {
-              if (!context.mounted) return;
-              debugPrint(err.toString());
-              CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.error,
-                AuthValidationsLanguageConstants.error.tr,
-                err.toString(),
-              );
+            } finally {
+              controller.isSubmitting.value = false;
+              controller.isEnabled.value = true;
             }
-
-            controller.isSubmitting.value = false;
-            controller.isEnabled.value = true;
           },
           loadingWidget: controller.isLoading.value
               ? const CircularProgressIndicator(
@@ -174,6 +152,51 @@ class RegisterScreen extends GetView<RegisterController> {
         );
       }),
     );
+  }
+
+  Future<void> _handleRegisterResponse(
+    BuildContext context,
+    RegisterResponse registerResponse,
+  ) async {
+    if (!context.mounted) return;
+
+    DialogType dialogType = DialogType.error;
+    String message = registerResponse.message ?? 'Unknown error';
+
+    if (registerResponse.statusCode == 201) {
+      dialogType = DialogType.success;
+      message = registerResponse.message ?? 'Success Register!';
+      await _showDialog(
+        context,
+        dialogType,
+        AuthValidationsLanguageConstants.success.tr,
+        message,
+      );
+      controller.navigateToLoginScreen();
+    } else {
+      await _showDialog(
+        context,
+        dialogType,
+        AuthValidationsLanguageConstants.error.tr,
+        message,
+      );
+    }
+  }
+
+  Future<void> _showDialog(
+    BuildContext context,
+    DialogType dialogType,
+    String title,
+    String message,
+  ) async {
+    if (context.mounted) {
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context,
+        dialogType,
+        title,
+        message,
+      );
+    }
   }
 
   Widget _buildAgeField() {

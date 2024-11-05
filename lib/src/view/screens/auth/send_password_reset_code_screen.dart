@@ -9,6 +9,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.d
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/forget_password_response.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 
@@ -152,11 +153,11 @@ class SendPasswordResetCodeScreen extends GetView<ResetPasswordController> {
             controller.isSubmitting.value = true;
             controller.isEnabled.value = false;
 
-            String? responseMessage;
+            ForgetPasswordResponse? forgetPasswordResponse;
             try {
-              responseMessage = await controller.sendPasswordResetCode();
+              forgetPasswordResponse = await controller.sendPasswordResetCode();
               if (!context.mounted) return;
-              await _handleResponse(responseMessage, context);
+              await _handleResponse(forgetPasswordResponse, context);
             } catch (error) {
               debugPrint(error.toString());
               if (!context.mounted) return;
@@ -177,49 +178,34 @@ class SendPasswordResetCodeScreen extends GetView<ResetPasswordController> {
     });
   }
 
-  Future<void> _handleResponse(
-      String? responseMessage, BuildContext context) async {
+  Future<void> _handleResponse(ForgetPasswordResponse? forgetPasswordResponse,
+      BuildContext context) async {
     if (!context.mounted) return;
-    debugPrint(responseMessage);
-    switch (responseMessage) {
-      case "Password reset code sent to your email":
-        {
-          await _showDialog(
-            context,
-            DialogType.success,
-            SendPasswordResetCodeScreenLanguageConstants
-                .passwordResetCodeSentToYourEmail.tr,
-          );
-          controller.navigateToResetPasswordScreen();
-          break;
-        }
-      case "A password reset code has already been sent to your email. Please check your inbox or request a new code after a few minutes.":
-        await _showDialog(
-          context,
-          DialogType.error,
-          SendPasswordResetCodeScreenLanguageConstants.codeAlreadySent.tr,
-        );
-        controller.navigateToResetPasswordScreen();
-        break;
-      case "Invalid credentials. Please check your email, then try again.":
-        await _showDialog(
-          context,
-          DialogType.error,
-          SendPasswordResetCodeScreenLanguageConstants.invalidCredentials.tr,
-        );
-        break;
-
-      case "Please make sure to fill all fields correctly!":
-        await _showDialog(
-          context,
-          DialogType.error,
-          SendPasswordResetCodeScreenLanguageConstants
-              .pleaseMakeSureToFillAllFields.tr,
-        );
-        break;
-      default:
-        await _showDialog(context, DialogType.error, responseMessage!);
-        break;
+    debugPrint(forgetPasswordResponse.toString());
+    if (forgetPasswordResponse!.statusCode == 200) {
+      await _showDialog(
+        context,
+        DialogType.success,
+        forgetPasswordResponse.message!,
+      );
+      controller.navigateToResetPasswordScreen();
+    } else if (forgetPasswordResponse.statusCode == 409) {
+      await _showDialog(
+        context,
+        DialogType.error,
+        forgetPasswordResponse.message!,
+      );
+      controller.navigateToResetPasswordScreen();
+    } else if (forgetPasswordResponse.statusCode == 422) {
+      await _showDialog(
+        context,
+        DialogType.error,
+        SendPasswordResetCodeScreenLanguageConstants
+            .pleaseMakeSureToFillAllFields.tr,
+      );
+    } else {
+      await _showDialog(
+          context, DialogType.error, forgetPasswordResponse.message!);
     }
   }
 

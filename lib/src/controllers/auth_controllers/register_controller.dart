@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/auth/register_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response.dart';
@@ -42,8 +43,8 @@ class RegisterController extends GetxController {
     update();
   }
 
-  Future<String> submitForm() async {
-    final err = AuthValidations.validateAll({
+  Future<RegisterResponse> registerUser() async {
+    final error = AuthValidations.validateAll({
       'fullName': fullNameController.text,
       'email': emailController.text,
       'password': passwordController.text,
@@ -53,14 +54,35 @@ class RegisterController extends GetxController {
       'country': countryController.text,
       'gender': selectedGender.value?.name,
     });
-    if (err != null) {
-      return 'Please make sure to fill all fields!';
+    RegisterResponse? registerResponse;
+    if (error != null) {
+      registerResponse = RegisterResponse(
+        statusCode: 422,
+        success: false,
+        message:
+            RegisterScreenLanguageConstants.pleaseMakeSureToFillAllFields.tr,
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+      );
+      return registerResponse;
     }
     if (profileImage == null) {
-      return 'Please make sure to upload your profile image.';
+      registerResponse = RegisterResponse(
+        statusCode: 400,
+        success: false,
+        message: RegisterScreenLanguageConstants
+            .pleaseMakeSureToUploadYourProfileImage.tr,
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+      );
+
+      return registerResponse;
     }
 
     final genderString = selectedGender.value?.name ?? '';
+
     final registerData = RegisterModel(
       fullName: fullNameController.text,
       email: emailController.text,
@@ -77,18 +99,18 @@ class RegisterController extends GetxController {
       isLoading(true);
       final RegisterResponse registerResponse =
           await _registerService.registerUser(registerData);
-      if (registerResponse.success) {
-        debugPrint(registerResponse.data.toString());
-        return registerResponse.message;
-      } else {
-        debugPrint(registerResponse.message);
-        return registerResponse.message;
-      }
+
+      return registerResponse;
     } catch (e) {
       debugPrint(e.toString());
-
-      Get.snackbar('Error', e.toString());
-      return e.toString();
+      return RegisterResponse(
+        statusCode: 500,
+        success: false,
+        message: "An error occurred while registering. Please try again.",
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+      );
     } finally {
       isLoading(false);
     }

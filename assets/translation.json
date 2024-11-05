@@ -72,10 +72,7 @@
             "en":"Password must be at least 6 characters",
             "ar":"يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل"
         },
-        "success_login_message":{
-            "en":"login successfully",
-            "ar":"تم تسجيل الدخول بنجاح"
-        },
+        
         "login_failed_message":{
             "en":"login failed",
             "ar":"فشل تسجيل الدخول"
@@ -219,6 +216,10 @@
         "password_reset_successfully":{
             "en":"Password reset successfully",
             "ar":"تم إعادة تعيين كلمة المرور بنجاح"
+       },
+       "enter_the_verification_code_sent_to_your_email":{
+           "en":"Enter the verification code sent to your email",
+           "ar":"ادخل رمز التحقق المرسل الى بريدك الالكتروني"
        }
     },
     "shared":{
