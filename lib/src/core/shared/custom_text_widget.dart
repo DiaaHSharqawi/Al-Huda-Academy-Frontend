@@ -14,6 +14,7 @@ class CustomGoogleTextWidget extends StatefulWidget {
   final String? fontFamily;
   final TextAlign? textAlign;
   final VoidCallback? onTap;
+  final TextOverflow? overflow;
 
   const CustomGoogleTextWidget({
     super.key,
@@ -26,6 +27,7 @@ class CustomGoogleTextWidget extends StatefulWidget {
     this.fontFamily,
     this.textAlign,
     this.onTap,
+    this.overflow,
   });
 
   @override
@@ -40,6 +42,7 @@ class _CustomGoogleTextWidgetState extends State<CustomGoogleTextWidget> {
   Widget build(BuildContext context) {
     final AppService appService = Get.find<AppService>();
     final bool isArabic = appService.isRtl.value;
+    // debugPrint("is arabic : ${isArabic.toString()}");
     final String fontFamily =
         isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
 

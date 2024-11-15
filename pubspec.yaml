@@ -54,6 +54,12 @@ dependencies:
 
   pinput: ^5.0.0
 
+  line_icons: ^2.0.3
+
+  just_audio: ^0.9.24
+
+  video_player: ^2.5.0
+
 dev_dependencies:
   json_serializable: ^6.5.0
   build_runner: ^2.3.0

@@ -10,14 +10,14 @@ class AppTranslation extends Translations {
     try {
       String jsonContent =
           await rootBundle.loadString('assets/translation.json');
-      debugPrint("Raw JSON Content: $jsonContent");
+      // debugPrint("Raw JSON Content: $jsonContent");
 
       Map<String, dynamic> jsonMap = jsonDecode(jsonContent);
       translations['en'] = _extractTranslations(jsonMap, 'en');
       translations['ar'] = _extractTranslations(jsonMap, 'ar');
 
-      debugPrint('Loaded Translations (EN): ${translations['en']}');
-      debugPrint('Loaded Translations (AR): ${translations['ar']}');
+      //debugPrint('Loaded Translations (EN): ${translations['en']}');
+      // debugPrint('Loaded Translations (AR): ${translations['ar']}');
     } catch (e) {
       debugPrint("Error loading translations: $e");
     }

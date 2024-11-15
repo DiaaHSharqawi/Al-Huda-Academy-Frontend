@@ -10,4 +10,7 @@ class AppRoutes {
   static String resetPassword = "$auth/reset-password";
 
   static String home = "/home";
+
+  static String athkar = "/athkar/category";
+  static String athkarCategories = "/athkar/categories";
 }
