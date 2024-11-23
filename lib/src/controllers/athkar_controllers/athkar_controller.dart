@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/athkar/athkar_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/athkar/athkars/athkar.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/athkar/athkars/athkars_response.dart';
 
 class AthkarController extends GetxController {

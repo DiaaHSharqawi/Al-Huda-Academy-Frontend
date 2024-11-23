@@ -1,11 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/auth/register_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response/register_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/gender.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/register_model.dart';
 
@@ -61,9 +60,7 @@ class RegisterController extends GetxController {
         success: false,
         message:
             RegisterScreenLanguageConstants.pleaseMakeSureToFillAllFields.tr,
-        user: null,
-        accessToken: null,
-        refreshToken: null,
+        data: null,
       );
       return registerResponse;
     }
@@ -73,9 +70,7 @@ class RegisterController extends GetxController {
         success: false,
         message: RegisterScreenLanguageConstants
             .pleaseMakeSureToUploadYourProfileImage.tr,
-        user: null,
-        accessToken: null,
-        refreshToken: null,
+        data: null,
       );
 
       return registerResponse;
@@ -99,7 +94,7 @@ class RegisterController extends GetxController {
       isLoading(true);
       final RegisterResponse registerResponse =
           await _registerService.registerUser(registerData);
-
+      debugPrint("---> Register response: ${registerResponse.toString()}");
       return registerResponse;
     } catch (e) {
       debugPrint(e.toString());
@@ -107,9 +102,7 @@ class RegisterController extends GetxController {
         statusCode: 500,
         success: false,
         message: "An error occurred while registering. Please try again.",
-        user: null,
-        accessToken: null,
-        refreshToken: null,
+        data: null,
       );
     } finally {
       isLoading(false);
@@ -118,6 +111,6 @@ class RegisterController extends GetxController {
 
   void navigateToLoginScreen() {
     // TODO : 1. Make it later Navigate to Home screen,
-    Get.offAllNamed(AppRoutes.login);
+    // Get.offAllNamed(AppRoutes.login);
   }
 }

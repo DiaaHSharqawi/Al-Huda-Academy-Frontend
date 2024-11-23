@@ -16,12 +16,12 @@ class OTPVerificationField extends StatelessWidget {
   final TextEditingController controller;
 
   const OTPVerificationField({
-    this.borderColor = Colors.blue,
+    this.borderColor = AppColors.primaryColor,
     this.focusedBorderColor = AppColors.primaryColor,
     this.submittedBackgroundColor = const Color(0xFFEAEFF3),
     this.textStyle = const TextStyle(
       fontSize: 22,
-      color: Color(0xFF1E3C57),
+      color: Colors.black,
       fontWeight: FontWeight.w700,
     ),
     this.fieldWidth = 56,

@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/login_controller.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/auth_screens_controllers/login_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response/login_response.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_button.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 
@@ -103,7 +103,7 @@ class LoginScreen extends GetView<LoginController> {
   Widget _buildGreetingText() {
     return CustomGoogleTextWidget(
       text: LoginScreenLanguageConstants.greeting.tr,
-      color: AppColors.primaryColor,
+      color: Colors.black,
       fontWeight: FontWeight.bold,
     );
   }
@@ -111,7 +111,7 @@ class LoginScreen extends GetView<LoginController> {
   Widget _buildWelcomeBackText() {
     return CustomGoogleTextWidget(
       text: LoginScreenLanguageConstants.welcomeBack.tr,
-      color: AppColors.primaryColor,
+      color: Colors.black,
       fontWeight: FontWeight.bold,
     );
   }
@@ -172,7 +172,8 @@ class LoginScreen extends GetView<LoginController> {
       alignment: Alignment.centerRight,
       child: CustomGoogleTextWidget(
         text: LoginScreenLanguageConstants.formFieldsInputsForgetPassword.tr,
-        color: AppColors.primaryColor,
+        color: AppColors.blackColor,
+        fontWeight: FontWeight.bold,
         fontSize: 18.0,
         textDecoration: TextDecoration.underline,
         onTap: controller.navigateToForgetPasswordScreen,
@@ -221,7 +222,6 @@ class LoginScreen extends GetView<LoginController> {
     debugPrint("==========================");
     debugPrint(jsonEncode(loginResponse?.toJson()));
     debugPrint("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
-    debugPrint(jsonEncode(loginResponse?.accessToken));
     debugPrint("==========================");
     debugPrint("Login Response: ${loginResponse?.statusCode}");
   }
@@ -262,7 +262,7 @@ class LoginScreen extends GetView<LoginController> {
         CustomGoogleTextWidget(
           text: LoginScreenLanguageConstants.dontHaveAnAccount.tr,
           fontSize: 16.0,
-          color: AppColors.primaryColor,
+          color: AppColors.blackColor,
           fontWeight: FontWeight.bold,
         ),
         const SizedBox(
@@ -272,7 +272,7 @@ class LoginScreen extends GetView<LoginController> {
           textDecoration: TextDecoration.underline,
           text: LoginScreenLanguageConstants.newUser.tr,
           fontSize: 16.0,
-          color: AppColors.primaryColor,
+          color: AppColors.blackColor,
           fontWeight: FontWeight.bold,
           onTap: () {
             controller.navigateToRegisterScreen();

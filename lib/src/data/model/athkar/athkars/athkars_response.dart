@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/athkar/athkars/athkar_response_message.dart';
 
 class AthkarResponse {
   AthkarResponse({
@@ -9,7 +10,7 @@ class AthkarResponse {
   });
 
   final bool? success;
-  final Message? message;
+  final AthkarResponseMessage? message;
   final int statusCode;
   final String? responseMessage;
 
@@ -20,7 +21,7 @@ class AthkarResponse {
     return AthkarResponse(
       statusCode: statusCode,
       success: json["success"],
-      message: Message.fromJson(json["message"]),
+      message: AthkarResponseMessage.fromJson(json["message"]),
     );
   }
 
@@ -32,79 +33,5 @@ class AthkarResponse {
   @override
   String toString() {
     return "$success, $message, ";
-  }
-}
-
-class Message {
-  Message({
-    this.categoryId,
-    this.category,
-    this.athkars,
-  });
-
-  final String? categoryId;
-  final String? category;
-  final List<Athkar>? athkars;
-
-  factory Message.fromJson(Map<String, dynamic> json) {
-    debugPrint("+-+-+-+-+-+-+");
-    debugPrint("Message: $json");
-    debugPrint("+-+-+-+-+-+-+");
-    return Message(
-      categoryId: json["categoryId"],
-      category: json["category"],
-      athkars:
-          List<Athkar>.from(json["athkars"].map((x) => Athkar.fromJson(x))),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        "categoryId": categoryId,
-        "category": category,
-        "athkars": athkars?.map((x) => x.toJson()).toList(),
-      };
-
-  @override
-  String toString() {
-    return "$categoryId, $category, $athkars, ";
-  }
-}
-
-class Athkar {
-  Athkar({
-    required this.id,
-    required this.text,
-    required this.count,
-    required this.audio,
-    required this.filename,
-  });
-
-  final int? id;
-  final String? text;
-  final int? count;
-  final String? audio;
-  final String? filename;
-
-  factory Athkar.fromJson(Map<String, dynamic> json) {
-    return Athkar(
-      id: json["id"],
-      text: json["text"],
-      count: json["count"],
-      audio: json["audio"],
-      filename: json["filename"],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "text": text,
-        "count": count,
-        "audio": audio,
-        "filename": filename,
-      };
-
-  @override
-  String toString() {
-    return "$id, $text, $count, $audio, $filename, ";
   }
 }

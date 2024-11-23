@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response/register_response.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response/register_response_data.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/register_model.dart';
 
 class RegisterService extends GetxService {
@@ -49,21 +50,22 @@ class RegisterService extends GetxService {
       final Map<String, dynamic> jsonResponse = json.decode(responseData.body);
       debugPrint("----------------");
       debugPrint(jsonResponse.toString());
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+        final registerResponseData =
+            RegisterResponseData.fromJson(jsonResponse['data']);
+
         return RegisterResponse(
           statusCode: response.statusCode,
           success: jsonResponse['success'] ?? false,
           message: jsonResponse['message'] ?? '',
-          accessToken: jsonResponse['accessToken'],
-          refreshToken: jsonResponse['refreshToken'],
+          data: registerResponseData,
         );
       } else {
         return RegisterResponse(
           statusCode: response.statusCode,
           success: jsonResponse['success'] ?? false,
           message: jsonResponse['message'] ?? '',
-          accessToken: jsonResponse['accessToken'],
-          refreshToken: jsonResponse['refreshToken'],
+          data: null,
         );
       }
     } catch (e) {

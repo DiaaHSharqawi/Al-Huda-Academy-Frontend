@@ -11,6 +11,10 @@ class AuthValidations {
       ),
       FormBuilderValidators.email(
           errorText: AuthValidationsLanguageConstants.enterAValidEmail.tr),
+      FormBuilderValidators.match(
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
+        errorText: AuthValidationsLanguageConstants.enterAValidEmail.tr,
+      ),
     ])(email);
   }
 

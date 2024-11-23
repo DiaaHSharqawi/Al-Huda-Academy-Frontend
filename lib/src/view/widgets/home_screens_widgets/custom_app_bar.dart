@@ -5,15 +5,18 @@ class CustomAppBar extends PreferredSize {
   final Color backgroundColor;
   final String? appBarBackgroundImage;
   final bool? showBackArrow;
+  final Color? arrowColor;
 
-  const CustomAppBar(
-      {super.key,
-      required this.appBarChilds,
-      required this.backgroundColor,
-      this.appBarBackgroundImage,
-      required super.preferredSize,
-      required super.child,
-      this.showBackArrow = false});
+  const CustomAppBar({
+    super.key,
+    required this.appBarChilds,
+    required this.backgroundColor,
+    this.appBarBackgroundImage,
+    required super.preferredSize,
+    required super.child,
+    this.showBackArrow = false,
+    this.arrowColor = Colors.white,
+  });
 
   @override
   PreferredSize build(BuildContext context) {
@@ -26,7 +29,10 @@ class CustomAppBar extends PreferredSize {
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: arrowColor,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop(); // Navigate back
                   },

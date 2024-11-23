@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/entry_screens_widgets/language_screen_widgets.dart';
 
-import '../../../controllers/language_controller/language_controller.dart';
+import '../../../controllers/entry_screens_controllers/language_controller.dart';
 import '../../../core/constants/app_images.dart';
 import '../../../core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
@@ -69,9 +68,9 @@ class LanguageScreen extends GetView<LanguageController> {
         fontSize: 20.0,
         onPressed: () {
           controller.changeLanguage(languageCode);
-          //controller.navigateToLoginScreen();
+          controller.navigateToLoginScreen();
           // todo:  return it back to navigate to login screen
-          Get.toNamed(AppRoutes.athkarCategories);
+          //Get.toNamed(AppRoutes.athkarCategories);
         },
       ),
     );

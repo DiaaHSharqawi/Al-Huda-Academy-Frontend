@@ -7,7 +7,7 @@ import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 class CustomAuthTextFormField extends StatelessWidget {
   final String? textFormLabelText;
   final String textFormHintText;
-  final IconData iconName;
+  final IconData? iconName;
   final Color colorIcon;
   final bool obscureText;
   final TextEditingController controller;
@@ -19,7 +19,7 @@ class CustomAuthTextFormField extends StatelessWidget {
     super.key,
     this.textFormLabelText,
     required this.textFormHintText,
-    required this.iconName,
+    this.iconName,
     required this.colorIcon,
     this.obscureText = false,
     required this.controller,
@@ -58,13 +58,21 @@ class CustomAuthTextFormField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        prefixIcon: InkWell(
-          onTap: onTap,
-          child: Icon(
-            iconName,
-            color: colorIcon,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: const BorderSide(
+            color: Colors.black,
           ),
         ),
+        prefixIcon: iconName != null
+            ? InkWell(
+                onTap: onTap,
+                child: Icon(
+                  iconName,
+                  color: colorIcon,
+                ),
+              )
+            : null,
       ),
       textDirection: textFormDirection,
     );

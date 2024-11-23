@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/family_link_controllers/family_link_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/services/family_link/family_link_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/family_link/get_childs_by_parent_id_response.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   @override
@@ -55,7 +59,29 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           color: Colors.grey,
         ),
         currentIndex: 0,
-        onTap: (index) {},
+        onTap: (index) async {
+          if (index == 1) {
+            Get.toNamed(AppRoutes.athkarCategories);
+          }
+          if (index == 2) {
+            var familyLinkController =
+                Get.put(FamilyLinkController(Get.put(FamilyLinkService())));
+
+            GetChildsByUserIdResponse? response =
+                await familyLinkController.getChildrenByParentId();
+
+            if (response?.familyLink != null) {
+              familyLinkController.familyLinks.assign(response!.familyLink!);
+            }
+
+            debugPrint("Family links: ${familyLinkController.familyLinks}");
+            if (response!.statusCode == 200) {
+              Get.toNamed('/family-link/family-links-dashboard');
+            } else if (response.statusCode == 404) {
+              Get.toNamed('/family-link/add-participant');
+            }
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(LineIcons.home),
@@ -66,12 +92,8 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             label: 'الأذكار',
           ),
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.user),
-            label: 'الحساب',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(LineIcons.user),
-            label: 'المجموعة',
+            icon: Icon(LineIcons.users),
+            label: 'الرقابة الابوية',
           ),
         ],
       ),

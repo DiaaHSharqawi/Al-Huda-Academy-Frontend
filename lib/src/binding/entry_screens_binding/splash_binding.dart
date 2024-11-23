@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/controllers/splash_controller.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/entry_screens_controllers/splash_controller.dart';
 
 class SplashBinding extends Bindings {
   final _splachScreenDuartion = 5;

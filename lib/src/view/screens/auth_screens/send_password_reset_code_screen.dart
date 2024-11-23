@@ -1,7 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moltqa_al_quran_frontend/src/controllers/auth_controllers/reset_password_controller.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/auth_screens_controllers/reset_password_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
