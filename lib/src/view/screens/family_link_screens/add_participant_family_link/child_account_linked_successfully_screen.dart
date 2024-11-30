@@ -90,7 +90,7 @@ class ChildAccountLinkedSuccessfullyScreen
         fontSize: 22,
         fontWeight: FontWeight.bold,
         onPressed: () {
-          controller.navigateToFamilyLinksDashboardScreen();
+          controller.navigateToHomeScreen();
         },
       ),
     );

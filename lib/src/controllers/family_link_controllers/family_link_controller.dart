@@ -42,6 +42,10 @@ class FamilyLinkController extends GetxController {
     Get.toNamed(AppRoutes.childAccountLinkedSuccessfullyScreen);
   }
 
+  void navigateToHomeScreen() {
+    Get.toNamed(AppRoutes.home);
+  }
+
   Future<SendChildVerificationCodeFamilyLinkResponse?>
       sendChildVerificationCodeFamilyLink() async {
     final SendChildVerificationCodeFamilyLinkResponse? response;

@@ -34,7 +34,7 @@ class FamilyLinkService extends GetxService {
         },
         body: {
           'senderIdentifier': senderUserId,
-          'receiverIdentifier': childEmail,
+          'reciverIdentifier': childEmail,
         },
       );
 

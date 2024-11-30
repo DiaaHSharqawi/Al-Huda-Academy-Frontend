@@ -23,7 +23,7 @@ class LanguageScreen extends GetView<LanguageController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildImageLogo(),
+                SizedBox(child: _buildImageLogo()),
                 const SizedBox(height: 82.0),
                 _buildTitle(),
                 const SizedBox(height: 32.0),
