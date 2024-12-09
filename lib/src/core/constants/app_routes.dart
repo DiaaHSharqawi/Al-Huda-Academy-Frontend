@@ -7,7 +7,17 @@ class AppRoutes {
 
   static String auth = "/auth";
   static String login = "$auth/login";
+
   static String register = "$auth/register";
+  static String registerParticipant = "$register/participant";
+  static String registerSupervisor = "$register/supervisor";
+  static String qualificationsRegister = "$auth/qualifications";
+  static String credentialDetailsRegister = "$register/credential-details";
+  static String personalDetailsRegister = "$register/personal-details";
+  static String roleSelectionRegister = "$register/role-selection";
+  static String genderSelectionRegister = "$register/gender-selection";
+  static String selectProfileImageRegister = "$register/select-profile-image";
+
   static String sendPasswordResetCode = "$auth/send-password-reset-code";
   static String resetPassword = "$auth/reset-password";
 

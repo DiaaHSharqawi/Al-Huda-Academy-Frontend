@@ -8,24 +8,26 @@ class CustomAuthTextFormField extends StatelessWidget {
   final String? textFormLabelText;
   final String textFormHintText;
   final IconData? iconName;
-  final Color colorIcon;
+  final Color? colorIcon;
   final bool obscureText;
   final TextEditingController controller;
   final String? Function(String?)? textFormFieldValidator;
   final AutovalidateMode autovalidateMode;
   final VoidCallback? onTap;
+  final int? maxLines;
 
   const CustomAuthTextFormField({
     super.key,
     this.textFormLabelText,
     required this.textFormHintText,
     this.iconName,
-    required this.colorIcon,
+    this.colorIcon,
     this.obscureText = false,
     required this.controller,
     required this.textFormFieldValidator,
     required this.autovalidateMode,
     this.onTap,
+    this.maxLines = 1,
   });
 
   @override
@@ -41,6 +43,7 @@ class CustomAuthTextFormField extends StatelessWidget {
     final TextDirection hintTextDirection = textFormDirection;
 
     return TextFormField(
+      maxLines: maxLines,
       autovalidateMode: autovalidateMode,
       obscureText: obscureText,
       validator: textFormFieldValidator,

@@ -275,7 +275,7 @@ class LoginScreen extends GetView<LoginController> {
           color: AppColors.blackColor,
           fontWeight: FontWeight.bold,
           onTap: () {
-            controller.navigateToRegisterScreen();
+            controller.navigateToRoleSelectionScreen();
           },
         ),
       ],

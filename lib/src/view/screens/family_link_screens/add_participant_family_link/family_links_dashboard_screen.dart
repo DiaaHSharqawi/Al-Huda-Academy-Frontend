@@ -40,7 +40,7 @@ class FamilyLinksDashboardScreen extends GetView<FamilyLinkController> {
     );
   }
 
-  Widget _buildWelcomeText() {
+/*  Widget _buildWelcomeText() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(32.0),
@@ -54,16 +54,16 @@ class FamilyLinksDashboardScreen extends GetView<FamilyLinkController> {
         fontWeight: FontWeight.bold,
       ),
     );
-  }
+  }*/
 
   Widget _buildYourFamilyLinkAccounts() {
     return SizedBox(
       height: 300.0,
       child: ListView.builder(
         controller: ScrollController(),
-        itemCount: controller.familyLinks[0].children.length,
+        itemCount: controller.familyLinks.length,
         itemBuilder: (context, index) {
-          final familyLink = controller.familyLinks[0].children[index];
+          final familyLink = controller.familyLinks[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
@@ -96,22 +96,22 @@ class FamilyLinksDashboardScreen extends GetView<FamilyLinkController> {
                           ),
                         ),
                         const SizedBox(width: 16.0),
-                        Column(
+                        const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
+                              padding: EdgeInsets.only(left: 16.0),
                               child: CustomGoogleTextWidget(
-                                text: familyLink.childId?.fullName ?? 'Unknown',
+                                text: 'hi',
                                 fontSize: 18.0,
                               ),
                             ),
-                            const SizedBox(height: 8.0),
-                            const Padding(
+                            SizedBox(height: 8.0),
+                            Padding(
                               padding: EdgeInsets.only(left: 16.0),
                               child: CustomGoogleTextWidget(
-                                text: 'son',
+                                text: "child",
                                 fontSize: 16.0,
                                 color: Colors.grey,
                               ),

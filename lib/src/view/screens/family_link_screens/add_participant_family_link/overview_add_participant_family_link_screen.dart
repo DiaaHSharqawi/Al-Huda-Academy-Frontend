@@ -84,7 +84,7 @@ class OverviewAddParticipantFamilyLinkScreen
         fontWeight: FontWeight.bold,
         onPressed: () {
           controller.navigateToDoesYourChildHaveAccountScreen();
-          //controller.getChildrenByParentId();
+          //controller.getChildrenByParentEmail();
         },
       ),
     );

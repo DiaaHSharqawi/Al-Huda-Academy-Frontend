@@ -8,7 +8,7 @@ class GetChildsByUserIdResponse {
 
   final bool? success;
   final String? message;
-  final FamilyLink? familyLink;
+  final List<FamilyLink>? familyLink;
   final int statusCode;
 
   factory GetChildsByUserIdResponse.fromJson(
@@ -19,14 +19,16 @@ class GetChildsByUserIdResponse {
       message: json["message"],
       familyLink: json["FamilyLink"] == null
           ? null
-          : FamilyLink.fromJson(json["FamilyLink"]),
+          : (json["FamilyLink"] as List<dynamic>)
+              .map((e) => FamilyLink.fromJson(e as Map<String, dynamic>))
+              .toList(),
     );
   }
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
-        "FamilyLink": familyLink?.toJson(),
+        "FamilyLink": familyLink?.map((e) => e.toJson()).toList(),
       };
 
   @override

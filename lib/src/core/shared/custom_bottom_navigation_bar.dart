@@ -68,7 +68,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 Get.put(FamilyLinkController(Get.put(FamilyLinkService())));
 
             GetChildsByUserIdResponse? response =
-                await familyLinkController.getChildrenByParentId();
+                await familyLinkController.getChildrenByParentEmail();
 
             if (response?.familyLink != null) {
               familyLinkController.familyLinks.assign(response!.familyLink!);

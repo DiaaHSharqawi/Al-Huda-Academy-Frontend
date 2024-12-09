@@ -90,4 +90,8 @@ class LoginController extends GetxController {
   void navigateToForgetPasswordScreen() {
     Get.toNamed(AppRoutes.sendPasswordResetCode);
   }
+
+  void navigateToRoleSelectionScreen() {
+    Get.toNamed(AppRoutes.roleSelectionRegister);
+  }
 }

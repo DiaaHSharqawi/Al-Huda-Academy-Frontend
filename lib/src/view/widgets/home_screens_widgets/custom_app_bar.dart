@@ -6,6 +6,7 @@ class CustomAppBar extends PreferredSize {
   final String? appBarBackgroundImage;
   final bool? showBackArrow;
   final Color? arrowColor;
+  final double? arrowMargin;
 
   const CustomAppBar({
     super.key,
@@ -16,6 +17,7 @@ class CustomAppBar extends PreferredSize {
     required super.child,
     this.showBackArrow = false,
     this.arrowColor = Colors.white,
+    this.arrowMargin = 10,
   });
 
   @override
@@ -26,16 +28,19 @@ class CustomAppBar extends PreferredSize {
         elevation: 0,
         automaticallyImplyLeading: showBackArrow!,
         leading: showBackArrow!
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: arrowColor,
+            ? Container(
+                margin: EdgeInsets.all(arrowMargin!),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: arrowColor,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Navigate back
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Navigate back
-                  },
                 ),
               )
             : null,

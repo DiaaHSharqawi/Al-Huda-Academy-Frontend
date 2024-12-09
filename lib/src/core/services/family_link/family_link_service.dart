@@ -21,9 +21,10 @@ class FamilyLinkService extends GetxService {
 
   Future<SendChildVerificationCodeFamilyLinkResponse?>
       sendChildVerificationCodeFamilyLink(
-          String senderUserId, String childEmail) async {
-    debugPrint('senderUserId: $senderUserId');
+          String senderUserEmail, String childEmail) async {
+    debugPrint('senderUserEmail: $senderUserEmail');
     debugPrint('childEmail: $childEmail');
+
     final url = Uri.parse(sendChildVerificationCode);
     try {
       final response = await http.post(
@@ -33,8 +34,8 @@ class FamilyLinkService extends GetxService {
               appService.languageStorage.read('language') ?? 'en',
         },
         body: {
-          'senderIdentifier': senderUserId,
-          'reciverIdentifier': childEmail,
+          'senderUserEmail': senderUserEmail,
+          'receiverUserEmail': childEmail,
         },
       );
 
@@ -77,9 +78,12 @@ class FamilyLinkService extends GetxService {
   }
 
   Future<VerifyChildVerificationCodeFamilyLinkResponse?>
-      verifyChildVerificationCodeFamilyLink(String senderUserId,
-          String childEmail, String verificationCode) async {
+      verifyChildVerificationCodeFamilyLink(String senderUserEmail,
+          String receiverUserEmail, String verificationCode) async {
     debugPrint('verifyChildVerificationCodeFamilyLink');
+    debugPrint(
+        'senderUserEmail: $senderUserEmail, receiverUserEmail: $receiverUserEmail, verificationCode: $verificationCode');
+
     final url = Uri.parse(verifyChildVerificationCode);
     try {
       final response = await http.post(
@@ -89,8 +93,8 @@ class FamilyLinkService extends GetxService {
               appService.languageStorage.read('language') ?? 'en',
         },
         body: {
-          'senderIdentifier': senderUserId,
-          'receiverIdentifier': childEmail,
+          'senderUserEmail': senderUserEmail,
+          'receiverUserEmail': receiverUserEmail,
           'verificationCode': verificationCode,
         },
       );
@@ -133,16 +137,19 @@ class FamilyLinkService extends GetxService {
     }
   }
 
-  Future<GetChildsByUserIdResponse?> getChildrenByParentId(
-      String parentId) async {
-    debugPrint('getChildrenByParentId');
+  Future<GetChildsByUserIdResponse> getChildrenByParentEmail(
+      String parentEmail) async {
+    debugPrint('getChildrenByParentEmail');
     final url = Uri.parse("$alHudaBaseURL/family-link/childs");
     try {
-      final response = await http.get(
-        url.replace(queryParameters: {'parentId': parentId}),
+      final response = await http.post(
+        url,
         headers: <String, String>{
           'Accept-Language':
               appService.languageStorage.read('language') ?? 'en',
+        },
+        body: {
+          'parentEmail': parentEmail,
         },
       );
 
@@ -153,7 +160,12 @@ class FamilyLinkService extends GetxService {
       if (response.statusCode == 200) {
         if (data['success']) {
           debugPrint("data : ${data['FamilyLink']}");
-          return GetChildsByUserIdResponse.fromJson(data, response.statusCode);
+          return GetChildsByUserIdResponse(
+            statusCode: response.statusCode,
+            success: true,
+            message: data['message'],
+            familyLink: data['FamilyLink'],
+          );
         } else {
           debugPrint("data if not success:  ${data['message']}");
           return GetChildsByUserIdResponse(
@@ -178,8 +190,8 @@ class FamilyLinkService extends GetxService {
       return GetChildsByUserIdResponse(
         statusCode: 500,
         success: false,
-        familyLink: null,
         message: 'حدث خطأ ما',
+        familyLink: null,
       );
     }
   }

@@ -21,7 +21,7 @@ class FamilyLinkController extends GetxController {
 
   TextEditingController verificationCodeController = TextEditingController();
 
-  var familyLinks = <FamilyLink>[].obs;
+  var familyLinks = <Object>[].obs;
   void navigateToDoesYourChildHaveAccountScreen() {
     Get.toNamed('/family-link/does-your-child-have-account');
   }
@@ -69,11 +69,12 @@ class FamilyLinkController extends GetxController {
         isLoading(true);
         isEnabled(false);
 
-        final senderUserId = (await appService
-                .getDecodedToken(appService.getToken()))?['UserInfo']['id'] ??
-            'No_User_Id';
+        final senderUserEmail = (await appService.getDecodedToken(
+                appService.getToken()))?['UserInfo']['email'] ??
+            'No_User_Email';
+
         response = await _familyLinkService.sendChildVerificationCodeFamilyLink(
-          senderUserId,
+          senderUserEmail,
           childEmail,
         );
         return response;
@@ -96,6 +97,7 @@ class FamilyLinkController extends GetxController {
     debugPrint('verifyChildVerificationCodeFamilyLink');
     debugPrint(
         'email: ${childEmailController.text}, verificationCode: ${verificationCodeController.text}');
+
     final error = AuthValidations.validateAll({
       'email': childEmailController.text,
       'verificationCode': verificationCodeController.text,
@@ -113,14 +115,14 @@ class FamilyLinkController extends GetxController {
       isLoading(true);
       isEnabled(false);
 
-      final senderUserId = (await appService
-              .getDecodedToken(appService.getToken()))?['UserInfo']['id'] ??
-          'No_User_Id';
-      debugPrint('senderUserId: $senderUserId');
+      final senderUserEmail = (await appService
+              .getDecodedToken(appService.getToken()))?['UserInfo']['email'] ??
+          'No_User_Email';
+      debugPrint('senderUserEmail: $senderUserEmail');
 
       final response =
           await _familyLinkService.verifyChildVerificationCodeFamilyLink(
-        senderUserId,
+        senderUserEmail,
         childEmailController.text,
         verificationCodeController.text,
       );
@@ -139,16 +141,16 @@ class FamilyLinkController extends GetxController {
     }
   }
 
-  Future<GetChildsByUserIdResponse?> getChildrenByParentId() async {
+  Future<GetChildsByUserIdResponse?> getChildrenByParentEmail() async {
     try {
-      final parentId = (await appService
-              .getDecodedToken(appService.getToken()))?['UserInfo']['id'] ??
-          'No_User_Id';
-      debugPrint('parentId: $parentId');
+      final parentEmail = (await appService
+              .getDecodedToken(appService.getToken()))?['UserInfo']['email'] ??
+          'No_User_Email';
+      debugPrint('parentEmail: $parentEmail');
 
-      debugPrint('getChildrenByParentId');
+      debugPrint('getChildrenByParentEmail');
       final error = AuthValidations.validateAll({
-        'parentId': parentId,
+        'email': parentEmail.toString(),
       });
       if (error != null) {
         return GetChildsByUserIdResponse(
@@ -161,7 +163,8 @@ class FamilyLinkController extends GetxController {
 
       isLoading(true);
 
-      final response = await _familyLinkService.getChildrenByParentId(parentId);
+      final GetChildsByUserIdResponse response = await _familyLinkService
+          .getChildrenByParentEmail(parentEmail.toString());
       debugPrint('Response: $response.toString()');
 
       return response;

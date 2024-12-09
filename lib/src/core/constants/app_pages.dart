@@ -12,7 +12,12 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/athkar_screens/athkar_categories_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/athkar_screens/athkar_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/login_screen.dart';
-import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screens/credential_details_register_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screens/gender_selection_register_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screens/personal_details_register_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screens/qualifications_register_screens.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screens/role_selection_register_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_screens/select_profile_image_register_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/reset_password_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/send_password_reset_code_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/entry_screens/language_screen.dart';
@@ -33,13 +38,6 @@ class AppPages {
       binding: LoginBinding(),
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 800),
-    ),
-    GetPage(
-      name: AppRoutes.register,
-      page: () => const RegisterScreen(),
-      binding: RegisterBinding(),
-      transition: Transition.cupertino,
-      transitionDuration: const Duration(milliseconds: 1000),
     ),
     GetPage(
       name: AppRoutes.sendPasswordResetCode,
@@ -131,6 +129,51 @@ class AppPages {
       name: AppRoutes.childAccountLinkedSuccessfullyScreen,
       page: () => const ChildAccountLinkedSuccessfullyScreen(),
       transition: Transition.leftToRightWithFade,
+    ),
+  ];
+
+  static final List<GetPage> registerPages = [
+    GetPage(
+      name: AppRoutes.qualificationsRegister,
+      page: () => const QualificationsRegisterScreens(),
+      binding: RegisterBinding(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(milliseconds: 1000),
+    ),
+    GetPage(
+      name: AppRoutes.credentialDetailsRegister,
+      page: () => const CredentialDetailsRegisterScreen(),
+      binding: RegisterBinding(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(milliseconds: 1000),
+    ),
+    GetPage(
+      name: AppRoutes.genderSelectionRegister,
+      page: () => const GenderSelectionRegisterScreen(),
+      binding: RegisterBinding(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(milliseconds: 1000),
+    ),
+    GetPage(
+      name: AppRoutes.roleSelectionRegister,
+      page: () => const RoleSelectionRegisterScreen(),
+      transition: Transition.leftToRightWithFade,
+      transitionDuration: const Duration(milliseconds: 500),
+      binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.selectProfileImageRegister,
+      page: () => const SelectProfileImageRegisterScreen(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(milliseconds: 1000),
+      binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.personalDetailsRegister,
+      page: () => const PersonalDetailsRegisterScreen(),
+      binding: RegisterBinding(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(milliseconds: 1000),
     ),
   ];
 }

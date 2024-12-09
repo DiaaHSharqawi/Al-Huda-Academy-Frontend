@@ -48,14 +48,15 @@ class HomeScreen extends GetView<HomeController> {
                 const SizedBox(
                   width: 80.0,
                   height: 80.0,
-                  child: CircleAvatar(
+                ),
+                /* child: CircleAvatar(
                     radius: 64.0,
                     backgroundImage: NetworkImage(
                       "https://res.cloudinary.com/dvqxt060a/image/upload/v1731927088/uploads/tabsfvu8obg4gjeryock.png",
                       scale: 3.5,
                     ),
                   ),
-                ),
+                ),*/
                 const SizedBox(width: 16.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
