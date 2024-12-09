@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/entry_screens_controllers/splash_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
-import '../../../controllers/splash_controller.dart';
 
 import '../../../core/constants/app_images.dart';
 import '../../../core/constants/app_colors.dart';

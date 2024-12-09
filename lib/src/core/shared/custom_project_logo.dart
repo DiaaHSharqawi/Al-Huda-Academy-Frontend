@@ -27,40 +27,40 @@ class CustomProjectLogo extends StatelessWidget {
     final String fontFamily =
         appService.isRtl.value ? AppFonts.arabicFont : AppFonts.englishFont;
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        SizedBox(
-          width: width,
-          height: height,
-          child: Image.asset(
+    return SizedBox(
+      height: 300,
+      width: double.infinity,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset(
             imagePath,
-            height: height,
-            width: width,
+            height: 150,
+            width: 150,
             fit: BoxFit.cover,
           ),
-        ),
-        if (text != null)
-          Positioned(
-            bottom: 8,
-            child: Container(
-              width: width,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                border: Border.all(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(32.0),
-              ),
-              child: CustomGoogleTextWidget(
-                text: text!,
-                fontFamily: fontFamily,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: fontSize,
-                textAlign: TextAlign.center,
+          if (text != null)
+            Positioned(
+              bottom: 10,
+              child: Container(
+                width: width,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+                child: CustomGoogleTextWidget(
+                  text: text!,
+                  fontFamily: fontFamily,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: fontSize,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

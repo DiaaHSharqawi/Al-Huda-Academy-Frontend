@@ -11,6 +11,10 @@ class AuthValidations {
       ),
       FormBuilderValidators.email(
           errorText: AuthValidationsLanguageConstants.enterAValidEmail.tr),
+      FormBuilderValidators.match(
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
+        errorText: AuthValidationsLanguageConstants.enterAValidEmail.tr,
+      ),
     ])(email);
   }
 
@@ -31,7 +35,7 @@ class AuthValidations {
         errorText: AuthValidationsLanguageConstants.phoneNumberIsRequired.tr,
       ),
       FormBuilderValidators.match(
-        RegExp(r'^\+?[0-9]{10,15}$'),
+        RegExp(r'^\+?[0-9]{4,15}$'),
         errorText: AuthValidationsLanguageConstants.enterValidPhoneNumber.tr,
       ),
     ])(phone);
@@ -112,6 +116,17 @@ class AuthValidations {
             .verificationCodeMustBeExactlyFourCharactersAndNoSpaces.tr,
       ),
     ])(code);
+  }
+
+  static String? validateBirthDate(String? birthDate) {
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: 'من فضلك أدخل تاريخ ميلادك',
+      ),
+      FormBuilderValidators.date(
+        errorText: 'من فضلك أدخل تاريخ ميلاد صحيح',
+      ),
+    ])(birthDate);
   }
 
   static Map<String, String?>? validateAll(Map<String, String?> values) {

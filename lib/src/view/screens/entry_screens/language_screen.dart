@@ -4,7 +4,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dar
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/entry_screens_widgets/language_screen_widgets.dart';
 
-import '../../../controllers/language_controller/language_controller.dart';
+import '../../../controllers/entry_screens_controllers/language_controller.dart';
 import '../../../core/constants/app_images.dart';
 import '../../../core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
@@ -23,7 +23,7 @@ class LanguageScreen extends GetView<LanguageController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildImageLogo(),
+                SizedBox(child: _buildImageLogo()),
                 const SizedBox(height: 82.0),
                 _buildTitle(),
                 const SizedBox(height: 32.0),
@@ -69,6 +69,8 @@ class LanguageScreen extends GetView<LanguageController> {
         onPressed: () {
           controller.changeLanguage(languageCode);
           controller.navigateToLoginScreen();
+          // todo:  return it back to navigate to login screen
+          //Get.toNamed(AppRoutes.athkarCategories);
         },
       ),
     );

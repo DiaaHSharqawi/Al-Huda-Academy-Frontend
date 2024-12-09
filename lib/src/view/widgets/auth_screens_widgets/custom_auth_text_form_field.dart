@@ -7,25 +7,27 @@ import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 class CustomAuthTextFormField extends StatelessWidget {
   final String? textFormLabelText;
   final String textFormHintText;
-  final IconData iconName;
-  final Color colorIcon;
+  final IconData? iconName;
+  final Color? colorIcon;
   final bool obscureText;
   final TextEditingController controller;
   final String? Function(String?)? textFormFieldValidator;
   final AutovalidateMode autovalidateMode;
   final VoidCallback? onTap;
+  final int? maxLines;
 
   const CustomAuthTextFormField({
     super.key,
     this.textFormLabelText,
     required this.textFormHintText,
-    required this.iconName,
-    required this.colorIcon,
+    this.iconName,
+    this.colorIcon,
     this.obscureText = false,
     required this.controller,
     required this.textFormFieldValidator,
     required this.autovalidateMode,
     this.onTap,
+    this.maxLines = 1,
   });
 
   @override
@@ -41,6 +43,7 @@ class CustomAuthTextFormField extends StatelessWidget {
     final TextDirection hintTextDirection = textFormDirection;
 
     return TextFormField(
+      maxLines: maxLines,
       autovalidateMode: autovalidateMode,
       obscureText: obscureText,
       validator: textFormFieldValidator,
@@ -58,13 +61,21 @@ class CustomAuthTextFormField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        prefixIcon: InkWell(
-          onTap: onTap,
-          child: Icon(
-            iconName,
-            color: colorIcon,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: const BorderSide(
+            color: Colors.black,
           ),
         ),
+        prefixIcon: iconName != null
+            ? InkWell(
+                onTap: onTap,
+                child: Icon(
+                  iconName,
+                  color: colorIcon,
+                ),
+              )
+            : null,
       ),
       textDirection: textFormDirection,
     );
