@@ -39,12 +39,7 @@ class AlHudaAcademy extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: AppRoutes.login,
         getPages: [
-          ...AppPages.entryScreens,
-          ...AppPages.authenticationPages,
-          ...AppPages.homePages,
-          ...AppPages.athkarPages,
-          ...AppPages.familyLinksPages,
-          ...AppPages.registerPages,
+          ...AppPages.pages,
         ],
       ),
     );

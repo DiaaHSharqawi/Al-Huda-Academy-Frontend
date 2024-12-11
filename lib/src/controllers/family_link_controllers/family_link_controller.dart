@@ -69,9 +69,9 @@ class FamilyLinkController extends GetxController {
         isLoading(true);
         isEnabled(false);
 
-        final senderUserEmail = (await appService.getDecodedToken(
-                appService.getToken()))?['UserInfo']['email'] ??
-            'No_User_Email';
+        final senderUserEmail =
+            (await appService.getDecodedToken())?['UserInfo']['email'] ??
+                'No_User_Email';
 
         response = await _familyLinkService.sendChildVerificationCodeFamilyLink(
           senderUserEmail,
@@ -115,8 +115,8 @@ class FamilyLinkController extends GetxController {
       isLoading(true);
       isEnabled(false);
 
-      final senderUserEmail = (await appService
-              .getDecodedToken(appService.getToken()))?['UserInfo']['email'] ??
+      final senderUserEmail = (await appService.getDecodedToken())?['UserInfo']
+              ['email'] ??
           'No_User_Email';
       debugPrint('senderUserEmail: $senderUserEmail');
 
@@ -143,8 +143,8 @@ class FamilyLinkController extends GetxController {
 
   Future<GetChildsByUserIdResponse?> getChildrenByParentEmail() async {
     try {
-      final parentEmail = (await appService
-              .getDecodedToken(appService.getToken()))?['UserInfo']['email'] ??
+      final parentEmail = (await appService.getDecodedToken())?['UserInfo']
+              ['email'] ??
           'No_User_Email';
       debugPrint('parentEmail: $parentEmail');
 

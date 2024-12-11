@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
-import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/auth/register_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/Validations.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
@@ -73,6 +72,7 @@ class RegisterController extends GetxController {
     update();
   }
 
+/*
   Future<RegisterResponse> registerUser() async {
     final error = AuthValidations.validateAll({
       'fullName': fullNameController.text,
@@ -140,7 +140,7 @@ class RegisterController extends GetxController {
       isLoading(false);
     }
   }
-
+*/
   Map<String, Object?> validatePersonalDetails() {
     hasInteracted(true);
     debugPrint("Validating personal details");

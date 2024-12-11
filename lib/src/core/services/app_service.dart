@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/user_information.dart';
 
 class AppService extends GetxService {
   late GetStorage languageStorage;
   var isRtl = false.obs;
+
+  var user = Rxn<UserInformation>();
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
@@ -32,6 +35,20 @@ class AppService extends GetxService {
     await _secureStorage.write(key: 'token', value: token);
   }
 
+  Future<void> loadUserFromToken() async {
+    String? token = await getToken();
+    if (token != null && JwtDecoder.isExpired(token) == false) {
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      debugPrint("Decoded Token: $decodedToken");
+      user.value = UserInformation.fromJson(
+        decodedToken["UserInfo"],
+      );
+    } else {
+      debugPrint("Token is either null or expired");
+      user.value = null;
+    }
+  }
+
   Future<String?> getToken() async {
     return await _secureStorage.read(key: 'token');
   }
@@ -40,7 +57,7 @@ class AppService extends GetxService {
     await _secureStorage.delete(key: 'token');
   }
 
-  Future<Map<String, dynamic>?> getDecodedToken(token) async {
+  Future<Map<String, dynamic>?> getDecodedToken() async {
     String? token = await getToken();
     if (token != null && JwtDecoder.isExpired(token) == false) {
       return JwtDecoder.decode(token);

@@ -39,4 +39,8 @@ class AppRoutes {
       "/family-link/enter-your-child-verification-code";
   static String childAccountLinkedSuccessfullyScreen =
       "/family-link/child-account-linked-successfully";
+
+  // Supervisor Screens
+  static String supervisor = "/supervisor";
+  static String supervisorHomeScreen = "/supervisor/home";
 }
