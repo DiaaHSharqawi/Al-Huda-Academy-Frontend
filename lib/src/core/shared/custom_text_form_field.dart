@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 
-class CustomAuthTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatelessWidget {
   final String? textFormLabelText;
   final String textFormHintText;
   final IconData? iconName;
@@ -15,9 +15,8 @@ class CustomAuthTextFormField extends StatelessWidget {
   final AutovalidateMode autovalidateMode;
   final VoidCallback? onTap;
   final int? maxLines;
-  final bool? readOnly;
 
-  const CustomAuthTextFormField({
+  const CustomTextFormField({
     super.key,
     this.textFormLabelText,
     required this.textFormHintText,
@@ -29,7 +28,6 @@ class CustomAuthTextFormField extends StatelessWidget {
     required this.autovalidateMode,
     this.onTap,
     this.maxLines = 1,
-    this.readOnly = false,
   });
 
   @override
@@ -45,7 +43,6 @@ class CustomAuthTextFormField extends StatelessWidget {
     final TextDirection hintTextDirection = textFormDirection;
 
     return TextFormField(
-      readOnly: readOnly!,
       maxLines: maxLines,
       autovalidateMode: autovalidateMode,
       obscureText: obscureText,

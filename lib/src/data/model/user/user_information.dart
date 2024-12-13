@@ -1,13 +1,18 @@
 class UserInformation {
+  String _id;
   String _email;
   String _fullName;
   Role _role;
 
   UserInformation(
-      {required String email, required String fullName, required Role role})
+      {required String email,
+      required String fullName,
+      required Role role,
+      required String id})
       : _email = email,
         _fullName = fullName,
-        _role = role;
+        _role = role,
+        _id = id;
 
   Role get getRole => _role;
   set role(Role role) => _role = role;
@@ -20,6 +25,7 @@ class UserInformation {
 
   factory UserInformation.fromJson(Map<String, dynamic> json) {
     return UserInformation(
+      id: json['id'].toString(),
       email: json['email'],
       fullName: json['fullName'],
       role: Role.fromJson(json['role']),
@@ -28,6 +34,7 @@ class UserInformation {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': _id,
       'fullName': _fullName,
       'role': _role.toJson(),
       'email': _email,

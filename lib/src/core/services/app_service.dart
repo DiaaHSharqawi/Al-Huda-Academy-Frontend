@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/user_information.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/user/user_information.dart';
 
 class AppService extends GetxService {
   late GetStorage languageStorage;

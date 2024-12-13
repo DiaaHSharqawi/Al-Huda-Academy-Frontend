@@ -15,6 +15,7 @@ class CustomGoogleTextWidget extends StatefulWidget {
   final TextAlign? textAlign;
   final VoidCallback? onTap;
   final TextOverflow? overflow;
+  final TextDirection? textDirection;
 
   const CustomGoogleTextWidget({
     super.key,
@@ -28,6 +29,7 @@ class CustomGoogleTextWidget extends StatefulWidget {
     this.textAlign,
     this.onTap,
     this.overflow,
+    this.textDirection,
   });
 
   @override
@@ -35,9 +37,6 @@ class CustomGoogleTextWidget extends StatefulWidget {
 }
 
 class _CustomGoogleTextWidgetState extends State<CustomGoogleTextWidget> {
-  get textAlign => null;
-  set textAlign(textAlgin) => textAlgin;
-
   @override
   Widget build(BuildContext context) {
     final AppService appService = Get.find<AppService>();
@@ -46,22 +45,27 @@ class _CustomGoogleTextWidgetState extends State<CustomGoogleTextWidget> {
     final String fontFamily =
         isArabic ? AppFonts.arabicFont : AppFonts.englishFont;
 
-    textAlign ??= isArabic ? TextAlign.right : TextAlign.left;
-    debugPrint(widget.textAlign.toString());
+    final textAlign =
+        widget.textAlign ?? (isArabic ? TextAlign.right : TextAlign.left);
+    //debugPrint(textAlign.toString());
 
-    return InkWell(
-      onTap: widget.onTap,
-      splashColor: Colors.blue.withAlpha(30),
-      child: Text(
-        widget.text,
-        textAlign: widget.textAlign,
-        style: GoogleFonts.getFont(
-          fontFamily,
-          fontSize: widget.fontSize,
-          fontWeight: widget.fontWeight,
-          letterSpacing: widget.letterSpacing,
-          decoration: widget.textDecoration,
-          color: widget.color,
+    return Directionality(
+      textDirection: widget.textDirection ??
+          (isArabic ? TextDirection.rtl : TextDirection.ltr),
+      child: InkWell(
+        onTap: widget.onTap,
+        splashColor: Colors.blue.withAlpha(30),
+        child: Text(
+          widget.text,
+          textAlign: textAlign,
+          style: GoogleFonts.getFont(
+            fontFamily,
+            fontSize: widget.fontSize,
+            fontWeight: widget.fontWeight,
+            letterSpacing: widget.letterSpacing,
+            decoration: widget.textDecoration,
+            color: widget.color,
+          ),
         ),
       ),
     );

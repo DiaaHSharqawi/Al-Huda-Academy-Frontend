@@ -11,8 +11,8 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.d
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_image_picker.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/profile_image.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/role.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/profile_image.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/role.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class SelectProfileImageRegisterScreen extends GetView<RegisterController> {

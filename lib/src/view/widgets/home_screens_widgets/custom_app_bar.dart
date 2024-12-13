@@ -13,7 +13,7 @@ class CustomAppBar extends PreferredSize {
     required this.appBarChilds,
     required this.backgroundColor,
     this.appBarBackgroundImage,
-    required super.preferredSize,
+    super.preferredSize = const Size.fromHeight(180.0),
     required super.child,
     this.showBackArrow = false,
     this.arrowColor = Colors.white,
@@ -23,7 +23,7 @@ class CustomAppBar extends PreferredSize {
   @override
   PreferredSize build(BuildContext context) {
     return PreferredSize(
-      preferredSize: const Size.fromHeight(180.0),
+      preferredSize: preferredSize,
       child: AppBar(
         elevation: 0,
         automaticallyImplyLeading: showBackArrow!,
@@ -48,14 +48,15 @@ class CustomAppBar extends PreferredSize {
           alignment: Alignment.bottomCenter,
           child: Container(
             width: double.infinity,
-            height: 180.0,
             decoration: BoxDecoration(
               color: backgroundColor,
               image: appBarBackgroundImage != null
                   ? DecorationImage(
-                      image: AssetImage(appBarBackgroundImage!),
-                      fit: BoxFit.contain,
-                      alignment: Alignment.bottomCenter,
+                      image: AssetImage(
+                        appBarBackgroundImage!,
+                      ),
+                      fit: BoxFit.fitHeight,
+                      alignment: Alignment.center,
                       opacity: 0.1,
                     )
                   : null,

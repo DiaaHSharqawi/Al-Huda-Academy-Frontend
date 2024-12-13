@@ -18,6 +18,7 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
+          preferredSize: const Size.fromHeight(150.0),
           appBarChilds: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
@@ -36,7 +37,6 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
             ),
           ),
           backgroundColor: AppColors.primaryColor,
-          preferredSize: const Size.fromHeight(180.0),
           child: const SizedBox.expand(),
         ),
         body: Padding(
@@ -125,6 +125,7 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
         ),
         onTap: () {
           // Navigate to the group creation screen
+          controller.navigateToCreateGroupScreen();
         },
         shadow: const BoxShadow(
           color: AppColors.primaryColor,

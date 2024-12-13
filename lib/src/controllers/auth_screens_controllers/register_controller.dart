@@ -9,9 +9,9 @@ import 'package:moltqa_al_quran_frontend/src/core/services/auth/register_service
 import 'package:moltqa_al_quran_frontend/src/core/utils/Validations.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/auth_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/auth/register_response/register_response.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/gender.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/profile_image.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/role.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/profile_image.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/role.dart';
 
 class RegisterController extends GetxController {
   // Uint8List? profileImage;
@@ -72,75 +72,6 @@ class RegisterController extends GetxController {
     update();
   }
 
-/*
-  Future<RegisterResponse> registerUser() async {
-    final error = AuthValidations.validateAll({
-      'fullName': fullNameController.text,
-      'email': emailController.text,
-      'password': passwordController.text,
-      //'age': ageController.text,
-      'phone': phoneController.text,
-      'city': cityController.text,
-      'country': countryController.text,
-      'gender': selectedGender.value?.name,
-    });
-    RegisterResponse? registerResponse;
-    if (error != null) {
-      registerResponse = RegisterResponse(
-        statusCode: 422,
-        success: false,
-        message:
-            RegisterScreenLanguageConstants.pleaseMakeSureToFillAllFields.tr,
-        data: null,
-      );
-      return registerResponse;
-    }
-    if (profileImage.value == null) {
-      registerResponse = RegisterResponse(
-        statusCode: 400,
-        success: false,
-        message: RegisterScreenLanguageConstants
-            .pleaseMakeSureToUploadYourProfileImage.tr,
-        data: null,
-      );
-
-      return registerResponse;
-    }
-
-    final genderString = selectedGender.value?.name ?? '';
-
-    /*final registerData = RegisterModel(
-      fullName: fullNameController.text,
-      email: emailController.text,
-      password: passwordController.text,
-      phone: phoneController.text,
-      city: cityController.text,
-      country: countryController.text,
-      gender: genderString,
-      age: ageController.text,
-      profileImage: profileImage.value,
-    );*/
-
-    try {
-      isLoading(true);
-      //final RegisterResponse registerResponse =
-      //     await _registerService.registerUser(registerData);
-      //debugPrint("---> Register response: ${registerResponse.toString()}");
-      return RegisterResponse(
-          statusCode: 200, success: true, message: "message", data: null);
-    } catch (e) {
-      debugPrint(e.toString());
-      return RegisterResponse(
-        statusCode: 500,
-        success: false,
-        message: "An error occurred while registering. Please try again.",
-        data: null,
-      );
-    } finally {
-      isLoading(false);
-    }
-  }
-*/
   Map<String, Object?> validatePersonalDetails() {
     hasInteracted(true);
     debugPrint("Validating personal details");
