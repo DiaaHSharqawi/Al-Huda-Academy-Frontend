@@ -3,9 +3,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
+import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/auth/login_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response/login_response.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/user_model.dart';
 
 class LoginController extends GetxController {
   final TextEditingController userIdentifierController =
@@ -18,8 +18,6 @@ class LoginController extends GetxController {
   var isEnabled = true.obs;
 
   var isObscureText = true.obs;
-
-  var user = Rxn<UserModel>();
 
   final LoginService _loginService = LoginService();
 
@@ -79,8 +77,18 @@ class LoginController extends GetxController {
     }
   }
 
-  void navigateToHomeScreen() {
-    Get.toNamed(AppRoutes.home);
+  void navigateToHomeScreen() async {
+    var appService = Get.find<AppService>();
+    debugPrint("the login role was : ");
+    var roleName = appService.user.value?.getRole.getRoleName;
+    debugPrint("the login role was : ==> $roleName");
+    debugPrint(appService.user.toJson().toString());
+
+    if (roleName == 'supervisor') {
+      Get.toNamed(AppRoutes.supervisorHomeScreen);
+    }
+
+    // Get.toNamed(AppRoutes.home);
   }
 
   void navigateToRegisterScreen() {

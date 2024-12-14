@@ -64,8 +64,12 @@ dependencies:
 
   flutter_secure_storage: ^9.2.2
   getwidget: ^4.0.0
+
   board_datetime_picker: ^2.1.6
+
   intl_phone_field: ^3.2.0
+
+  day_night_time_picker:
 
 dev_dependencies:
   json_serializable: ^6.5.0

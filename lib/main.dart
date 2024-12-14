@@ -37,14 +37,9 @@ class AlHudaAcademy extends StatelessWidget {
         locale: localizationController.initialLanguage,
         translations: AppTranslation(),
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.language,
         getPages: [
-          ...AppPages.entryScreens,
-          ...AppPages.authenticationPages,
-          ...AppPages.homePages,
-          ...AppPages.athkarPages,
-          ...AppPages.familyLinksPages,
-          ...AppPages.registerPages,
+          ...AppPages.pages,
         ],
       ),
     );

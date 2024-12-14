@@ -11,7 +11,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.d
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/gender.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class GenderSelectionRegisterScreen extends GetView<RegisterController> {

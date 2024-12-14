@@ -40,7 +40,8 @@ class LoginService extends GetxService {
         debugPrint("Login data: ${data['data']}");
         final loginMessage = LoginResponseData.fromJson(data['data']);
         if (loginMessage.accessToken != null) {
-          appService.saveToken(loginMessage.accessToken!);
+          await appService.saveToken(loginMessage.accessToken!);
+          await appService.loadUserFromToken();
         } else {
           debugPrint("Access token is null");
         }

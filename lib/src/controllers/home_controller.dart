@@ -9,7 +9,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    appService.getDecodedToken(appService.getToken()).then((decodedToken) {
+    appService.getDecodedToken().then((decodedToken) {
       debugPrint("Decoded Token: $decodedToken");
       debugPrint(decodedToken?["UserInfo"]["fullName"] ?? "");
       welcomeName.value = decodedToken?["UserInfo"]["fullName"] ?? "";
