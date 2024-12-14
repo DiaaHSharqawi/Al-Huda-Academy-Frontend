@@ -30,17 +30,15 @@ class CustomAppBar extends PreferredSize {
         leading: showBackArrow!
             ? Container(
                 margin: EdgeInsets.all(arrowMargin!),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: arrowColor,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Navigate back
-                    },
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: arrowColor,
                   ),
+                  onPressed: () {
+                    debugPrint("Back Arrow Pressed");
+                    Navigator.of(context).pop(); // Navigate back
+                  },
                 ),
               )
             : null,

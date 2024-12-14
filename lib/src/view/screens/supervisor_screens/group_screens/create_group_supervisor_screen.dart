@@ -1,9 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/create_group_supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
@@ -52,7 +54,7 @@ class CreateGroupSupervisorScreen
                 const SizedBox(
                   height: 32.0,
                 ),
-                _buildCreateGroupButton(),
+                _buildCreateGroupButton(context),
               ],
             ),
           ),
@@ -61,23 +63,50 @@ class CreateGroupSupervisorScreen
     );
   }
 
-  Widget _buildCreateGroupButton() {
-    return Obx(() => controller.isSubmitting.value
-        ? const CircularProgressIndicator()
-        : SizedBox(
-            width: double.infinity,
-            child: CustomButton(
-              foregroundColor: Colors.white,
-              backgroundColor: AppColors.primaryColor,
-              buttonText: "انشاء المجموعة",
-              buttonTextColor: AppColors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              onPressed: () {
-                controller.createANewMemorizationGroup();
-              },
-            ),
-          ));
+  Widget _buildCreateGroupButton(BuildContext context) {
+    return Obx(() => SizedBox(
+          width: double.infinity,
+          child: CustomButton(
+            loadingWidget: controller.isLoading.value
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : null,
+            foregroundColor: Colors.white,
+            backgroundColor: AppColors.primaryColor,
+            buttonText: "انشاء المجموعة",
+            buttonTextColor: AppColors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            onPressed: () async {
+              final createANewMemorizationGroupResponse =
+                  await controller.createANewMemorizationGroup();
+
+              debugPrint("Response: ");
+              debugPrint(createANewMemorizationGroupResponse.toString());
+              if (!context.mounted) return;
+
+              debugPrint(
+                  "Response ---->: ${createANewMemorizationGroupResponse['statusCode']}");
+              if (createANewMemorizationGroupResponse['statusCode'] == 201) {
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.success,
+                  "تم ارسال طلب لانشاء المجموعة",
+                  "تم ارسال طلب لانشاء المجموعة ، سيتم مراجعة الطلب من قبل الادارة وسيتم اعلامك بالنتيجة",
+                );
+                controller.navigateToSuperVisorHomeScreen();
+              } else {
+                CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.error,
+                  "حدث خطأ ما",
+                  createANewMemorizationGroupResponse['message'],
+                );
+              }
+            },
+          ),
+        ));
   }
 
   Widget _buildDayPicker() {
@@ -119,6 +148,8 @@ class CreateGroupSupervisorScreen
 
   PreferredSize _buildAppBar() {
     return const CustomAppBar(
+      showBackArrow: true,
+      arrowMargin: 16.0,
       preferredSize: Size.fromHeight(150.0),
       appBarBackgroundImage: "assets/images/ornament1.png",
       appBarChilds: Padding(

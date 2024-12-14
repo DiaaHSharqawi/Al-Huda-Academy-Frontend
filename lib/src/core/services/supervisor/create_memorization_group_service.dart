@@ -43,7 +43,7 @@ class CreateMemorizationGroupService extends GetxService {
           'end_time': createModelMap['endTime'],
           'days': createModelMap['selectedDays'],
           'group_status': 'pending',
-          'supervisor_id': appService.user.value!.getEmail,
+          'supervisor_id': appService.user.value!.getMemberId(),
         }),
       );
 
