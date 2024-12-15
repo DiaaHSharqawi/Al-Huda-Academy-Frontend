@@ -338,7 +338,6 @@ class RegisterController extends GetxController {
   }
 
   void navigateToLoginScreen() {
-    // TODO : 1. Make it later Navigate to Home screen,
     Get.offAllNamed(AppRoutes.login);
   }
 

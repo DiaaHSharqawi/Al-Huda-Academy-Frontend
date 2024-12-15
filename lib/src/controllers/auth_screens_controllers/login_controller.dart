@@ -86,6 +86,10 @@ class LoginController extends GetxController {
 
     if (roleName == 'supervisor') {
       Get.toNamed(AppRoutes.supervisorHomeScreen);
+    } else if (roleName == 'participant') {
+      Get.toNamed(AppRoutes.participantHomeScreen);
+    } else if (roleName == 'admin') {
+      Get.toNamed(AppRoutes.adminHomeScreen);
     }
 
     // Get.toNamed(AppRoutes.home);

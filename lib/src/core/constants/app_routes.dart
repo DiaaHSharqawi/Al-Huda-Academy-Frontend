@@ -44,4 +44,12 @@ class AppRoutes {
   static String supervisor = "/supervisor";
   static String supervisorHomeScreen = "/supervisor/home";
   static String createGroupSupervisorScreen = "/supervisor/create-group";
+
+  // Participant Screens
+  static String participant = "/participant";
+  static String participantHomeScreen = "/participant/home";
+
+  // Admin Screens
+  static String admin = "/admin";
+  static String adminHomeScreen = "/admin/home";
 }
