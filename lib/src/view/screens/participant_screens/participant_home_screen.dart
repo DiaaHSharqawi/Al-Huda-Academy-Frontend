@@ -4,6 +4,7 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_card.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
@@ -180,6 +181,9 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
         color: AppColors.blackColor,
         size: 40.0,
       ),
+      onTap: () {
+        Get.toNamed(AppRoutes.participantSearchMemorizationGroup);
+      },
     );
   }
 

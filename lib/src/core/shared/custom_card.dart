@@ -13,6 +13,7 @@ class CustomCard extends StatelessWidget {
   final double cardTextSize;
   final Color cardInnerBoxShadowColor;
   final Widget? icon;
+  final VoidCallback? onTap;
 
   const CustomCard({
     super.key,
@@ -26,6 +27,7 @@ class CustomCard extends StatelessWidget {
     required this.cardTextColor,
     this.avatarCard,
     this.icon,
+    this.onTap,
   });
 
   @override
@@ -53,7 +55,7 @@ class CustomCard extends StatelessWidget {
           width: 40.0,
           child: icon,
         ),
-        onTap: () {},
+        onTap: onTap,
         shadow: BoxShadow(
           color: cardInnerBoxShadowColor,
           blurRadius: 10.0,
