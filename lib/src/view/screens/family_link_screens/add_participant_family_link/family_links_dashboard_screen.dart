@@ -63,7 +63,7 @@ class FamilyLinksDashboardScreen extends GetView<FamilyLinkController> {
         controller: ScrollController(),
         itemCount: controller.familyLinks.length,
         itemBuilder: (context, index) {
-          final familyLink = controller.familyLinks[index];
+          //   final familyLink = controller.familyLinks[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(

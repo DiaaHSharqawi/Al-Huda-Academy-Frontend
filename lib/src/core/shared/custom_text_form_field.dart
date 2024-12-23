@@ -14,6 +14,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? textFormFieldValidator;
   final AutovalidateMode autovalidateMode;
   final VoidCallback? onTap;
+  final void Function(String)? onChanged;
   final int? maxLines;
 
   const CustomTextFormField({
@@ -28,6 +29,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.autovalidateMode,
     this.onTap,
     this.maxLines = 1,
+    this.onChanged,
   });
 
   @override
@@ -43,6 +45,7 @@ class CustomTextFormField extends StatelessWidget {
     final TextDirection hintTextDirection = textFormDirection;
 
     return TextFormField(
+      onChanged: onChanged,
       maxLines: maxLines,
       autovalidateMode: autovalidateMode,
       obscureText: obscureText,

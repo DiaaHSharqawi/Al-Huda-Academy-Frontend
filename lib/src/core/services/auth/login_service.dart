@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -29,7 +31,7 @@ class LoginService extends GetxService {
           'email': email,
           'password': password,
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       debugPrint('Response status: ${response.statusCode}');
       debugPrint('Response body: ${response.body}');
@@ -61,13 +63,36 @@ class LoginService extends GetxService {
           message: data['message'],
         );
       }
+    } on SocketException {
+      debugPrint("No Internet connection");
+      return LoginResponse(
+        statusCode: 503,
+        message:
+            "No Internet connection. Please check your connection and try again.",
+        success: false,
+      );
+    } on HttpException {
+      debugPrint("Couldn't find the server");
+      return LoginResponse(
+        statusCode: 404,
+        message: "Couldn't find the server. Please try again later.",
+        success: false,
+      );
+    } on TimeoutException {
+      debugPrint("Connection timeout");
+      return LoginResponse(
+        statusCode: 408,
+        message: "Connection timeout. Please try again later.",
+        success: false,
+      );
     } catch (e) {
       debugPrint("Exception occurred: $e");
       return LoginResponse(
-          statusCode: 500,
-          message:
-              "An error occurred while logging in. Please check your internet connection and try again.",
-          success: false);
+        statusCode: 500,
+        message:
+            "An error occurred while logging in. Please check your internet connection and try again.",
+        success: false,
+      );
     }
   }
 }
