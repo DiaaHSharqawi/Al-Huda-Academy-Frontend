@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_search_memorization_group_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.dart';
@@ -11,6 +12,9 @@ import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_filt
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_search_filter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/selected_part_of_quran_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_langugue_filtter.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
+import 'package:moltqa_al_quran_frontend/src/view/widgets/group_screens_widgets/custom_group_card.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -22,27 +26,35 @@ class ParticipantSearchMemorizationGroupScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
         body: Container(
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeaderSection(),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  _buildSearchField(context),
-                ],
-              ),
+          child: SizedBox(
+            width: double.infinity,
+            child: Obx(
+              () => controller.isLoading.value
+                  ? Center(
+                      child: Lottie.asset(
+                        'assets/images/loaderLottie.json',
+                        width: 600,
+                        height: 600,
+                      ),
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeaderSection(),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        _buildSearchField(context),
+                        _buildMemorizationGroupList(),
+                      ],
+                    ),
             ),
           ),
         ),
@@ -50,27 +62,53 @@ class ParticipantSearchMemorizationGroupScreen
     );
   }
 
+  Widget _buildLoadingIndicator() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
   Widget _buildSearchField(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: CustomTextFormField(
-              iconName: Icons.search,
-              textFormHintText: "ابحث عن أستاذ أو حلقة",
-              controller: controller.searchController,
-              textFormFieldValidator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "الرجاء إدخال كلمة البحث";
-                }
-                return null;
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-            ),
+      child: Row(children: [
+        Expanded(
+          child: CustomTextFormField(
+            onChanged: (String value) async {
+              if (value.isEmpty) {
+                debugPrint("Search query is empty");
+                controller.memorizationGroups.clear();
+                controller.buildFilterQueryParams();
+                await controller.fetchMemorizationGroup();
+                controller.isFilterApplied.value = false;
+              }
+              controller.searchQuery.value = value;
+            },
+            iconName: Icons.search,
+            textFormHintText: "ابحث عن حلقة",
+            controller: controller.searchController,
+            textFormFieldValidator: (value) {
+              if (value == null || value.isEmpty) {
+                return "الرجاء إدخال كلمة البحث";
+              }
+              return null;
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
+        ),
+        Obx(
+          () => IconButton(
+            icon: Icon(
+              controller.isFilterApplied.value
+                  ? Icons.filter_list_outlined
+                  : Icons.filter_list_off_outlined,
+              color: controller.isFilterApplied.value
+                  ? Colors.red
+                  : AppColors.blackColor,
+            ),
             onPressed: () {
               showDialog(
                 context: context,
@@ -80,14 +118,101 @@ class ParticipantSearchMemorizationGroupScreen
               );
             },
           ),
-        ],
-      ),
+        )
+      ]),
     );
+  }
+
+  Widget _buildMemorizationGroupList() {
+    return Obx(() {
+      if (controller.memorizationGroups.isEmpty) {
+        return const Center(
+          child: Text(
+            'No groups found',
+            style: TextStyle(fontSize: 18.0, color: Colors.black),
+          ),
+        );
+      }
+      return NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            //  debugPrint("Notification: $notification");
+            if (notification is ScrollUpdateNotification) {
+              if (notification.scrollDelta != null) {
+                // debugPrint("Scrolling");
+                return false;
+              }
+            }
+            return true;
+          },
+          child:
+              //  if (controller.memorizationGroups.length > 1)
+              /*   const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 1.0),
+                  child: Center(
+                    child: CustomGoogleTextWidget(
+                      text: 'مرر للأسفل للمزيد من النتائج',
+                      fontSize: 15.0,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),*/
+
+              Expanded(
+            flex: 1,
+            child: ListView.builder(
+              //shrinkWrap: true,
+              controller: controller.scrollController,
+              itemCount: controller.memorizationGroups.length +
+                  (controller.isMoreDataLoading.value ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < controller.memorizationGroups.length) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    width: double.infinity,
+                    child: CustomGroupCard(
+                      groupTime:
+                          "${controller.memorizationGroups[index].startTime!} - ${controller.memorizationGroups[index].endTime!}",
+                      days:
+                          controller.memorizationGroups[index].days.toString(),
+                      groupName:
+                          controller.memorizationGroups[index].groupName!,
+                      groupGoal:
+                          controller.memorizationGroups[index].groupGoal!,
+                      studentsCount: controller
+                          .memorizationGroups[index].participantsGender!
+                          .toString(),
+                      groupGender: controller
+                          .memorizationGroups[index].participantsGender!,
+                      participantsLevel: controller
+                          .memorizationGroups[index].participantsLevel!,
+                      language: controller
+                          .memorizationGroups[index].participantsGender!
+                          .toString(),
+                      onDetailsPressed: () {
+                        debugPrint("Details pressed");
+                        debugPrint(
+                            "Group id: ${controller.memorizationGroups[index].id}");
+                      },
+                    ),
+                  );
+                } else if (index >= controller.memorizationGroups.length &&
+                    controller.memorizationGroups.length <
+                        controller.totalMemorizationGroups) {
+                  return _buildLoadingIndicator();
+                } else {
+                  debugPrint("No more data to load");
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ));
+    });
   }
 
   Widget _buildFilterDialog(BuildContext context) {
     return AlertDialog(
       scrollable: true,
+      surfaceTintColor: AppColors.white,
       title: const CustomGoogleTextWidget(
         text: "فلترة البحث",
         fontSize: 18.0,
@@ -134,6 +259,11 @@ class ParticipantSearchMemorizationGroupScreen
           onPressed: () {
             // Clear filter logic
             Navigator.of(context).pop();
+            controller.queryParams.clear();
+            controller.clearFilterQueryParams();
+
+            controller.fetchMemorizationGroup();
+            controller.isFilterApplied.value = false;
           },
           child: const CustomGoogleTextWidget(
             text: "إزالة التصفية",
@@ -143,9 +273,19 @@ class ParticipantSearchMemorizationGroupScreen
           ),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             // Apply filter logic
+            debugPrint("Apply filter");
+            debugPrint(controller.selectedGender.value.name);
+            debugPrint(controller.selectedGroupObjective.value.name);
+
             Navigator.of(context).pop();
+            controller.buildFilterQueryParams();
+
+            await controller.fetchMemorizationGroup();
+
+            debugPrint("Query params: ${controller.queryParams}");
+            debugPrint(controller.selectedSurahs.toString());
           },
           child: const CustomGoogleTextWidget(
             text: "تطبيق",
@@ -281,7 +421,7 @@ class ParticipantSearchMemorizationGroupScreen
                 GroupContentFilter.partOfQuran,
             onChanged: (value) {
               if (value != null) {
-                debugPrint("Selected role: $value");
+                debugPrint("Selected content: $value");
                 controller.selectedGroupContent.value = value;
               }
             },
@@ -293,6 +433,26 @@ class ParticipantSearchMemorizationGroupScreen
                   GroupContentFilter.partOfQuran
               ? _buildPartOfQuranChoice()
               : const SizedBox(),
+        ),
+        Obx(
+          () => CustomRadioListTile<GroupContentFilter>(
+            title: const CustomGoogleTextWidget(
+              text: 'مقتطفات من القران',
+              fontSize: 16.0,
+              fontWeight: FontWeight.normal,
+              color: AppColors.blackColor,
+            ),
+            value: GroupContentFilter.excerptsFromTheQuran,
+            groupValue: controller.selectedGroupContent.value,
+            selected: controller.selectedGroupContent.value ==
+                GroupContentFilter.excerptsFromTheQuran,
+            onChanged: (value) {
+              if (value != null) {
+                debugPrint("Selected content: $value");
+                controller.selectedGroupContent.value = value;
+              }
+            },
+          ),
         ),
         Obx(
           () => CustomRadioListTile<GroupContentFilter>(
@@ -362,51 +522,57 @@ class ParticipantSearchMemorizationGroupScreen
         const SizedBox(
           height: 8.0,
         ),
-        MultiSelectDialogField(
-          items: [
-            MultiSelectItem<String>(
-              '1',
-              'الفاتحة',
+        if (controller.selectedPartOfQuranType.value ==
+            SelectedPartOfQuranFiltter.surahs)
+          Obx(
+            () => MultiSelectDialogField<Surah>(
+              initialValue: controller.selectedSurahs,
+              items: controller.surahs
+                  .map((surah) => MultiSelectItem<Surah>(surah, surah.name!))
+                  .toList(),
+              chipDisplay: MultiSelectChipDisplay<Surah>(
+                chipColor: AppColors.primaryColor,
+                textStyle: const TextStyle(color: Colors.white),
+                items: controller.selectedSurahs
+                    .map((surah) => MultiSelectItem<Surah>(surah, surah.name!))
+                    .toList(),
+                onTap: (value) {
+                  controller.selectedSurahs.remove(value);
+                },
+              ),
+              title: const CustomGoogleTextWidget(
+                text: "اختر السور",
+                fontSize: 16.0,
+              ),
+              selectedColor: AppColors.primaryColor,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.primaryColor,
+                  width: 2,
+                ),
+              ),
+              buttonIcon: const Icon(
+                Icons.arrow_drop_down,
+                color: AppColors.primaryColor,
+              ),
+              buttonText: Text(
+                "اختر السور",
+                style: GoogleFonts.almarai(
+                  fontSize: 16.0,
+                  color: AppColors.blackColor,
+                ),
+              ),
+              onConfirm: (values) {
+                debugPrint("Selected surahs: $values");
+                debugPrint("Selected surahs: ${values.isEmpty}");
+
+                controller.selectedSurahs.value = values;
+                debugPrint(
+                    "Selected surahs: ${controller.selectedSurahs.toString()}");
+              },
             ),
-            MultiSelectItem<String>(
-              '2',
-              'البقرة',
-            ),
-          ],
-          title: const CustomGoogleTextWidget(
-            text: "اختر السور",
-            fontSize: 16.0,
-          ),
-          selectedColor: AppColors.primaryColor,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: AppColors.primaryColor,
-              width: 2,
-            ),
-          ),
-          buttonIcon: const Icon(
-            Icons.arrow_drop_down,
-            color: AppColors.primaryColor,
-          ),
-          buttonText: const Text(
-            "اختر السور",
-            style: TextStyle(
-              fontSize: 16.0,
-              color: AppColors.blackColor,
-            ),
-          ),
-          onConfirm: (values) {
-            controller.selectedSurahs.value = values;
-          },
-          chipDisplay: MultiSelectChipDisplay(
-            chipColor: AppColors.primaryColor,
-            textStyle: const TextStyle(color: Colors.white),
-            onTap: (value) {
-              controller.selectedSurahs.remove(value);
-            },
-          ),
-        ),
+          )
       ],
     );
   }
@@ -435,42 +601,55 @@ class ParticipantSearchMemorizationGroupScreen
             fillColor: AppColors.primaryColor,
           ),
         ),
-        MultiSelectDialogField(
-          items: const [],
-          title: const CustomGoogleTextWidget(
-            text: "اختر الأجزاء",
-            fontSize: 16.0,
-          ),
-          selectedColor: AppColors.primaryColor,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: AppColors.primaryColor,
-              width: 2,
+        if (controller.selectedPartOfQuranType.value ==
+            SelectedPartOfQuranFiltter.juzs)
+          MultiSelectDialogField(
+            items: controller.juzas
+                .map((juz) => MultiSelectItem(juz, juz.arabicPart!))
+                .toList(),
+            chipDisplay: MultiSelectChipDisplay<Juza>(
+              chipColor: AppColors.primaryColor,
+              textStyle: GoogleFonts.getFont(
+                'Almarai',
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+              items: controller.selectedJuzzas
+                  .map((juz) => MultiSelectItem<Juza>(juz, juz.arabicPart!))
+                  .toList(),
+              onTap: (value) {
+                controller.selectedJuzzas.remove(value);
+              },
             ),
-          ),
-          buttonIcon: const Icon(
-            Icons.arrow_drop_down,
-            color: AppColors.primaryColor,
-          ),
-          buttonText: const Text(
-            "اختر الأجزاء",
-            style: TextStyle(
+            title: const CustomGoogleTextWidget(
+              text: "اختر الأجزاء",
               fontSize: 16.0,
-              color: AppColors.blackColor,
             ),
-          ),
-          onConfirm: (values) {
-            controller.selectedJuzzas.value = values;
-          },
-          chipDisplay: MultiSelectChipDisplay(
-            chipColor: AppColors.primaryColor,
-            textStyle: const TextStyle(color: Colors.white),
-            onTap: (value) {
-              controller.selectedJuzzas.remove(value);
+            selectedColor: AppColors.primaryColor,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: AppColors.primaryColor,
+                width: 2,
+              ),
+            ),
+            buttonIcon: const Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.primaryColor,
+            ),
+            buttonText: Text(
+              "اختر الأجزاء",
+              style: GoogleFonts.almarai(
+                fontSize: 16.0,
+                color: AppColors.blackColor,
+              ),
+            ),
+            onConfirm: (values) {
+              controller.selectedJuzzas.value = values;
+              debugPrint(
+                  "Selected juzs: ${controller.selectedJuzzas.toString()}");
             },
           ),
-        ),
       ],
     );
   }
