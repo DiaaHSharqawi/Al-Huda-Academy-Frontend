@@ -52,7 +52,9 @@ class ParticipantSearchMemorizationGroupScreen
                           height: 8.0,
                         ),
                         _buildSearchField(context),
-                        _buildMemorizationGroupList(),
+                        Expanded(
+                          child: _buildMemorizationGroupList(),
+                        ),
                       ],
                     ),
             ),
@@ -133,33 +135,32 @@ class ParticipantSearchMemorizationGroupScreen
           ),
         );
       }
-      return NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            //  debugPrint("Notification: $notification");
-            if (notification is ScrollUpdateNotification) {
-              if (notification.scrollDelta != null) {
-                // debugPrint("Scrolling");
-                return false;
+      return Expanded(
+        child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              //  debugPrint("Notification: $notification");
+              if (notification is ScrollUpdateNotification) {
+                if (notification.scrollDelta != null) {
+                  // debugPrint("Scrolling");
+                  return false;
+                }
               }
-            }
-            return true;
-          },
-          child:
-              //  if (controller.memorizationGroups.length > 1)
-              /*   const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.0),
-                  child: Center(
-                    child: CustomGoogleTextWidget(
-                      text: 'مرر للأسفل للمزيد من النتائج',
-                      fontSize: 15.0,
-                      color: Colors.grey,
+              return true;
+            },
+            child:
+                //  if (controller.memorizationGroups.length > 1)
+                /*   const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.0),
+                    child: Center(
+                      child: CustomGoogleTextWidget(
+                        text: 'مرر للأسفل للمزيد من النتائج',
+                        fontSize: 15.0,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                ),*/
+                  ),*/
 
-              Expanded(
-            flex: 1,
-            child: ListView.builder(
+                ListView.builder(
               //shrinkWrap: true,
               controller: controller.scrollController,
               itemCount: controller.memorizationGroups.length +
@@ -192,20 +193,23 @@ class ParticipantSearchMemorizationGroupScreen
                         debugPrint("Details pressed");
                         debugPrint(
                             "Group id: ${controller.memorizationGroups[index].id}");
+                        debugPrint("index: $index");
+                        controller.navigateToGroupDetailsScreen(
+                          controller.memorizationGroups[index].id!.toString(),
+                        );
                       },
                     ),
                   );
-                } else if (index >= controller.memorizationGroups.length &&
-                    controller.memorizationGroups.length <
-                        controller.totalMemorizationGroups) {
-                  return _buildLoadingIndicator();
-                } else {
-                  debugPrint("No more data to load");
+                }
+
+                if (index == controller.totalMemorizationGroups) {
                   return const SizedBox.shrink();
                 }
+
+                return _buildLoadingIndicator();
               },
-            ),
-          ));
+            )),
+      );
     });
   }
 

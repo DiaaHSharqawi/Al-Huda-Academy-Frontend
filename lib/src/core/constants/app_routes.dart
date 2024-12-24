@@ -50,6 +50,8 @@ class AppRoutes {
   static String participantHomeScreen = "/participant/home";
   static String participantSearchMemorizationGroup =
       "/participant/search-group";
+  static String participantSearchedGroupDetails =
+      "/participant/searched-group-details";
 
   // Admin Screens
   static String admin = "/admin";
