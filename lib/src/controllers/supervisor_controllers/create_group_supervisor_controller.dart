@@ -3,14 +3,36 @@ import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/create_memorization_group_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/days_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 
 class CreateGroupSupervisorController extends GetxController {
   final CreateMemorizationGroupService _createMemorizationGroupService;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    try {
+      isLoading(true);
+
+      await getDaysList();
+      await getGendersList();
+      await getParticipantLevelList();
+    } catch (e) {
+      debugPrint('Error fetching data list: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
 
   CreateGroupSupervisorController(this._createMemorizationGroupService);
 
   var isSubmitting = false.obs;
   var isLoading = false.obs;
+
+  var selectedGender = Rx<Gender?>(null);
+  var selectedLevel = 'notSelected'.obs;
 
   final TextEditingController groupNameController = TextEditingController();
 
@@ -25,25 +47,13 @@ class CreateGroupSupervisorController extends GetxController {
   var selectedEndTime = Rx<TimeOfDay>(TimeOfDay.now());
   get getSelectedEndTime => selectedEndTime.value;
 
-  final List<String> daysOfWeek = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
+  final List<Day> days = [];
 
-  final List<String> daysOfWeekArabic = [
-    'السبت',
-    'الأحد',
-    'الاثنين',
-    'الثلاثاء',
-    'الأربعاء',
-    'الخميس',
-    'الجمعة'
-  ];
+  final List<Gender> genders = [];
+
+  final List<ParticipantLevel> participantLevels = [];
+
+  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(0, 2));
 
   final RxList<String> selectedDays = <String>[].obs;
 
@@ -107,6 +117,31 @@ class CreateGroupSupervisorController extends GetxController {
     } finally {
       isSubmitting(false);
       isLoading(false);
+    }
+  }
+
+  Future<void> getDaysList() async {
+    var daysResponse = await _createMemorizationGroupService.getDaysList();
+    debugPrint("controller");
+    debugPrint(daysResponse.firstOrNull.toString());
+    if (daysResponse.isNotEmpty) {
+      days.addAll(daysResponse);
+    }
+  }
+
+  Future<void> getGendersList() async {
+    var gendersResponse =
+        await _createMemorizationGroupService.getGendersList();
+    if (gendersResponse.isNotEmpty) {
+      genders.addAll(gendersResponse);
+    }
+  }
+
+  Future<void> getParticipantLevelList() async {
+    var participantLevelResponse =
+        await _createMemorizationGroupService.getParticipantLevelList();
+    if (participantLevelResponse.isNotEmpty) {
+      participantLevels.addAll(participantLevelResponse);
     }
   }
 

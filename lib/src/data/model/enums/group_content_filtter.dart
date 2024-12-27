@@ -1,7 +1,7 @@
 enum GroupContentFilter {
-  allOfQuran,
-  partOfQuran,
-  excerptsFromTheQuran,
+  allQuran,
+  juzasQuran,
+  surahsQuran,
+  extractsQuran,
   all,
-  surahsOfQuran
 }

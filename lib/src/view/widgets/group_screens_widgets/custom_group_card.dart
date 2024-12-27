@@ -5,8 +5,8 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart
 
 class CustomGroupCard extends StatelessWidget {
   final String groupName;
-  final String studentsCount;
-  final String language;
+  final String? studentsCount;
+  final String? language;
   final String groupGoal;
   final String groupGender;
   final VoidCallback onDetailsPressed;
@@ -17,8 +17,8 @@ class CustomGroupCard extends StatelessWidget {
   const CustomGroupCard({
     super.key,
     required this.groupName,
-    required this.studentsCount,
-    required this.language,
+    this.studentsCount,
+    this.language,
     required this.onDetailsPressed,
     required this.groupGoal,
     required this.groupGender,
@@ -258,7 +258,7 @@ class CustomGroupCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription() {
+  /*Widget _buildDescription() {
     return const Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -289,9 +289,9 @@ class CustomGroupCard extends StatelessWidget {
         ),
       ],
     );
-  }
+  }*/
 
-  Widget _buildStudentsCount() {
+  /* Widget _buildStudentsCount() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -323,9 +323,9 @@ class CustomGroupCard extends StatelessWidget {
         ),
       ],
     );
-  }
+  }*/
 
-  Widget _buildLanguage() {
+  /* Widget _buildLanguage() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -357,7 +357,7 @@ class CustomGroupCard extends StatelessWidget {
         ),
       ],
     );
-  }
+  }*/
 
   Widget _buildDetailsButton() {
     return Align(

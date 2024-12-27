@@ -3,13 +3,17 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/create_group_supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_memorization_group.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
@@ -26,36 +30,54 @@ class CreateGroupSupervisorScreen
           width: double.infinity,
           margin: const EdgeInsets.all(24.0),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildHeaderText(),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                _buildGroupNameField(),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                _buildGroupDescriptionField(),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                _buildGroupCapacityField(),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                _buildGroupTime(context),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                _buildDayPicker(),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                _buildCreateGroupButton(context),
-              ],
+            child: Obx(
+              () => controller.isLoading.value
+                  ? const Center(
+                      child: CustomLoadingWidget(
+                        imagePath: 'assets/images/loaderLottie.json',
+                        width: 600,
+                        height: 600,
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        _buildHeaderText(),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        _buildGroupNameField(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildGroupDescriptionField(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildGroupCapacityField(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildGroupTime(context),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildDayPicker(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildGroupGender(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildGroupLevel(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildCreateGroupButton(context),
+                      ],
+                    ),
             ),
           ),
         ),
@@ -109,12 +131,135 @@ class CreateGroupSupervisorScreen
         ));
   }
 
+  Widget _buildGroupLevel() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CustomGoogleTextWidget(
+          text: "اختر مستوى المجموعة",
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(() {
+                if (controller.participantLevels.length < 3) {
+                  return const Center(
+                    child: Text('Not enough data to display slider'),
+                  );
+                }
+                double minLevel =
+                    controller.participantLevels.first.id!.toDouble();
+                double maxLevel =
+                    controller.participantLevels[2].id!.toDouble();
+
+                debugPrint(
+                    "Min level: $minLevel , Max level: $maxLevel ,controller.participantLevel.length ${controller.participantLevels.length}");
+                return Column(
+                  children: [
+                    RangeSlider(
+                      activeColor: AppColors.primaryColor,
+                      inactiveColor: Colors.grey,
+                      values: RangeValues(
+                        controller.selectedParticipantLevels.value.start
+                            .clamp(minLevel, maxLevel),
+                        controller.selectedParticipantLevels.value.end
+                            .clamp(minLevel, maxLevel),
+                      ),
+                      min: minLevel,
+                      max: maxLevel,
+                      divisions: 2,
+                      labels: RangeLabels(
+                        controller.selectedParticipantLevels.value.start
+                            .clamp(minLevel, maxLevel)
+                            .toString(),
+                        controller.selectedParticipantLevels.value.end
+                            .clamp(minLevel, maxLevel)
+                            .toString(),
+                      ),
+                      onChanged: (RangeValues values) {
+                        debugPrint("Selected values: $values");
+                        controller.selectedParticipantLevels.value = values;
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:
+                          controller.participantLevels.take(3).map((level) {
+                        return CustomGoogleTextWidget(
+                          text: level.participantLevelAr!,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.blackColor,
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGroupGender() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CustomGoogleTextWidget(
+          text: "اختر جنس المجموعة",
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Wrap(
+          spacing: 8.0,
+          children: controller.genders.map((gender) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(() => Radio<Gender>(
+                      fillColor:
+                          WidgetStateProperty.all(AppColors.primaryColor),
+                      value: gender,
+                      groupValue: controller.selectedGender.value,
+                      onChanged: (value) {
+                        debugPrint("Value: $value");
+                        controller.selectedGender.value = value!;
+                      },
+                    )),
+                CustomGoogleTextWidget(
+                  text: gender.nameAr!,
+                  fontSize: 16.0,
+                  color: Colors.black,
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
   Widget _buildDayPicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const CustomGoogleTextWidget(
-          text: "اختر يوم المجموعة",
+          text: "اختر ايام المجموعة",
           fontSize: 16.0,
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -124,19 +269,22 @@ class CreateGroupSupervisorScreen
         ),
         Obx(() => Wrap(
               spacing: 8.0,
-              children: controller.daysOfWeekArabic.map((day) {
+              children: controller.days.map((day) {
                 return ChoiceChip(
+                  backgroundColor: Colors.black12.withOpacity(0.1),
+                  selectedColor: AppColors.primaryColor.withOpacity(0.5),
                   label: CustomGoogleTextWidget(
-                    text: day,
+                    text: day.nameAr!,
                     fontSize: 16.0,
                     color: Colors.black,
                   ),
-                  selected: controller.selectedDays.contains(day),
+                  selected: controller.selectedDays.contains(day.id.toString()),
                   onSelected: (selected) {
                     if (selected) {
-                      controller.selectedDays.add(day);
+                      debugPrint(day.id.toString());
+                      controller.selectedDays.add(day.id.toString());
                     } else {
-                      controller.selectedDays.remove(day);
+                      controller.selectedDays.remove(day.id.toString());
                     }
                   },
                 );

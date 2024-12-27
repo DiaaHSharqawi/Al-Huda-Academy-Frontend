@@ -43,6 +43,7 @@ class AppRoutes {
   // Supervisor Screens
   static String supervisor = "/supervisor";
   static String supervisorHomeScreen = "/supervisor/home";
+  static String supervisorGroupDashboard = "/supervisor/group-dashboard";
   static String createGroupSupervisorScreen = "/supervisor/create-group";
 
   // Participant Screens
