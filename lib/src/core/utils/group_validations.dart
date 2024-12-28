@@ -14,13 +14,47 @@ class GroupValidations {
     ])(groupName);
   }
 
+  static String? validateGroupLevel(String? groupLevelId) {
+    debugPrint("groupLevelId: $groupLevelId");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر مستوى المجموعة",
+      ),
+      FormBuilderValidators.integer(
+        errorText: "من فضلك أدخل مستوى صحيح",
+      ),
+      FormBuilderValidators.min(
+        1,
+        errorText: "مستوى المجموعة يجب أن يكون بين 1 و 5",
+      ),
+      FormBuilderValidators.max(
+        5,
+        errorText: "مستوى المجموعة يجب أن يكون بين 1 و 5",
+      ),
+    ])(groupLevelId);
+  }
+
+  static String? validateGroupGender(String? groupGender) {
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر نوع جنس المجموعة",
+      ),
+      (value) {
+        if (value != 'male' && value != 'female') {
+          return "من فضلك اختر نوع جنس المجموعة";
+        }
+        return null;
+      },
+    ])(groupGender);
+  }
+
   static String? validateGroupCapacity(String? capacity) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
         errorText: "من فضلك أدخل عدد 'الطلاب المسموح بهم' في المجموعة",
       ),
       FormBuilderValidators.integer(
-        errorText: "من فضلك أدخل عدد صحيح",
+        errorText: "من فضلك أدخل عدد مجموعة صحيح",
       ),
       FormBuilderValidators.min(
         1,
@@ -67,8 +101,8 @@ class GroupValidations {
     ])(endTime);
   }
 
-  static String? validateGroupDays(List<String> days) {
-    debugPrint("Days--->: ${days.runtimeType}");
+  static String? validateGroupDays(List<int> days) {
+    debugPrint("Days--->: ${days}");
     debugPrint(days.toString());
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
@@ -78,7 +112,13 @@ class GroupValidations {
         1,
         errorText: "من فضلك اختر يوم واحد على الأقل",
       ),
-    ])(days.isNotEmpty ? days.join(', ') : null);
+      (value) {
+        if (days.any((day) => day < 1 || day > 7)) {
+          return "من فضلك اختر أيام من 1 إلى 7 فقط";
+        }
+        return null;
+      },
+    ])(days);
   }
 
   static Map<String, String?>? validateAll(Map<String, String?> values) {
@@ -113,24 +153,25 @@ class GroupValidations {
     }
     if (values['selectedDays'] != null) {
       debugPrint("Selected days: ${values['selectedDays'].runtimeType}");
-      debugPrint(values['selectedDays']!);
 
-      final selectedDays = values['selectedDays'];
+      final selectedDaysList = RegExp(r'\d+')
+          .allMatches(values['selectedDays']!)
+          .map((match) => int.parse(match.group(0)!))
+          .toList();
 
-      var formattedDays = selectedDays
-          ?.splitMapJoin(
-            RegExp(r'\d+'),
-            onMatch: (m) => m.group(0)!,
-            onNonMatch: (n) => n,
-          )
-          .replaceAll('[', '')
-          .replaceAll(']', '');
+      debugPrint("Selected days:-->  $selectedDaysList");
 
-      debugPrint("Selected days: $formattedDays");
-
-      final daysError = validateGroupDays(formattedDays!.split(', '));
+      final daysError = validateGroupDays(selectedDaysList);
 
       if (daysError != null) errors['selectedDays'] = daysError;
+    }
+    if (values['groupGender'] != null) {
+      final groupGenderError = validateGroupGender(values['groupGender']);
+      if (groupGenderError != null) errors['groupGender'] = groupGenderError;
+    }
+    if (values['groupLevel'] != null) {
+      final groupLevelError = validateGroupLevel(values['groupLevelId']);
+      if (groupLevelError != null) errors['groupLevelId'] = groupLevelError;
     }
 
     debugPrint(errors.toString());

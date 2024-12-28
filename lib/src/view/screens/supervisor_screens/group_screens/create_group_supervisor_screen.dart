@@ -3,16 +3,17 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/create_group_supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_memorization_group.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filtter.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_gender_group_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
@@ -89,28 +90,41 @@ class CreateGroupSupervisorScreen
     return Obx(() => SizedBox(
           width: double.infinity,
           child: CustomButton(
-            loadingWidget: controller.isLoading.value
-                ? const CircularProgressIndicator(
-                    color: Colors.white,
-                  )
-                : null,
-            foregroundColor: Colors.white,
-            backgroundColor: AppColors.primaryColor,
-            buttonText: "انشاء المجموعة",
-            buttonTextColor: AppColors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            onPressed: () async {
-              final createANewMemorizationGroupResponse =
-                  await controller.createANewMemorizationGroup();
+              loadingWidget: controller.isLoading.value
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : null,
+              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primaryColor,
+              buttonText: "استمر",
+              buttonTextColor: AppColors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              onPressed: () async {
+                //controller.navigateToCreateMemorizationGroupContentScreen();
+                final getGroupByGroupName =
+                    await controller.getGroupByGroupName();
 
-              debugPrint("Response: ");
-              debugPrint(createANewMemorizationGroupResponse.toString());
-              if (!context.mounted) return;
+                debugPrint("Response: ");
+                debugPrint(getGroupByGroupName.toString());
+                if (!context.mounted) return;
 
-              debugPrint(
-                  "Response ---->: ${createANewMemorizationGroupResponse['statusCode']}");
-              if (createANewMemorizationGroupResponse['statusCode'] == 201) {
+                debugPrint(
+                    "Response ---->: ${getGroupByGroupName['statusCode']}");
+
+                if (getGroupByGroupName['statusCode'] == 404) {
+                  controller.navigateToCreateMemorizationGroupContentScreen();
+                } else {
+                  await CustomAwesomeDialog.showAwesomeDialog(
+                    context,
+                    DialogType.error,
+                    'خطأ',
+                    getGroupByGroupName['message'],
+                  );
+                }
+
+                /* if (createANewMemorizationGroupResponse['statusCode'] == 201) {
                 await CustomAwesomeDialog.showAwesomeDialog(
                   context,
                   DialogType.success,
@@ -126,8 +140,8 @@ class CreateGroupSupervisorScreen
                   createANewMemorizationGroupResponse['message'],
                 );
               }
-            },
-          ),
+            },*/
+              }),
         ));
   }
 
@@ -225,31 +239,37 @@ class CreateGroupSupervisorScreen
         const SizedBox(
           height: 16.0,
         ),
-        Wrap(
-          spacing: 8.0,
-          children: controller.genders.map((gender) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Obx(() => Radio<Gender>(
-                      fillColor:
-                          WidgetStateProperty.all(AppColors.primaryColor),
-                      value: gender,
+        Row(
+          children: [
+            ...controller.genders.map(
+              (gender) {
+                return Expanded(
+                  child: Obx(
+                    () => CustomRadioListTile<SupervisorGenderGroupEnum>(
+                      title: CustomGoogleTextWidget(
+                        text: gender.nameAr!,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.blackColor,
+                      ),
+                      value: SupervisorGenderGroupEnum.values.firstWhere(
+                          (genderSearch) => genderSearch.name == gender.nameEn),
                       groupValue: controller.selectedGender.value,
+                      selected: controller.selectedGender.value.toString() ==
+                          gender.nameEn,
                       onChanged: (value) {
-                        debugPrint("Value: $value");
-                        controller.selectedGender.value = value!;
+                        if (value != null) {
+                          debugPrint("Selected $value");
+                          controller.selectedGender.value = value;
+                        }
                       },
-                    )),
-                CustomGoogleTextWidget(
-                  text: gender.nameAr!,
-                  fontSize: 16.0,
-                  color: Colors.black,
-                ),
-              ],
-            );
-          }).toList(),
-        ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        )
       ],
     );
   }

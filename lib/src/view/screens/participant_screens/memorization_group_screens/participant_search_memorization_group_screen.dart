@@ -448,6 +448,8 @@ class ParticipantSearchMemorizationGroupScreen
             GroupContentFilter.surahsQuran)
           Obx(
             () => MultiSelectDialogField<Surah>(
+              searchable: true,
+              searchHint: 'ابحث عن سورة',
               initialValue: controller.selectedSurahs,
               items: controller.surahs
                   .map((surah) => MultiSelectItem<Surah>(surah, surah.name!))

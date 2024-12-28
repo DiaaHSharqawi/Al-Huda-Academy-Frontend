@@ -201,7 +201,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     var juzas = await _participantSearchMemorizationGroupService.getJuzaList();
     debugPrint("juzas");
     debugPrint(juzas.toString());
-    if (surahs.isNotEmpty) {
+    if (juzas.isNotEmpty) {
       this.juzas.addAll(juzas);
     }
   }
@@ -365,12 +365,12 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
         debugPrint("levelMap[(start + end) ]: ${[(start + end) / 2]}");
         debugPrint(
             "levelMap[(start + end) / 2]: ${levelMap[(start + end) / 2]}");
-        ParticipantLevel? levelId = participantLevel.firstWhere(
+        ParticipantLevel? level = participantLevel.firstWhere(
             (level) => level.participantLevelEn == levelMap[(start + end) / 2]);
 
-        debugPrint("levelId *****: $levelId");
+        debugPrint("level *****: $level");
 
-        queryParams['participants_level_id'] = levelId;
+        queryParams['participants_level_id'] = level.id;
       }
     }
 

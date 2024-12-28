@@ -16,6 +16,8 @@ class CustomTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
   final void Function(String)? onChanged;
   final int? maxLines;
+  final bool? enableBorder;
+  final TextInputType? keyboardType;
 
   const CustomTextFormField({
     super.key,
@@ -30,6 +32,8 @@ class CustomTextFormField extends StatelessWidget {
     this.onTap,
     this.maxLines = 1,
     this.onChanged,
+    this.enableBorder = true,
+    this.keyboardType,
   });
 
   @override
@@ -45,6 +49,7 @@ class CustomTextFormField extends StatelessWidget {
     final TextDirection hintTextDirection = textFormDirection;
 
     return TextFormField(
+      keyboardType: keyboardType,
       onChanged: onChanged,
       maxLines: maxLines,
       autovalidateMode: autovalidateMode,
@@ -61,15 +66,19 @@ class CustomTextFormField extends StatelessWidget {
           fontFamily,
           color: Colors.grey,
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(
-            color: Colors.black,
-          ),
-        ),
+        border: enableBorder == true
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              )
+            : InputBorder.none,
+        focusedBorder: enableBorder == true
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.black,
+                ),
+              )
+            : InputBorder.none,
         prefixIcon: iconName != null
             ? InkWell(
                 onTap: onTap,
