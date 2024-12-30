@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:lottie/lottie.dart';
@@ -121,7 +120,7 @@ class ParticipantSearchedGroupDetailsScreen
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
-            Icons.details,
+            Icons.manage_accounts,
             color: AppColors.primaryColor,
           ),
           const SizedBox(width: 16.0),
@@ -182,7 +181,7 @@ class ParticipantSearchedGroupDetailsScreen
                 ),
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.arabicPart!,
+                    text: content.juza!.arabicPart!,
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -266,7 +265,7 @@ class ParticipantSearchedGroupDetailsScreen
                 ),
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.name!,
+                    text: content.surah!.name!,
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -392,7 +391,7 @@ class ParticipantSearchedGroupDetailsScreen
                 ),
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.surahName!,
+                    text: content.surah!.surah!.name!,
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -432,7 +431,7 @@ class ParticipantSearchedGroupDetailsScreen
       child: Row(
         children: [
           const Icon(
-            CupertinoIcons.person,
+            CupertinoIcons.book,
             color: AppColors.primaryColor,
           ),
           const SizedBox(width: 16.0),
@@ -478,8 +477,7 @@ class ParticipantSearchedGroupDetailsScreen
           ),
           Expanded(
             child: CustomGoogleTextWidget(
-              text: controller
-                  .memorizationGroupDetails.value!.participantsGender!,
+              text: controller.memorizationGroupDetails.value!.gender!.nameAr!,
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,
@@ -511,9 +509,8 @@ class ParticipantSearchedGroupDetailsScreen
           Expanded(
             child: CustomGoogleTextWidget(
               text: controller.memorizationGroupDetails.value!.days
-                  .toString()
-                  .replaceAll("[", "")
-                  .replaceAll("]", ""),
+                  .map((day) => day.nameAr)
+                  .join(", "),
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,
@@ -671,8 +668,8 @@ class ParticipantSearchedGroupDetailsScreen
           ),
           Expanded(
             child: CustomGoogleTextWidget(
-              text:
-                  controller.memorizationGroupDetails.value!.participantsLevel!,
+              text: controller.memorizationGroupDetails.value!.participantLevel!
+                  .participantLevelAr!,
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,
@@ -703,7 +700,8 @@ class ParticipantSearchedGroupDetailsScreen
           ),
           Expanded(
             child: CustomGoogleTextWidget(
-              text: controller.memorizationGroupDetails.value!.groupGoal!,
+              text: controller
+                  .memorizationGroupDetails.value!.groupGoal!.groupGoalAr!,
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,

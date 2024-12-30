@@ -1,7 +1,7 @@
 enum GroupObjectiveSearchFiltter {
   memorization,
   recitation,
-  review,
+  revision,
   all,
   notSelected
 }

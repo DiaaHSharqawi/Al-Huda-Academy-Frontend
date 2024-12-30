@@ -5,8 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/Languages/languages_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_search_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
 class ParticipantSearchMemorizationGroupService extends GetxService {
@@ -119,6 +124,193 @@ class ParticipantSearchMemorizationGroupService extends GetxService {
         return juzaResponse.juzas;
       } else {
         debugPrint("Failed to get surah list: ${data['message']}");
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<Gender>> getGenderList() async {
+    final url = Uri.parse("$alHudaBaseURL/gender");
+    debugPrint("$url");
+    String? lang = appService.languageStorage.read('language');
+    debugPrint("lang device : $lang");
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      final Map<String, dynamic> data = json.decode(response.body);
+      GenderResponseModel genderResponseModel =
+          GenderResponseModel.fromJson(data);
+
+      debugPrint("*-*-*-*-*-");
+      debugPrint(genderResponseModel.toString());
+      debugPrint("Data: $data");
+
+      if (data['success']) {
+        debugPrint("gender list: ${data['data']}");
+        return genderResponseModel.genders;
+      } else {
+        debugPrint("Failed to get gender list: ${data['message']}");
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<GroupGoal>> getGroupGoalList() async {
+    final url = Uri.parse("$alHudaBaseURL/group-goal");
+    debugPrint("$url");
+    String? lang = appService.languageStorage.read('language');
+    debugPrint("lang device : $lang");
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      final Map<String, dynamic> data = json.decode(response.body);
+      GroupGoalResponseModel groupGoalResponseModel =
+          GroupGoalResponseModel.fromJson(data);
+
+      debugPrint("*-*-*-*-*-");
+      debugPrint(groupGoalResponseModel.toString());
+      debugPrint("Data: $data");
+
+      if (data['success']) {
+        debugPrint("groupGoals list: ${groupGoalResponseModel.groupGoals}");
+        return groupGoalResponseModel.groupGoals;
+      } else {
+        debugPrint("Failed to get groupGoals list: ${data['message']}");
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<Language>> getGroupLanguagesList() async {
+    final url = Uri.parse("$alHudaBaseURL/language");
+    debugPrint("$url");
+    String? lang = appService.languageStorage.read('language');
+    debugPrint("lang device : $lang");
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      final Map<String, dynamic> data = json.decode(response.body);
+      LanguagesResponseModel languagesResponseModel =
+          LanguagesResponseModel.fromJson(data);
+
+      debugPrint("*-*-*-*-*-");
+      debugPrint(languagesResponseModel.toString());
+      debugPrint("Data: $data");
+
+      if (data['success']) {
+        debugPrint(
+            "languagesResponseModel  list: ${languagesResponseModel.languages}");
+        return languagesResponseModel.languages;
+      } else {
+        debugPrint(
+            "Failed to get languagesResponseModel list: ${data['message']}");
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<TeachingMethod>> getTeachingMethodsList() async {
+    final url = Uri.parse("$alHudaBaseURL/teaching-methods");
+    debugPrint("$url");
+    String? lang = appService.languageStorage.read('language');
+    debugPrint("lang device : $lang");
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+      final Map<String, dynamic> data = json.decode(response.body);
+      TeachingMethodsResponseModel teachingMethodsResponseModel =
+          TeachingMethodsResponseModel.fromJson(data);
+
+      debugPrint("*-*-*-*-*-");
+      debugPrint(teachingMethodsResponseModel.toString());
+
+      debugPrint("Data: $data");
+      if (data['success']) {
+        debugPrint(
+            "teachingMethodsResponseModel  list: ${teachingMethodsResponseModel.teachingMethods}");
+        return teachingMethodsResponseModel.teachingMethods;
+      } else {
+        debugPrint(
+            "Failed to get teachingMethodsResponseModel list: ${data['message']}");
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<ParticipantLevel>> getParticipantLevelList() async {
+    final url = Uri.parse("$alHudaBaseURL/participant-level");
+    debugPrint("$url");
+    String? lang = appService.languageStorage.read('language');
+    debugPrint("lang device : $lang");
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      ParticipantLevelResponseModel participantLevelResponseModel =
+          ParticipantLevelResponseModel.fromJson(data);
+
+      debugPrint("*-*-*-*-*-");
+      debugPrint(participantLevelResponseModel.toString());
+
+      debugPrint("Data: $data");
+      if (data['success']) {
+        debugPrint(
+            "participantLevelResponseModel  list: ${participantLevelResponseModel.participantLevels}");
+        return participantLevelResponseModel.participantLevels;
+      } else {
+        debugPrint(
+            "Failed to get participantLevelResponseModel list: ${data['message']}");
         return [];
       }
     } catch (e) {
