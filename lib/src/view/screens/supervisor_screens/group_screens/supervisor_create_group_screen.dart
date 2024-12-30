@@ -12,15 +12,14 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filtter.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_gender_group_enum.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
-class CreateGroupSupervisorScreen
-    extends GetView<CreateGroupSupervisorController> {
-  const CreateGroupSupervisorScreen({super.key});
+class SupervisorCreateGroupScreen
+    extends GetView<SupervisorCreateGroupController> {
+  const SupervisorCreateGroupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +75,11 @@ class CreateGroupSupervisorScreen
                         const SizedBox(
                           height: 32.0,
                         ),
-                        _buildCreateGroupButton(context),
+                        _buildGroupObjective(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildContinueButton(context),
                       ],
                     ),
             ),
@@ -86,7 +89,46 @@ class CreateGroupSupervisorScreen
     );
   }
 
-  Widget _buildCreateGroupButton(BuildContext context) {
+  Widget _buildGroupObjective() {
+    return ExpansionTile(
+      title: const CustomGoogleTextWidget(
+        text: "الهدف من المجموعة",
+        fontSize: 16.0,
+      ),
+      children: [
+        ...controller.groupGoals.map((goal) {
+          return Obx(
+            () => CustomRadioListTile<GroupObjectiveEnum>(
+              title: CustomGoogleTextWidget(
+                text: goal.groupGoalAr!,
+                fontSize: 16.0,
+                fontWeight: FontWeight.normal,
+                color: AppColors.blackColor,
+              ),
+              value: GroupObjectiveEnum.values.firstWhere(
+                  (objective) => objective.name == goal.groupGoalEng),
+              groupValue: controller.selectedGroupObjective.value,
+              selected: controller.selectedGroupObjective.value.toString() ==
+                  goal.groupGoalEng,
+              onChanged: (value) {
+                if (value != null) {
+                  debugPrint("Selected $value");
+                  controller.selectedGroupObjective.value = value;
+                  controller.selectedGroupObjectiveId.value = controller
+                      .groupGoals
+                      .firstWhere((goal) => goal.groupGoalEng == value.name)
+                      .id!
+                      .toString();
+                }
+              },
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildContinueButton(BuildContext context) {
     return Obx(() => SizedBox(
           width: double.infinity,
           child: CustomButton(
@@ -120,27 +162,9 @@ class CreateGroupSupervisorScreen
                     context,
                     DialogType.error,
                     'خطأ',
-                    getGroupByGroupName['message'],
+                    "اسم المجموعة موجود بالفعل، الرجاء اختيار اسم آخر",
                   );
                 }
-
-                /* if (createANewMemorizationGroupResponse['statusCode'] == 201) {
-                await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.success,
-                  "تم ارسال طلب لانشاء المجموعة",
-                  "تم ارسال طلب لانشاء المجموعة ، سيتم مراجعة الطلب من قبل الادارة وسيتم اعلامك بالنتيجة",
-                );
-                controller.navigateToSuperVisorHomeScreen();
-              } else {
-                CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  "حدث خطأ ما",
-                  createANewMemorizationGroupResponse['message'],
-                );
-              }
-            },*/
               }),
         ));
   }
@@ -202,6 +226,7 @@ class CreateGroupSupervisorScreen
                       onChanged: (RangeValues values) {
                         debugPrint("Selected values: $values");
                         controller.selectedParticipantLevels.value = values;
+                        controller.setSelectedLevelId();
                       },
                     ),
                     Row(
@@ -261,6 +286,14 @@ class CreateGroupSupervisorScreen
                         if (value != null) {
                           debugPrint("Selected $value");
                           controller.selectedGender.value = value;
+                          controller.selectedGenderId.value = controller.genders
+                              .firstWhere((genderSearch) =>
+                                  genderSearch.nameEn == gender.nameEn)
+                              .id
+                              .toString();
+
+                          debugPrint(
+                              "Selected gender id: ${controller.selectedGenderId.value}");
                         }
                       },
                     ),
@@ -545,8 +578,8 @@ class CreateGroupSupervisorScreen
                   final result = await Navigator.of(context).push(
                     showPicker(
                       context: context,
-                      sunrise: const TimeOfDay(hour: 6, minute: 0), // optional
-                      sunset: const TimeOfDay(hour: 18, minute: 0), // optional
+                      sunrise: const TimeOfDay(hour: 6, minute: 0),
+                      sunset: const TimeOfDay(hour: 18, minute: 0),
                       duskSpanInMinutes: 120, // optional
                       onChange: (value) {
                         controller.selectedEndTime.value =
@@ -554,8 +587,8 @@ class CreateGroupSupervisorScreen
                         debugPrint("Time: $value");
                       },
                       value: Time(
-                        hour: controller.selectedEndTime.value.hour,
-                        minute: controller.selectedEndTime.value.minute,
+                        hour: (controller.selectedStartTime.value.hour),
+                        minute: controller.selectedStartTime.value.minute,
                       ),
                     ),
                   );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -46,6 +48,42 @@ class GroupValidations {
         return null;
       },
     ])(groupGender);
+  }
+
+  static String? validateGroupObjective(String? selectedGroupObjectiveId) {
+    debugPrint("selectedGroupObjectiveId: $selectedGroupObjectiveId");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر هدف المجموعة",
+      ),
+      FormBuilderValidators.integer(
+        errorText: "من فضلك أدخل هدف صحيح",
+      ),
+    ])(selectedGroupObjectiveId);
+  }
+
+  static String? validateTeachingMethodId(String? teachingMethodId) {
+    debugPrint("teachingMethodId: $teachingMethodId");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر  محتوى التدريس",
+      ),
+      FormBuilderValidators.integer(
+        errorText: "من فضلك أدخل محتوى التدريس  تدريس ",
+      ),
+    ])(teachingMethodId);
+  }
+
+  static String? validateSupervisorId(String? supervisorId) {
+    debugPrint("supervisorId: $supervisorId");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر مشرف المجموعة",
+      ),
+      FormBuilderValidators.integer(
+        errorText: "من فضلك أدخل معرف مشرف صحيح",
+      ),
+    ])(supervisorId);
   }
 
   static String? validateGroupCapacity(String? capacity) {
@@ -101,8 +139,108 @@ class GroupValidations {
     ])(endTime);
   }
 
+  static String? validateAyatForSurahs(String? ayatForSurahs) {
+    debugPrint("X: $ayatForSurahs");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر آيات من القرآن",
+      ),
+      (value) {
+        if (value == null) {
+          return "من فضلك اختر آيات من القرآن";
+        }
+        debugPrint("value : $value");
+        Map<String, dynamic> ayatMap = jsonDecode(value as String);
+        for (var entry in ayatMap.entries) {
+          if (!RegExp(r'^\d+$').hasMatch(entry.key)) {
+            return "من فضلك أدخل رقم سورة صحيح";
+          }
+          if (entry.value is! String ||
+              !RegExp(r'^(\d+-\d+,)*\d+-\d+$').hasMatch(entry.value)) {
+            return "من فضلك أدخل آيات صحيحة بالشكل الصحيح (مثال: 1-5,10-15)";
+          }
+        }
+        return null;
+      }
+    ])(ayatForSurahs);
+  }
+
+  static String? validateAyat(String? ayah) {
+    debugPrint("ayah: $ayah");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر آيات من القرآن",
+      ),
+      (value) {
+        if (value == null) {
+          return "من فضلك اختر آيات من القرآن";
+        }
+        debugPrint("value : $value");
+
+        if (ayah is! String ||
+            !RegExp(r'^(\d+-\d+,)*\d+-\d+$').hasMatch(ayah)) {
+          return "من فضلك أدخل آيات صحيحة بالشكل الصحيح (مثال: 1-5,10-15)";
+        }
+        return null;
+      }
+    ])(ayah);
+  }
+
+  static String? validateSurahIds(String? surahIds) {
+    debugPrint("surahIds: $surahIds");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر آيات من القرآن",
+      ),
+      (value) {
+        if (value == null) {
+          return "من فضلك اختر آيات من القرآن";
+        }
+        List<String> surahList =
+            List<String>.from(jsonDecode(value.toString()));
+        if (surahList.isEmpty) {
+          return "من فضلك اختر سور ";
+        }
+        debugPrint("surahList: $surahList");
+        for (var surah in surahList) {
+          int? surahId = int.tryParse(surah);
+          if (surahId == null || surahId < 1 || surahId > 114) {
+            return "من فضلك اختر سور بين 1 و 114 فقط";
+          }
+        }
+        return null;
+      }
+    ])(surahIds);
+  }
+
+  static String? validateJuzaIds(String? juzIds) {
+    debugPrint("juzIds: $juzIds");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر أجزاء من القرآن",
+      ),
+      (value) {
+        if (value == null) {
+          return "من فضلك اختر أجزاء من القرآن";
+        }
+        List<String> juzList = List<String>.from(jsonDecode(value.toString()));
+        if (juzList.isEmpty) {
+          return "من فضلك اختر أجزاء";
+        }
+        debugPrint("juzList: $juzList");
+        for (var juz in juzList) {
+          int? juzId = int.tryParse(juz);
+          if (juzId == null || juzId < 1 || juzId > 30) {
+            return "من فضلك اختر أجزاء بين 1 و 30 فقط";
+          }
+        }
+        return null;
+      }
+    ])(juzIds);
+  }
+
   static String? validateGroupDays(List<int> days) {
-    debugPrint("Days--->: ${days}");
+    debugPrint("Days--->: $days");
     debugPrint(days.toString());
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
@@ -122,6 +260,8 @@ class GroupValidations {
   }
 
   static Map<String, String?>? validateAll(Map<String, String?> values) {
+    debugPrint("validateAll");
+    debugPrint(values.toString());
     Map<String, String?> errors = {};
 
     if (values['groupName'] != null) {
@@ -169,9 +309,49 @@ class GroupValidations {
       final groupGenderError = validateGroupGender(values['groupGender']);
       if (groupGenderError != null) errors['groupGender'] = groupGenderError;
     }
-    if (values['groupLevel'] != null) {
+    if (values['groupLevelId'] != null) {
       final groupLevelError = validateGroupLevel(values['groupLevelId']);
       if (groupLevelError != null) errors['groupLevelId'] = groupLevelError;
+    }
+    if (values['selectedGroupObjectiveId'] != null) {
+      final groupGoalError =
+          validateGroupObjective(values['selectedGroupObjectiveId']);
+      if (groupGoalError != null) {
+        errors['selectedGroupObjectiveId'] = groupGoalError;
+      }
+    }
+    if (values['supervisorId'] != null) {
+      final supervisorIdError = validateSupervisorId(values['supervisorId']);
+      if (supervisorIdError != null) errors['supervisorId'] = supervisorIdError;
+    }
+    if (values['teachingMehodId'] != null) {
+      final teachingMethodError =
+          validateTeachingMethodId(values['teachingMehodId']);
+      if (teachingMethodError != null) {
+        errors['teachingMehodId'] = teachingMethodError;
+      }
+    }
+    if (values['extracts'] != null) {
+      debugPrint("Extracts VALIDATION : ${values['extracts'].runtimeType}");
+
+      final extractsError = validateAyatForSurahs(values['extracts']!);
+      if (extractsError != null) {
+        errors['extracts'] = (extractsError);
+      }
+    }
+    if (values['surah_ids'] != null) {
+      debugPrint("Surahs_ids VALIDATION : ${values['surah_ids']}");
+      final surahIdsError = validateSurahIds(values['surah_ids']);
+      if (surahIdsError != null) {
+        errors['surah_ids'] = surahIdsError;
+      }
+    }
+    if (values['juza_ids'] != null) {
+      debugPrint("Juza_ids VALIDATION : ${values['juza_ids']}");
+      final juzaIdsError = validateJuzaIds(values['juza_ids']);
+      if (juzaIdsError != null) {
+        errors['juza_ids'] = juzaIdsError;
+      }
     }
 
     debugPrint(errors.toString());

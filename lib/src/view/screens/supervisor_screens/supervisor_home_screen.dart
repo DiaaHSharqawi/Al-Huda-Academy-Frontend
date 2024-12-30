@@ -204,7 +204,7 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
       ),
     );
   }
-
+/*
   Widget _buildCreateAWeeklyPlan() {
     return Card(
       elevation: 5,
@@ -349,4 +349,6 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
       ),
     );
   }
+
+*/
 }

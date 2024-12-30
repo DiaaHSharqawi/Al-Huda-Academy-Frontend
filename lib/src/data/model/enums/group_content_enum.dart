@@ -1,4 +1,4 @@
-enum GroupContentFilter {
+enum GroupTeachingMethodEnum {
   allQuran,
   allOfQuranjuzas,
   allOfQuranSurahs,

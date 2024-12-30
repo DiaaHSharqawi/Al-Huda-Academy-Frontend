@@ -1,15 +1,17 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/create_group_supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_filtter.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_search_filter.dart';
+import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
@@ -18,7 +20,7 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class SupervisorCreateMemorizationGroupContentScreen
-    extends GetView<CreateGroupSupervisorController> {
+    extends GetView<SupervisorCreateGroupController> {
   const SupervisorCreateMemorizationGroupContentScreen({super.key});
 
   @override
@@ -47,68 +49,16 @@ class SupervisorCreateMemorizationGroupContentScreen
                           height: 16.0,
                         ),
                         _buildCreateGroupContent(context),
+                        const SizedBox(height: 16.0),
                         //_buildCreateGroupButton(context),
                         const SizedBox(height: 16.0),
-                        _buildGroupObjective(),
+                        _buildCreateGroupButton(context),
                       ],
                     ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildGroupObjective() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "الهدف من المجموعة",
-        fontSize: 16.0,
-      ),
-      children: [
-        ...controller.groupGoals.map((goal) {
-          return Obx(
-            () => CustomRadioListTile<GroupObjectiveSearchFiltter>(
-              title: CustomGoogleTextWidget(
-                text: goal.groupGoalAr!,
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-                color: AppColors.blackColor,
-              ),
-              value: GroupObjectiveSearchFiltter.values.firstWhere(
-                  (objective) => objective.name == goal.groupGoalEng),
-              groupValue: controller.selectedGroupObjective.value,
-              selected: controller.selectedGroupObjective.value.toString() ==
-                  goal.groupGoalEng,
-              onChanged: (value) {
-                if (value != null) {
-                  debugPrint("Selected $value");
-                  controller.selectedGroupObjective.value = value;
-                }
-              },
-            ),
-          );
-        }),
-        Obx(
-          () => CustomRadioListTile<GroupObjectiveSearchFiltter>(
-            title: const CustomGoogleTextWidget(
-              text: 'الكل',
-              fontSize: 16.0,
-              fontWeight: FontWeight.normal,
-              color: AppColors.blackColor,
-            ),
-            value: GroupObjectiveSearchFiltter.all,
-            groupValue: controller.selectedGroupObjective.value,
-            selected: controller.selectedGroupObjective.value ==
-                GroupObjectiveSearchFiltter.all,
-            onChanged: (value) {
-              if (value != null) {
-                controller.selectedGroupObjective.value = value;
-              }
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -133,56 +83,88 @@ class SupervisorCreateMemorizationGroupContentScreen
   }
 
   Widget _buildGroupContentChoice(BuildContext context) {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "المحتوى",
-        fontSize: 16.0,
-      ),
-      children: [
-        ...controller.teachingMethods.map((method) {
-          return Obx(
-            () => Column(
-              children: [
-                CustomRadioListTile<GroupContentFilter>(
-                  title: CustomGoogleTextWidget(
-                    text: method.methodNameArabic!,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.blackColor,
+    return Obx(
+      () => Column(
+        children: [
+          Row(
+            children: controller.teachingMethods
+                .take(2)
+                .map(
+                  (method) => Expanded(
+                    child: CustomRadioListTile<GroupTeachingMethodEnum>(
+                      title: CustomGoogleTextWidget(
+                        text: method.methodNameArabic!,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.blackColor,
+                      ),
+                      value: GroupTeachingMethodEnum.values.firstWhere(
+                          (filter) => filter.name == method.methodNameEnglish),
+                      groupValue: controller.selectedTeachingMethod.value,
+                      selected:
+                          controller.selectedTeachingMethod.value.toString() ==
+                              method.methodNameEnglish,
+                      onChanged: (value) {
+                        if (value != null) {
+                          debugPrint("Selected content: $value");
+                          controller.selectedTeachingMethod.value = value;
+                          controller.setSelectedTeachingMethodId();
+                        }
+                      },
+                    ),
                   ),
-                  value: GroupContentFilter.values.firstWhere(
-                      (filter) => filter.name == method.methodNameEnglish),
-                  groupValue: controller.selectedGroupContent.value,
-                  selected: controller.selectedGroupContent.value.toString() ==
-                      method.methodNameEnglish,
-                  onChanged: (value) {
-                    if (value != null) {
-                      debugPrint("Selected content: $value");
-                      controller.selectedGroupContent.value = value;
-                    }
-                  },
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 16.0),
+          ...controller.teachingMethods.skip(2).map(
+                (method) => Column(
+                  children: [
+                    CustomRadioListTile<GroupTeachingMethodEnum>(
+                      title: CustomGoogleTextWidget(
+                        text: method.methodNameArabic!,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.blackColor,
+                      ),
+                      value: GroupTeachingMethodEnum.values.firstWhere(
+                          (filter) => filter.name == method.methodNameEnglish),
+                      groupValue: controller.selectedTeachingMethod.value,
+                      selected:
+                          controller.selectedTeachingMethod.value.toString() ==
+                              method.methodNameEnglish,
+                      onChanged: (value) {
+                        if (value != null) {
+                          debugPrint(" selectedTeachingMethod: $value");
+                          if (value == GroupTeachingMethodEnum.extractsQuran ||
+                              value == GroupTeachingMethodEnum.surahsQuran) {
+                            controller.selectedSurahs.clear();
+                          }
+
+                          controller.selectedTeachingMethod.value = value;
+                          controller.setSelectedTeachingMethodId();
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    if (controller.selectedTeachingMethod.value.name ==
+                        method.methodNameEnglish)
+                      Obx(() => _buildPartOfQuranChoice()),
+                  ],
                 ),
-                if (controller.selectedGroupContent.value.name ==
-                    method.methodNameEnglish)
-                  Obx(() => _buildPartOfQuranChoice()),
-              ],
-            ),
-          );
-        }),
-
-        const SizedBox(height: 16.0),
-
-        const SizedBox(height: 16.0),
-        // _buildMultiJuzzaSelection(),
-      ],
+              ),
+        ],
+      ),
     );
   }
 
   Widget _buildExtractSurahSelection() {
     return Column(children: [
       Obx(
-        () => controller.selectedGroupContent.value ==
-                GroupContentFilter.extractsQuran
+        () => controller.selectedTeachingMethod.value ==
+                GroupTeachingMethodEnum.extractsQuran
             ? Column(
                 children: [
                   MultiSelectDialogField<Surah>(
@@ -221,14 +203,19 @@ class SupervisorCreateMemorizationGroupContentScreen
                       debugPrint("Selected surahs: ${values.isEmpty}");
 
                       controller.selectedSurahs.value = values;
-                      debugPrint(
-                          "Selected surahs: ${controller.selectedSurahs.toString()}");
+                      controller.ayatForSurahs.clear();
+                      controller.textControllers.clear();
+
+                      controller.textControllers.addAll({
+                        for (var surah in controller.selectedSurahs)
+                          surah.id!: TextEditingController()
+                      });
                     },
                   ),
                   Obx(
                     () => controller.selectedSurahs.isNotEmpty &&
-                            controller.selectedGroupContent.value ==
-                                GroupContentFilter.extractsQuran
+                            controller.selectedTeachingMethod.value ==
+                                GroupTeachingMethodEnum.extractsQuran
                         ? Container(
                             padding: const EdgeInsets.symmetric(
                               vertical: 24.0,
@@ -288,27 +275,30 @@ class SupervisorCreateMemorizationGroupContentScreen
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: CustomTextFormField(
+                                                  textFormFieldValidator:
+                                                      GroupValidations
+                                                          .validateAyat,
                                                   maxLines: 1,
                                                   autovalidateMode:
                                                       AutovalidateMode
                                                           .onUserInteraction,
-                                                  controller:
-                                                      TextEditingController(),
+                                                  controller: controller
+                                                          .textControllers[
+                                                      surah.id!]!,
                                                   enableBorder: false,
                                                   textFormLabelText:
                                                       "ادخل الايات",
-                                                  textFormFieldValidator:
-                                                      (value) {
-                                                    if (value!.isEmpty) {
-                                                      return "الرجاء ادخال الايات";
-                                                    }
-                                                    return null;
-                                                  },
                                                   textFormHintText: "5-1,15-10",
                                                   onChanged: (value) {
-                                                    controller.ayatForSurahs[
-                                                            surah.id!.toInt()] =
-                                                        value;
+                                                    controller
+                                                        .textControllers[
+                                                            surah.id!]!
+                                                        .text = value;
+
+                                                    debugPrint(
+                                                        "selected text controllers: ${controller.textControllers.map((key, value) => MapEntry(key, value.text))}");
+                                                    debugPrint(
+                                                        "Selected surahs: ${controller.selectedSurahs.toString()}");
                                                   },
                                                 ),
                                               ),
@@ -331,62 +321,24 @@ class SupervisorCreateMemorizationGroupContentScreen
     ]);
   }
 
-  Widget _buildAyatSelection() {
-    return Column(
-      children: [
-        Obx(
-          () => Column(
-            children: controller.selectedSurahs.map((surah) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomGoogleTextWidget(
-                    text: "Enter Ayat for ${surah.name}",
-                    fontSize: 16.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: "Enter Ayat",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      // Handle the ayat input for each surah
-                      controller.ayatForSurahs[surah.id!.toInt()] = value;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                ],
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildPartOfQuranChoice() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildMultiSurahSelection(),
-          const SizedBox(height: 16.0),
-          _buildMultiJuzzaSelection(),
-          const SizedBox(height: 16.0),
-          _buildExtractSurahSelection(),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildMultiSurahSelection(),
+        // const SizedBox(height: 16.0),
+        _buildMultiJuzzaSelection(),
+        //const SizedBox(height: 16.0),
+        _buildExtractSurahSelection(),
+      ],
     );
   }
 
   Widget _buildMultiSurahSelection() {
     return Column(
       children: [
-        if (controller.selectedGroupContent.value ==
-            GroupContentFilter.surahsQuran)
+        if (controller.selectedTeachingMethod.value ==
+            GroupTeachingMethodEnum.surahsQuran)
           Obx(
             () => MultiSelectDialogField<Surah>(
               searchable: true,
@@ -444,8 +396,8 @@ class SupervisorCreateMemorizationGroupContentScreen
   Widget _buildMultiJuzzaSelection() {
     return Column(
       children: [
-        if (controller.selectedGroupContent.value ==
-            GroupContentFilter.juzasQuran)
+        if (controller.selectedTeachingMethod.value ==
+            GroupTeachingMethodEnum.juzasQuran)
           MultiSelectDialogField(
             searchable: true,
             searchHint: 'ابحث عن الجزء',
@@ -514,7 +466,27 @@ class SupervisorCreateMemorizationGroupContentScreen
             buttonTextColor: AppColors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            onPressed: () async {},
+            onPressed: () async {
+              var response = await controller.createANewMemorizationGroup();
+              if (!context.mounted) return;
+
+              if (response['statusCode'] == 201) {
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.success,
+                  "تم انشاء المجموعة بنجاح",
+                  response['message'],
+                );
+                controller.navigateToSupervisorDashboardScreen();
+              } else {
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.error,
+                  "حدث خطأ",
+                  response['message'],
+                );
+              }
+            },
           ),
         ));
   }

@@ -213,7 +213,7 @@ class SupervisorMemorizationGroupDashboardScreen
     );
   }
 
-  Widget _buildOverviewSection() {
+  /*Widget _buildOverviewSection() {
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -249,8 +249,8 @@ class SupervisorMemorizationGroupDashboardScreen
             color: AppColors.primaryColor, blurRadius: 10.0, spreadRadius: 3),
       ),
     );
-  }
-
+  }*/
+/*
   Widget _buildCreateAWeeklyPlan() {
     return Card(
       elevation: 5,
@@ -292,8 +292,8 @@ class SupervisorMemorizationGroupDashboardScreen
         ),
       ),
     );
-  }
-
+  }*/
+/*
   Widget _buildSupervisorGroups() {
     return Card(
       elevation: 5,
@@ -395,4 +395,5 @@ class SupervisorMemorizationGroupDashboardScreen
       ),
     );
   }
+*/
 }

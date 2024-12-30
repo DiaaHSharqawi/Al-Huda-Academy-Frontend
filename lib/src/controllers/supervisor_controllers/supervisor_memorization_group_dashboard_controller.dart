@@ -4,6 +4,7 @@ import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor
 
 class SupervisorMemorizationGroupDashboardController extends GetxController {
   final SupervisorMemorizationGroupDashboardService
+      // ignore: unused_field
       _supervisorMemorizationGroupDashboardService;
 
   SupervisorMemorizationGroupDashboardController(

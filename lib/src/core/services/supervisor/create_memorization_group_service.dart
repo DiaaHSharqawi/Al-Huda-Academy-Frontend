@@ -25,13 +25,20 @@ class CreateMemorizationGroupService extends GetxService {
     final url = Uri.parse(
       createNewMemorizationGroup,
     );
+
     final Map<String, dynamic> createModelMap =
         createModel as Map<String, dynamic>;
+
+    final surahIds = createModelMap['surah_ids'];
+
+    debugPrint("surahIds: ${surahIds.runtimeType}");
+    if (surahIds != null && surahIds is! List<int>) {
+      throw Exception("surah_ids must be a list of integers.");
+    }
     try {
       debugPrint("---->");
-      debugPrint(
-        createModelMap['selectedDays'].toString(),
-      );
+      debugPrint(createModelMap.toString());
+
       final response = await http.post(
         url,
         headers: <String, String>{
@@ -42,12 +49,18 @@ class CreateMemorizationGroupService extends GetxService {
         body: json.encode({
           'groupName': createModelMap['groupName'],
           'group_description': createModelMap['groupDescription'],
-          'capacity': createModelMap['groupCapacity'],
-          'start_time': createModelMap['startTime'],
-          'end_time': createModelMap['endTime'],
-          'days': createModelMap['selectedDays'],
-          'group_status': 'pending',
+          'capacity': (createModelMap['capacity']),
+          'start_time': createModelMap['start_time'].toString(),
+          'end_time': createModelMap['end_time'].toString(),
+          'days': createModelMap['days'],
           'supervisor_id': appService.user.value!.getMemberId(),
+          'participants_gender_id': createModelMap['participants_gender_id'],
+          'participants_level_id': createModelMap['participants_level_id'],
+          'group_goal_id': createModelMap['group_goal_id'],
+          'teaching_method_id': createModelMap['teaching_method_id'],
+          'surah_ids': createModelMap['surah_ids'],
+          'juza_ids': createModelMap['juza_ids'],
+          'extracts': createModelMap['extracts'],
         }),
       );
 
