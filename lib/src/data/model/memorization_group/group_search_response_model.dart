@@ -218,23 +218,23 @@ class GroupSearchResponseGoal {
     required this.id,
     required this.groupGoalAr,
     required this.groupGoalEng,
-    required this.createdAt,
-    required this.updatedAt,
+    //  required this.createdAt,
+    //  required this.updatedAt,
   });
 
   final int? id;
   final String? groupGoalAr;
   final String? groupGoalEng;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  // final DateTime? createdAt;
+  //final DateTime? updatedAt;
 
   factory GroupSearchResponseGoal.fromJson(Map<String, dynamic> json) {
     return GroupSearchResponseGoal(
       id: json["id"],
       groupGoalAr: json["group_goal_ar"],
       groupGoalEng: json["group_goal_eng"],
-      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
+      // createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
+      // updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
     );
   }
 
@@ -242,13 +242,13 @@ class GroupSearchResponseGoal {
         "id": id,
         "group_goal_ar": groupGoalAr,
         "group_goal_eng": groupGoalEng,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
+        //"createdAt": createdAt?.toIso8601String(),
+        //  "updatedAt": updatedAt?.toIso8601String(),
       };
 
   @override
   String toString() {
-    return "$id, $groupGoalAr, $groupGoalEng, $createdAt, $updatedAt, ";
+    return "$id, $groupGoalAr, $groupGoalEng, ";
   }
 }
 

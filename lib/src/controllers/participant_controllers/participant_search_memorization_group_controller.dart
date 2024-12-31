@@ -105,8 +105,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
   var selectedJuzzas = [].obs;
 
-  //var selectedPartOfQuranType = SelectedPartOfQuranFiltter.notSelected.obs;
-
   var selectedStudentLevelRange = const RangeValues(0, 3).obs;
 
   final ParticipantSearchMemorizationGroupService
@@ -323,9 +321,43 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       }
     }
 
+    if (selectedGroupContent.value != GroupContentFilter.all) {
+      debugPrint("selectedGroupContent: ${selectedGroupContent.value}");
+
+      debugPrint("teaching method id ");
+      String teachingMethodId = teachingMethods
+          .firstWhere((element) =>
+              element.methodNameEnglish == selectedGroupContent.value.name)
+          .id
+          .toString();
+      debugPrint(teachingMethodId);
+
+      if (teachingMethodId == "3") {
+        queryParams['teaching_method_id'] = teachingMethodId.toString();
+        if (selectedJuzzas.isNotEmpty) {
+          queryParams['juza_ids'] = selectedJuzzas.map((j) => j.id).toList();
+        }
+      } else if (teachingMethodId == "4") {
+        queryParams['teaching_method_id'] = teachingMethodId.toString();
+        if (selectedSurahs.isNotEmpty) {
+          queryParams['surah_ids'] = selectedSurahs.map((s) => s.id).toList();
+        }
+      } else {
+        queryParams['teaching_method_id'] = teachingMethodId.toString();
+        queryParams['extract_ids'] = [];
+      }
+    }
+    /*
     if (selectedGroupContent.value != GroupContentFilter.allQuran &&
         selectedGroupContent.value != GroupContentFilter.all) {
       debugPrint("selectedGroupContent: ${selectedGroupContent.value}");
+
+      if (selectedGroupContent.value == GroupContentFilter.allOfQuranSurahs) {
+        queryParams['surahs'] = surahs.map((s) => s.id).toList();
+      }
+      if (selectedGroupContent.value == GroupContentFilter.allOfQuranjuzas) {
+        queryParams['juzas'] = juzas.map((j) => j.id).toList();
+      }
       if (selectedGroupContent.value == GroupContentFilter.surahsQuran &&
           selectedSurahs.isNotEmpty) {
         queryParams['surah_ids'] =
@@ -340,7 +372,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     }
     if (selectedGroupContent.value == GroupContentFilter.extractsQuran) {
       queryParams['extract_ids'] = [];
-    }
+    }*/
 
     if (selectedParticipantLevels.value.start != 0 ||
         selectedParticipantLevels.value.end != 2) {

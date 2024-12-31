@@ -33,7 +33,6 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
   var isLoading = false.obs;
 
   final ParticipantSearchedGroupDetailsService
-      // ignore: unused_field
       _participantSearchedGroupDetailsService;
 
   ParticipantSearchedGroupDetailsController(

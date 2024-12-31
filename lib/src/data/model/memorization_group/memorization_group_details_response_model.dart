@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class MemorizationGroupDetailsResponseModel {
   MemorizationGroupDetailsResponseModel({
     required this.success,
@@ -13,6 +15,7 @@ class MemorizationGroupDetailsResponseModel {
 
   factory MemorizationGroupDetailsResponseModel.fromJson(
       Map<String, dynamic> json, int statusCode) {
+    debugPrint("MemorizationGroupDetailsResponseModel.fromJson: $json");
     return MemorizationGroupDetailsResponseModel(
       statusCode: statusCode,
       success: json["success"],
@@ -84,11 +87,14 @@ class MemorizationGroupDetails {
   final List<LanguageGroupDetails> languages;
   final TeachingMethodGroupDetails? teachingMethod;
   final SupervisorGroupDetails? supervisor;
-  final List<SurahGroup> surahs;
+  final List<SurahQuran> surahs;
   final List<JuzaGroup> juzas;
   final List<ExtractGroupDetails> extracts;
 
   factory MemorizationGroupDetails.fromJson(Map<String, dynamic> json) {
+    debugPrint("MemorizationGroupDetails.fromJson: ${json["surahs"]}");
+    debugPrint("------------------------------");
+
     return MemorizationGroupDetails(
       id: json["id"],
       groupName: json["group_name"],
@@ -131,14 +137,16 @@ class MemorizationGroupDetails {
           : SupervisorGroupDetails.fromJson(json["Supervisor"]),
       surahs: json["surahs"] == null
           ? []
-          : List<SurahGroup>.from(json["surahs"]!.map((x) => x)),
+          : List<SurahQuran>.from(
+              json["surahs"]!.map((x) => SurahQuran.fromJson(x))),
       juzas: json["juzas"] == null
           ? []
           : List<JuzaGroup>.from(
               json["juzas"]!.map((x) => JuzaGroup.fromJson(x))),
       extracts: json["extracts"] == null
           ? []
-          : List<ExtractGroupDetails>.from(json["extracts"]!.map((x) => x)),
+          : List<ExtractGroupDetails>.from(
+              json["extracts"]!.map((x) => ExtractGroupDetails.fromJson(x))),
     );
   }
 
@@ -188,15 +196,20 @@ class ExtractGroupDetails {
   final int? surahId;
   final String? ayat;
   final int? groupId;
-  final SurahGroup? surah;
+  final SurahGroupExtract? surah;
 
   factory ExtractGroupDetails.fromJson(Map<String, dynamic> json) {
+    debugPrint("ExtractGroupDetails.fromJson: $json");
+    debugPrint("------------------------------");
+
     return ExtractGroupDetails(
       id: json["id"],
       surahId: json["surahId"],
       ayat: json["ayat"],
       groupId: json["groupId"],
-      surah: json["Surah"] == null ? null : SurahGroup.fromJson(json["Surah"]),
+      surah: json["Surah"] == null
+          ? null
+          : SurahGroupExtract.fromJson(json["Surah"]),
     );
   }
 
@@ -214,8 +227,53 @@ class ExtractGroupDetails {
   }
 }
 
-class SurahGroup {
-  SurahGroup({
+class SurahGroupExtract {
+  SurahGroupExtract({
+    required this.id,
+    required this.name,
+    required this.englishName,
+    required this.englishNameTranslation,
+    required this.numberOfAyahs,
+    required this.revelationType,
+  });
+
+  final int? id;
+  final String? name;
+  final String? englishName;
+  final String? englishNameTranslation;
+  final int? numberOfAyahs;
+  final String? revelationType;
+
+  factory SurahGroupExtract.fromJson(Map<String, dynamic> json) {
+    debugPrint("SurahGroup.fromJson: $json");
+    debugPrint("------------------------------");
+    return SurahGroupExtract(
+      id: json["id"],
+      name: json["name"],
+      englishName: json["englishName"],
+      englishNameTranslation: json["englishNameTranslation"],
+      numberOfAyahs: json["numberOfAyahs"],
+      revelationType: json["revelationType"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "englishName": englishName,
+        "englishNameTranslation": englishNameTranslation,
+        "numberOfAyahs": numberOfAyahs,
+        "revelationType": revelationType,
+      };
+
+  @override
+  String toString() {
+    return "$id, $name, $englishName, $englishNameTranslation, $numberOfAyahs, $revelationType, ";
+  }
+}
+
+class SurahQuran {
+  SurahQuran({
     required this.id,
     required this.surahId,
     required this.groupId,
@@ -227,8 +285,10 @@ class SurahGroup {
   final int? groupId;
   final SurahClass? surah;
 
-  factory SurahGroup.fromJson(Map<String, dynamic> json) {
-    return SurahGroup(
+  factory SurahQuran.fromJson(Map<String, dynamic> json) {
+    debugPrint("SurahQuran.fromJson: $json");
+    debugPrint("------------------------------");
+    return SurahQuran(
       id: json["id"],
       surahId: json["surahId"],
       groupId: json["groupId"],
@@ -267,6 +327,8 @@ class SurahClass {
   final String? revelationType;
 
   factory SurahClass.fromJson(Map<String, dynamic> json) {
+    debugPrint("SurahClass.fromJson: $json\n-");
+    debugPrint("------------------------------");
     return SurahClass(
       id: json["id"],
       name: json["name"],

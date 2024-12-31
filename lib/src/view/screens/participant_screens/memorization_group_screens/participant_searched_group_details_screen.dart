@@ -94,21 +94,23 @@ class ParticipantSearchedGroupDetailsScreen
         const SizedBox(
           height: 12.0,
         ),
-        if (controller.memorizationGroupDetails.value!.teachingMethod!
-                    .methodNameEnglish ==
-                "Memorization of Parts of the Quran-Surah" &&
+        if ((controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                    1 ||
+                controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                    4) &&
             controller.memorizationGroupDetails.value!.surahs.isNotEmpty)
           _buildGroupSurahs()
-        else if (controller.memorizationGroupDetails.value!.teachingMethod!
-                    .methodNameEnglish ==
-                "Memorization of Parts of the Quran-Juz" &&
+        else if ((controller
+                        .memorizationGroupDetails.value!.teachingMethod!.id ==
+                    2 ||
+                controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                    3) &&
             controller.memorizationGroupDetails.value!.juzas.isNotEmpty)
           _buildGroupJuza(),
-        if (controller.memorizationGroupDetails.value!.teachingMethod!
-                .methodNameEnglish ==
-            "Extracts from the Quran")
-          if (controller.memorizationGroupDetails.value!.extracts.isNotEmpty)
-            _buildGroupExtracts(),
+        if (controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                5 &&
+            controller.memorizationGroupDetails.value!.extracts.isNotEmpty)
+          _buildGroupExtracts(),
       ],
     );
   }
@@ -172,7 +174,7 @@ class ParticipantSearchedGroupDetailsScreen
               children: [
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.id.toString(),
+                    text: content.juzaId.toString(),
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -391,7 +393,7 @@ class ParticipantSearchedGroupDetailsScreen
                 ),
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.surah!.surah!.name!,
+                    text: content.surah!.name!,
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,

@@ -37,6 +37,8 @@ class ParticipantSearchedGroupDetailsService extends GetxService {
       debugPrint('Response body: ${response.body}');
 
       final Map<String, dynamic> data = json.decode(response.body);
+      debugPrint("Data: $data");
+
       MemorizationGroupDetailsResponseModel
           memorizationGroupDetailsResponseModel =
           MemorizationGroupDetailsResponseModel.fromJson(

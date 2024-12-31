@@ -34,6 +34,10 @@ class SupervisorCreateGroupController extends GetxController {
       await getJuzaList();
       await getGroupGoalList();
 
+      setSelectedLevelId();
+      debugPrint(
+          "selectedParticipantLevelId: ${selectedParticipantLevelId.value}");
+
       final appService = Get.find<AppService>();
       supervisorId.value = appService.user.value!.getMemberId();
     } catch (e) {
@@ -69,7 +73,7 @@ class SupervisorCreateGroupController extends GetxController {
   final List<Gender> genders = [];
 
   final List<ParticipantLevel> participantLevels = [];
-  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(0, 2));
+  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(1, 1));
   var selectedParticipantLevelId = "".obs;
 
   final RxList<String> selectedDays = <String>[].obs;
@@ -181,13 +185,11 @@ class SupervisorCreateGroupController extends GetxController {
               ),
             )
           : null,
-      'selectedSurahIds': selectedTeachingMethodId.value == "1" ||
-              selectedTeachingMethodId.value == "4"
+      'selectedSurahIds': selectedTeachingMethodId.value == "4"
           ? jsonEncode(
               selectedSurahs.map((surah) => surah.id.toString()).toList())
           : null,
-      "juza_ids": selectedTeachingMethodId.value == "2" ||
-              selectedTeachingMethodId.value == "3"
+      "juza_ids": selectedTeachingMethodId.value == "3"
           ? jsonEncode(
               selectedJuzzas.map((juza) => juza.id.toString()).toList(),
             )
@@ -227,14 +229,12 @@ class SupervisorCreateGroupController extends GetxController {
         'participants_level_id': selectedParticipantLevelId.value, // p level
         'group_goal_id': selectedGroupObjectiveId.value,
         'teaching_method_id': selectedTeachingMethodId.value,
-        'surah_ids': (selectedTeachingMethodId.value == "1" ||
-                selectedTeachingMethodId.value == "4")
+        'surah_ids': (selectedTeachingMethodId.value == "4")
             ? selectedSurahs
                 .map((surah) => int.parse(surah.id.toString()))
                 .toList()
             : null,
-        'juza_ids': selectedTeachingMethodId.value == "2" ||
-                selectedTeachingMethodId.value == "3"
+        'juza_ids': selectedTeachingMethodId.value == "3"
             ? selectedJuzzas
                 .map((juza) => int.parse(juza.id.toString()))
                 .toList()
