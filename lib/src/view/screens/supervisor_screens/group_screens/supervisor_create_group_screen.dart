@@ -90,12 +90,17 @@ class SupervisorCreateGroupScreen
   }
 
   Widget _buildGroupObjective() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "الهدف من المجموعة",
-        fontSize: 16.0,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const CustomGoogleTextWidget(
+          text: "الهدف من المجموعة",
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
         ...controller.groupGoals.map((goal) {
           return Obx(
             () => CustomRadioListTile<GroupObjectiveEnum>(
@@ -162,7 +167,7 @@ class SupervisorCreateGroupScreen
                     context,
                     DialogType.error,
                     'خطأ',
-                    "اسم المجموعة موجود بالفعل، الرجاء اختيار اسم آخر",
+                    getGroupByGroupName['message'],
                   );
                 }
               }),

@@ -59,4 +59,7 @@ class AppRoutes {
   // Admin Screens
   static String admin = "/admin";
   static String adminHomeScreen = "/admin/home";
+  static String adminGroupDashboard = "/admin/group-dashboard";
+  static String adminRequestsForCreatingGroup =
+      "/admin/requests-for-creating-group";
 }

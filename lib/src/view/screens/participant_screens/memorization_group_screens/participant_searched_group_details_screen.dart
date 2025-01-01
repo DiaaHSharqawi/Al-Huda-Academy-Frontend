@@ -237,7 +237,9 @@ class ParticipantSearchedGroupDetailsScreen
     return Column(
       children: [
         _buildGroupContentSurahsDetailsHeader(),
-        _buildGroupContentSurhasRows(),
+        Container(
+          child: _buildGroupContentSurhasRows(),
+        ),
       ],
     );
   }
@@ -245,39 +247,44 @@ class ParticipantSearchedGroupDetailsScreen
   Widget _buildGroupContentSurhasRows() {
     return Padding(
       padding: const EdgeInsets.all(18.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children:
-            controller.memorizationGroupDetails.value!.surahs.map((content) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: CustomGoogleTextWidget(
-                    text: content.id.toString(),
-                    textAlign: TextAlign.center,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.blackColor,
-                  ),
+      child: SizedBox(
+        height: 350,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: controller.memorizationGroupDetails.value!.surahs
+                .map((content) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: CustomGoogleTextWidget(
+                        text: content.surahId.toString(),
+                        textAlign: TextAlign.center,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomGoogleTextWidget(
+                        text: content.surah!.name!,
+                        textAlign: TextAlign.center,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: CustomGoogleTextWidget(
-                    text: content.surah!.name!,
-                    textAlign: TextAlign.center,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.blackColor,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -384,7 +391,7 @@ class ParticipantSearchedGroupDetailsScreen
               children: [
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.surahId.toString(),
+                    text: content.surah!.id.toString(),
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,

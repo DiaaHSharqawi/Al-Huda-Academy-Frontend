@@ -240,14 +240,14 @@ class ParticipantSearchMemorizationGroupScreen
           ),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             // Clear filter logic
             Navigator.of(context).pop();
             controller.queryParams.clear();
             controller.memorizationGroups.clear();
             controller.clearFilterQueryParams();
 
-            controller.fetchMemorizationGroup();
+            await controller.fetchMemorizationGroup();
             controller.isFilterApplied.value = false;
           },
           child: const CustomGoogleTextWidget(

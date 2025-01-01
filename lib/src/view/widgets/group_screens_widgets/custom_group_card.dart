@@ -7,24 +7,26 @@ class CustomGroupCard extends StatelessWidget {
   final String groupName;
   final String? studentsCount;
   final String? language;
-  final String groupGoal;
-  final String groupGender;
+  final String? groupGoal;
+  final String? groupGender;
   final VoidCallback onDetailsPressed;
-  final String participantsLevel;
-  final String days;
-  final String groupTime;
+  final String? participantsLevel;
+  final String? days;
+  final String? groupTime;
+  final String? groupSupervisorName;
 
   const CustomGroupCard({
     super.key,
     required this.groupName,
+    required this.onDetailsPressed,
+    this.groupSupervisorName,
     this.studentsCount,
     this.language,
-    required this.onDetailsPressed,
-    required this.groupGoal,
-    required this.groupGender,
-    required this.participantsLevel,
-    required this.days,
-    required this.groupTime,
+    this.groupGoal,
+    this.groupGender,
+    this.participantsLevel,
+    this.days,
+    this.groupTime,
   });
 
   @override
@@ -55,14 +57,20 @@ class CustomGroupCard extends StatelessWidget {
             height: 20,
             thickness: 2,
           ),
-          const SizedBox(height: 16.0),
-          _buildParticipantGender(),
-          const SizedBox(height: 16.0),
-          _buildParticipantLevel(),
-          const SizedBox(height: 16.0),
-          _buildGroupDays(),
-          const SizedBox(height: 16.0),
-          _buildGroupTime(),
+          groupSupervisorName == null
+              ? const SizedBox.shrink()
+              : _buildSupervisorGroup(),
+          studentsCount == null
+              ? const SizedBox.shrink()
+              : _buildStudentsCount(),
+          groupGender == null
+              ? const SizedBox.shrink()
+              : _buildParticipantGender(),
+          participantsLevel == null
+              ? const SizedBox.shrink()
+              : _buildParticipantLevel(),
+          days == null ? const SizedBox.shrink() : _buildGroupDays(),
+          groupTime == null ? const SizedBox.shrink() : _buildGroupTime(),
           const SizedBox(height: 16.0),
           _buildDetailsButton(),
         ],
@@ -70,137 +78,200 @@ class CustomGroupCard extends StatelessWidget {
     );
   }
 
-  Widget _buildGroupTime() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+  Widget _buildSupervisorGroup() {
+    return Column(
       children: [
-        const Icon(
-          Icons.timer,
-          color: AppColors.primaryColor,
+        const SizedBox(height: 16.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.supervised_user_circle,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "المشرف على المجموعة: ",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: groupSupervisorName!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CustomGoogleTextWidget(
-                text: " وقت المجموعة: ",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
+      ],
+    );
+  }
+
+  Widget _buildGroupTime() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 16.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.timer,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: " وقت المجموعة: ",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: groupTime!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              const SizedBox(width: 12.0),
-              CustomGoogleTextWidget(
-                text: groupTime,
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
   }
 
   Widget _buildGroupDays() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
-        const Icon(
-          Icons.calendar_today_sharp,
-          color: AppColors.primaryColor,
+        const SizedBox(
+          height: 16.0,
         ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CustomGoogleTextWidget(
-                text: "أيام المجموعة: ",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.calendar_today_sharp,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "أيام المجموعة: ",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: days!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              const SizedBox(width: 12.0),
-              CustomGoogleTextWidget(
-                text: days,
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
   }
 
   Widget _buildParticipantLevel() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
-        const Icon(
-          Icons.school,
-          color: AppColors.primaryColor,
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CustomGoogleTextWidget(
-                text: "المستوى",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
+        const SizedBox(height: 16.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.school,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "المستوى",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: participantsLevel!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              const SizedBox(width: 12.0),
-              CustomGoogleTextWidget(
-                text: participantsLevel,
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
   }
 
   Widget _buildParticipantGender() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
-        const Icon(
-          Icons.male,
-          color: AppColors.primaryColor,
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CustomGoogleTextWidget(
-                text: "جنس المشاركين: ",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
+        const SizedBox(height: 16.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.male,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "جنس المشاركين: ",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: groupGender!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              const SizedBox(width: 12.0),
-              CustomGoogleTextWidget(
-                text: groupGender,
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -228,29 +299,31 @@ class CustomGroupCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 16.0),
-              Row(
-                children: [
-                  const Expanded(
-                    flex: 1,
-                    child: CustomGoogleTextWidget(
-                      text: "هدف المجموعة:",
-                      fontSize: 18.0,
-                      color: Colors.black,
-                      overflow: TextOverflow.ellipsis,
+              groupGoal == null
+                  ? const SizedBox.shrink()
+                  : Row(
+                      children: [
+                        const Expanded(
+                          flex: 1,
+                          child: CustomGoogleTextWidget(
+                            text: "هدف المجموعة:",
+                            fontSize: 18.0,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: CustomGoogleTextWidget(
+                            text: groupGoal!,
+                            fontSize: 16.0,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: CustomGoogleTextWidget(
-                      text: groupGoal,
-                      fontSize: 16.0,
-                      color: Colors.black,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -258,106 +331,44 @@ class CustomGroupCard extends StatelessWidget {
     );
   }
 
-  /*Widget _buildDescription() {
-    return const Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStudentsCount() {
+    return Column(
       children: [
-        Icon(
-          Icons.description,
-          color: AppColors.primaryColor,
-        ),
-        SizedBox(width: 8.0),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomGoogleTextWidget(
-                text: "وصف المجموعة:",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
+        const SizedBox(height: 16.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.people,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "عدد الطلاب:",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: studentsCount!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              SizedBox(height: 8.0),
-              CustomGoogleTextWidget(
-                text: "sadasd",
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
-  }*/
-
-  /* Widget _buildStudentsCount() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.people,
-          color: AppColors.primaryColor,
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CustomGoogleTextWidget(
-                text: "عدد الطلاب:",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(width: 12.0),
-              CustomGoogleTextWidget(
-                text: studentsCount,
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }*/
-
-  /* Widget _buildLanguage() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Icon(
-          Icons.language,
-          color: AppColors.primaryColor,
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const CustomGoogleTextWidget(
-                text: "اللغة:",
-                fontSize: 18.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4.0),
-              CustomGoogleTextWidget(
-                text: language,
-                fontSize: 16.0,
-                color: Colors.black,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }*/
+  }
 
   Widget _buildDetailsButton() {
     return Align(

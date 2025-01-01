@@ -2,12 +2,12 @@ class UserInformation {
   String _id;
   String _memberId;
   String _email;
-  String _fullName;
+  String? _fullName;
   Role _role;
 
   UserInformation(
       {required String email,
-      required String fullName,
+      String? fullName,
       required Role role,
       required String id,
       required String memberId})
@@ -23,7 +23,7 @@ class UserInformation {
   String get getEmail => _email;
   set email(String email) => _email = email;
 
-  String get getFullName => _fullName;
+  String? get getFullName => _fullName;
   set fullName(String fullName) => _fullName = fullName;
 
   String getMemberId() => _memberId;

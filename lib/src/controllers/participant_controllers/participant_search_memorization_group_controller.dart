@@ -347,32 +347,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
         queryParams['extract_ids'] = [];
       }
     }
-    /*
-    if (selectedGroupContent.value != GroupContentFilter.allQuran &&
-        selectedGroupContent.value != GroupContentFilter.all) {
-      debugPrint("selectedGroupContent: ${selectedGroupContent.value}");
-
-      if (selectedGroupContent.value == GroupContentFilter.allOfQuranSurahs) {
-        queryParams['surahs'] = surahs.map((s) => s.id).toList();
-      }
-      if (selectedGroupContent.value == GroupContentFilter.allOfQuranjuzas) {
-        queryParams['juzas'] = juzas.map((j) => j.id).toList();
-      }
-      if (selectedGroupContent.value == GroupContentFilter.surahsQuran &&
-          selectedSurahs.isNotEmpty) {
-        queryParams['surah_ids'] =
-            selectedSurahs.map((surah) => surah.id).toList();
-      }
-
-      if (selectedGroupContent.value == GroupContentFilter.juzasQuran &&
-          selectedJuzzas.isNotEmpty) {
-        queryParams['juza_ids'] =
-            selectedJuzzas.map((juza) => juza.id).toList();
-      }
-    }
-    if (selectedGroupContent.value == GroupContentFilter.extractsQuran) {
-      queryParams['extract_ids'] = [];
-    }*/
 
     if (selectedParticipantLevels.value.start != 0 ||
         selectedParticipantLevels.value.end != 2) {
@@ -408,36 +382,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
     debugPrint(queryParams.toString());
 
-/*
-    if (selectedSupervisorLanguage != null &&
-        selectedSupervisorLanguage != SupervisorLangugueFilter.all) {
-      queryParams['supervisorLanguage'] = selectedSupervisorLanguage.name;
-    }
-
-    if (selectedGroupContent != null) {
-      queryParams['groupContent'] = selectedGroupContent.name;
-
-      if (selectedGroupContent == GroupContentFilter.partOfQuran) {
-        queryParams['partOfQuranType'] = selectedPartOfQuranType?.name;
-
-        if (selectedPartOfQuranType == SelectedPartOfQuranFiltter.surahs &&
-            selectedSurahs.isNotEmpty) {
-          queryParams['surahs'] = selectedSurahs.map((s) => s.id).toList();
-        }
-
-        if (selectedPartOfQuranType == SelectedPartOfQuranFiltter.juzs &&
-            selectedJuzzas.isNotEmpty) {
-          queryParams['juzzas'] = selectedJuzzas.map((j) => j.id).toList();
-        }
-      }
-    }
-
-    if (selectedStudentLevelRange.start != 0 ||
-        selectedStudentLevelRange.end != 2) {
-      queryParams['minLevel'] = selectedStudentLevelRange.start;
-      queryParams['maxLevel'] = selectedStudentLevelRange.end;
-    }
-*/
     memorizationGroups.clear();
     debugPrint(memorizationGroups.toString());
 
