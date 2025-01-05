@@ -21,7 +21,7 @@ class CredentialDetailsRegisterScreen extends GetView<RegisterController> {
         backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(24.0),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
@@ -74,32 +74,43 @@ class CredentialDetailsRegisterScreen extends GetView<RegisterController> {
   Widget _buildContinueButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: CustomButton(
-          foregroundColor: Colors.white,
-          backgroundColor: AppColors.primaryColor,
-          buttonText: 'استمر',
-          buttonTextColor: Colors.white,
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-          onPressed: () async {
-            Object result = await controller.validateCredentials();
-            debugPrint("Result: $result");
-            debugPrint("Result type: ${result.runtimeType}");
+      child: Obx(
+        () {
+          return CustomButton(
+            foregroundColor: Colors.white,
+            backgroundColor: AppColors.primaryColor,
+            buttonText: 'استمر',
+            buttonTextColor: Colors.white,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            onPressed: () async {
+              Object result = await controller.validateCredentials();
+              debugPrint("Result: $result");
+              debugPrint("Result type: ${result.runtimeType}");
 
-            if (result is Map && result['statusCode'] == 404) {
-              // should be navigate to the next screen
-              debugPrint("Navigate to the next screen");
-              controller.navigateToQualificationsScreen();
-            } else {
-              if (!context.mounted) return;
-              CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.error,
-                'خطأ',
-                (result as Map<String, dynamic>)['message'],
-              );
-            }
-          }),
+              if (result is Map && result['statusCode'] == 404) {
+                // should be navigate to the next screen
+                debugPrint("Navigate to the next screen");
+                controller.navigateToQualificationsScreen();
+              } else {
+                if (!context.mounted) return;
+                CustomAwesomeDialog.showAwesomeDialog(
+                  context,
+                  DialogType.error,
+                  'خطأ',
+                  (result as Map<String, dynamic>)['message'],
+                );
+              }
+            },
+            loadingWidget: controller.isLoading.value
+                ? const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
+                : null,
+            isEnabled: !controller.isLoading.value,
+          );
+        },
+      ),
     );
   }
 
@@ -115,11 +126,22 @@ class CredentialDetailsRegisterScreen extends GetView<RegisterController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomGoogleTextWidget(
-          text: 'البريد الالكتروني',
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        const Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: 'البريد الالكتروني',
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(width: 10.0),
+            CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         const SizedBox(height: 12.0),
         Obx(() {
@@ -140,11 +162,22 @@ class CredentialDetailsRegisterScreen extends GetView<RegisterController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomGoogleTextWidget(
-          text: ' كلمة السر',
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        const Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: ' كلمة السر',
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(width: 10.0),
+            CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         SizedBox(height: sizeBoxColumnSpace),
         Obx(

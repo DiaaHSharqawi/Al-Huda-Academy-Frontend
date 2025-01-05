@@ -8,4 +8,6 @@ class AppImages {
   static const holyQuranLogo = "$rootImages/holyQuranLogo.png";
 
   static const userAvatarImage = "$rootImages/userAvatar.png";
+
+  static const loadingImage = "$rootImages/loaderLottie.json";
 }

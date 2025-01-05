@@ -12,15 +12,29 @@ import 'package:moltqa_al_quran_frontend/src/view/screens/auth_screens/register_
 class RegisterPages {
   static final List<GetPage> pages = [
     GetPage(
-      name: AppRoutes.qualificationsRegister,
-      page: () => const QualificationsRegisterScreens(),
+      name: AppRoutes.roleSelectionRegister,
+      page: () => const RoleSelectionRegisterScreen(),
+      transition: Transition.leftToRightWithFade,
+      transitionDuration: const Duration(milliseconds: 500),
+      binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.credentialDetailsRegister,
+      page: () => const CredentialDetailsRegisterScreen(),
       binding: RegisterBinding(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(milliseconds: 1000),
     ),
     GetPage(
-      name: AppRoutes.credentialDetailsRegister,
-      page: () => const CredentialDetailsRegisterScreen(),
+      name: AppRoutes.qualificationsRegister,
+      page: () => const QualificationsRegisterScreens(),
+      binding: RegisterBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 1000),
+    ),
+    GetPage(
+      name: AppRoutes.personalDetailsRegister,
+      page: () => const PersonalDetailsRegisterScreen(),
       binding: RegisterBinding(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(milliseconds: 1000),
@@ -33,25 +47,11 @@ class RegisterPages {
       transitionDuration: const Duration(milliseconds: 1000),
     ),
     GetPage(
-      name: AppRoutes.roleSelectionRegister,
-      page: () => const RoleSelectionRegisterScreen(),
-      transition: Transition.leftToRightWithFade,
-      transitionDuration: const Duration(milliseconds: 500),
-      binding: RegisterBinding(),
-    ),
-    GetPage(
       name: AppRoutes.selectProfileImageRegister,
       page: () => const SelectProfileImageRegisterScreen(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(milliseconds: 1000),
       binding: RegisterBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.personalDetailsRegister,
-      page: () => const PersonalDetailsRegisterScreen(),
-      binding: RegisterBinding(),
-      transition: Transition.cupertino,
-      transitionDuration: const Duration(milliseconds: 1000),
     ),
   ];
 }

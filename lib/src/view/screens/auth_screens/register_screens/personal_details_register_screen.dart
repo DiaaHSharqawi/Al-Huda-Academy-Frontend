@@ -28,7 +28,7 @@ class PersonalDetailsRegisterScreen extends GetView<RegisterController> {
         backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(24.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -61,46 +61,71 @@ class PersonalDetailsRegisterScreen extends GetView<RegisterController> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomGoogleTextWidget(
-          text: RegisterScreenLanguageConstants.phoneNumber.tr,
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: RegisterScreenLanguageConstants.phoneNumber.tr,
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            const SizedBox(width: 10.0),
+            const CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         const SizedBox(height: 12.0),
-        IntlPhoneField(
-          invalidNumberMessage: 'من فضلك ادخل رقم هاتف صحيح',
-          pickerDialogStyle: PickerDialogStyle(
-            searchFieldInputDecoration: const InputDecoration(
-              hintText: 'ابحث عن دولتك',
-            ),
-          ),
-          autovalidateMode: controller.isSubmitting.value
-              ? AutovalidateMode.always
-              : AutovalidateMode.onUserInteraction,
-          textAlignVertical: TextAlignVertical.center,
-          validator: (phone) =>
-              AuthValidations.validatePhoneNumber(phone?.number),
-          controller: controller.phoneController,
-          cursorColor: AppColors.primaryColor,
-          decoration: const InputDecoration(
-            focusColor: AppColors.primaryColor,
-            hoverColor: Colors.red,
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.primaryColor,
-                width: 40.0,
+        Obx(
+          () {
+            return IntlPhoneField(
+              invalidNumberMessage: 'من فضلك ادخل رقم هاتف صحيح',
+              pickerDialogStyle: PickerDialogStyle(
+                searchFieldInputDecoration: const InputDecoration(
+                  hintText: 'ابحث عن دولتك',
+                ),
               ),
-            ),
-          ),
-          initialCountryCode: 'PS',
-          onSaved: (phone) {
-            debugPrint("phone is saved : ${phone.toString()}");
-            controller.phoneController.text = phone.toString();
-          },
-          onSubmitted: (phone) {
-            debugPrint("phone is submitted ${phone.toString()}");
-            controller.phoneController.text = phone;
+              autovalidateMode: controller.isSubmitting.value
+                  ? AutovalidateMode.always
+                  : AutovalidateMode.onUserInteraction,
+              textAlignVertical: TextAlignVertical.center,
+              validator: (phone) =>
+                  AuthValidations.validatePhoneNumber(phone?.number),
+              controller: controller.phoneController,
+              cursorColor: AppColors.primaryColor,
+              decoration: InputDecoration(
+                hintText: 'ادخل رقم الهاتف',
+                hintStyle: GoogleFonts.almarai(
+                  textStyle: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16.0,
+                  ),
+                ),
+                errorText: controller.isSubmitting.value &&
+                        controller.phoneController.text.isEmpty
+                    ? "يرجى ادخال رقم هاتف !"
+                    : null,
+                hoverColor: Colors.red,
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColors.primaryColor,
+                    width: 40.0,
+                  ),
+                ),
+              ),
+              initialCountryCode: 'PS',
+              onSaved: (phone) {
+                debugPrint("phone is saved : ${phone.toString()}");
+                controller.phoneController.text = phone.toString();
+              },
+              onSubmitted: (phone) {
+                debugPrint("phone is submitted ${phone.toString()}");
+                controller.phoneController.text = phone;
+              },
+            );
           },
         ),
       ],
@@ -112,51 +137,84 @@ class PersonalDetailsRegisterScreen extends GetView<RegisterController> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomGoogleTextWidget(
-          text: "تاريخ الميلاد",
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        const Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: "تاريخ الميلاد",
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(width: 10.0),
+            CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         const SizedBox(height: 12.0),
         Row(
           children: [
             Expanded(
-              child: BoardDateTimeInputField(
-                validators: BoardDateTimeInputFieldValidators(
-                  onIllegalFormat: (value) {
-                    return 'الرجاء اختيار تاريخ صحيح';
-                  },
-                  onRequired: () {
-                    return 'الرجاء اختيار تاريخ الميلاد';
-                  },
-                ),
-                decoration: InputDecoration(
-                  hintText: 'إضغط لاختيار تاريخ الميلاد',
-                  hintStyle: GoogleFonts.almarai(
-                    textStyle: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16.0,
+              child: Obx(
+                () => BoardDateTimeInputField(
+                  initialDate: controller.dateTimeController.selectedDate,
+                  cursorColor: AppColors.primaryColor,
+                  showPicker: true,
+                  showPickerType: BoardDateTimeFieldPickerType.mini,
+                  validators: BoardDateTimeInputFieldValidators(
+                    onIllegalFormat: (value) {
+                      return 'الرجاء اختيار تاريخ صحيح';
+                    },
+                    onRequired: () {
+                      return 'الرجاء اختيار تاريخ الميلاد';
+                    },
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'ادخل تاريخ الميلاد باليوم/الشهر/السنة',
+                    hintStyle: GoogleFonts.almarai(
+                      textStyle: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16.0,
+                      ),
                     ),
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryColor,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    errorText: controller.isSubmitting.value &&
+                            (controller.dateTimeController.selectedDate ==
+                                    null ||
+                                controller.dateTimeController.selectedDate
+                                    .toString()
+                                    .isEmpty)
+                        ? "يرجى ادخال تاريخ ميلاد صحيح"
+                        : null,
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+                  controller: controller.dateTimeController,
+                  pickerType: DateTimePickerType.date,
+                  options: const BoardDateTimeOptions(
+                    pickerFormat: PickerFormat.dmy,
+                    calendarSelectionRadius: BorderSide.strokeAlignOutside,
+                    languages: BoardPickerLanguages.en(),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.white,
+                    activeColor: AppColors.primaryColor,
                   ),
+                  textStyle: Theme.of(context).textTheme.bodyMedium,
+                  onChanged: (date) {
+                    debugPrint("date is changed : $date");
+
+                    controller.dateTimeController.setDate(date);
+                  },
+                  onResult: (date) {
+                    debugPrint("date is result : $date");
+                  },
                 ),
-                controller: controller.dateTimeController,
-                pickerType: DateTimePickerType.date,
-                options: const BoardDateTimeOptions(
-                  pickerFormat: PickerFormat.dmy,
-                  calendarSelectionRadius: BorderSide.strokeAlignOutside,
-                  languages: BoardPickerLanguages.en(),
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.white,
-                  activeColor: AppColors.primaryColor,
-                ),
-                textStyle: Theme.of(context).textTheme.bodyMedium,
-                onChanged: (date) {
-                  controller.dateTimeController.setDate(date);
-                },
               ),
             ),
           ],
@@ -179,21 +237,34 @@ class PersonalDetailsRegisterScreen extends GetView<RegisterController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomGoogleTextWidget(
-          text: RegisterScreenLanguageConstants.fullName.tr,
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: RegisterScreenLanguageConstants.fullName.tr,
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            const SizedBox(width: 10.0),
+            const CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         const SizedBox(height: 12.0),
-        CustomAuthTextFormField(
-          textFormHintText: RegisterScreenLanguageConstants.enterAFullName.tr,
-          colorIcon: AppColors.primaryColor,
-          controller: controller.fullNameController,
-          textFormFieldValidator: AuthValidations.validateFullName,
-          autovalidateMode: controller.isSubmitting.value
-              ? AutovalidateMode.always
-              : AutovalidateMode.onUserInteraction,
+        Obx(
+          () => CustomAuthTextFormField(
+            textFormHintText: RegisterScreenLanguageConstants.enterAFullName.tr,
+            colorIcon: AppColors.primaryColor,
+            controller: controller.fullNameController,
+            textFormFieldValidator: AuthValidations.validateFullName,
+            autovalidateMode: controller.isSubmitting.value
+                ? AutovalidateMode.always
+                : AutovalidateMode.onUserInteraction,
+          ),
         ),
       ],
     );
@@ -216,38 +287,64 @@ class PersonalDetailsRegisterScreen extends GetView<RegisterController> {
         const SizedBox(
           height: 25.0,
         ),
-        const CustomGoogleTextWidget(
-          text: 'الدولة',
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        const Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: 'الدولة',
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(width: 10.0),
+            CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         const SizedBox(height: 12.0),
-        CustomAuthTextFormField(
-          textFormHintText: RegisterScreenLanguageConstants.enterACountry.tr,
-          controller: controller.countryController,
-          textFormFieldValidator: AuthValidations.validateCountry,
-          autovalidateMode: controller.isSubmitting.value
-              ? AutovalidateMode.always
-              : AutovalidateMode.onUserInteraction,
-          obscureText: false,
+        Obx(
+          () => CustomAuthTextFormField(
+            textFormHintText: RegisterScreenLanguageConstants.enterACountry.tr,
+            controller: controller.countryController,
+            textFormFieldValidator: AuthValidations.validateCountry,
+            autovalidateMode: controller.isSubmitting.value
+                ? AutovalidateMode.always
+                : AutovalidateMode.onUserInteraction,
+            obscureText: false,
+          ),
         ),
         const SizedBox(height: 24.0),
-        const CustomGoogleTextWidget(
-          text: 'المدينة',
-          fontFamily: AppFonts.arabicFont,
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+        const Row(
+          children: [
+            CustomGoogleTextWidget(
+              text: 'المدينة',
+              fontFamily: AppFonts.arabicFont,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(width: 10.0),
+            CustomGoogleTextWidget(
+              text: '*',
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ],
         ),
         const SizedBox(height: 12.0),
-        CustomAuthTextFormField(
-          textFormHintText: RegisterScreenLanguageConstants.enterACity.tr,
-          controller: controller.cityController,
-          textFormFieldValidator: AuthValidations.validateCity,
-          autovalidateMode: controller.isSubmitting.value
-              ? AutovalidateMode.always
-              : AutovalidateMode.onUserInteraction,
-          obscureText: false,
+        Obx(
+          () => CustomAuthTextFormField(
+            textFormHintText: RegisterScreenLanguageConstants.enterACity.tr,
+            controller: controller.cityController,
+            textFormFieldValidator: AuthValidations.validateCity,
+            autovalidateMode: controller.isSubmitting.value
+                ? AutovalidateMode.always
+                : AutovalidateMode.onUserInteraction,
+            obscureText: false,
+          ),
         ),
       ],
     );

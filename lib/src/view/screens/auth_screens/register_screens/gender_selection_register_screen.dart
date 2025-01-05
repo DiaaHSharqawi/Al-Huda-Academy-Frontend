@@ -93,6 +93,8 @@ class GenderSelectionRegisterScreen extends GetView<RegisterController> {
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
         onPressed: () {
+          controller.isSubmitting(true);
+
           if (!context.mounted) return;
           if (controller.selectedGender.value == Gender.notSelected) {
             CustomAwesomeDialog.showAwesomeDialog(
@@ -102,6 +104,8 @@ class GenderSelectionRegisterScreen extends GetView<RegisterController> {
               " يرجى اختيار نوع الجنس للمتابعة: ذكر أو أنثى.",
             );
           } else {
+            controller.isSubmitting(false);
+
             debugPrint("Gender selected: ${controller.selectedGender.value}");
             debugPrint("Navigate to qualifications screen");
             controller.isSubmitting.value = false;
@@ -145,48 +149,63 @@ class GenderSelectionRegisterScreen extends GetView<RegisterController> {
   }
 
   Widget _buildGenderSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
-        _buildMaleGenderCheckBox(),
-        const SizedBox(width: 20.0),
-        _buildFemaleGenderCheckBox(),
+        if (controller.selectedGender.value == Gender.notSelected &&
+            controller.isSubmitting.value)
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: CustomGoogleTextWidget(
+              text: 'يرجى اختيار نوع الجنس للمتابعة',
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: controller.genders.map((gender) {
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: controller.selectedGender.value?.name == gender.nameEn
+                      ? AppColors.primaryColor
+                      : Colors.grey.withOpacity(0.1),
+                  width: controller.selectedGender.value?.name == gender.nameEn
+                      ? 5.0
+                      : 1.0,
+                ),
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              child: GFCheckbox(
+                type: GFCheckboxType.circle,
+                activeBgColor: AppColors.white,
+                onChanged: (value) {
+                  debugPrint("value: $value");
+                  controller.selectedGender.value =
+                      gender.nameEn == "male" ? Gender.male : Gender.female;
+
+                  controller.selectedGenderId.value = gender.id.toString();
+                },
+                value: gender.nameEn == controller.selectedGender.value?.name,
+                size: 180.0,
+                inactiveIcon: _buildCheckBoxIcon(
+                  'assets/images/${gender.nameEn}.png',
+                  gender.nameAr.toString(),
+                ),
+                activeIcon: _buildCheckBoxIcon(
+                  'assets/images/${gender.nameEn}.png',
+                  gender.nameAr.toString(),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       ],
-    );
-  }
-
-  Widget _buildMaleGenderCheckBox() {
-    return GFCheckbox(
-      type: GFCheckboxType.circle,
-      activeBgColor: AppColors.white,
-      activeBorderColor: AppColors.primaryColor,
-      onChanged: (value) {
-        debugPrint("value: $value");
-        controller.selectedGender.value = Gender.male;
-      },
-      value: controller.selectedGender.value == Gender.male,
-      size: 180.0,
-      inactiveIcon: _buildCheckBoxIcon('assets/images/male.png', 'ذكر'),
-      activeIcon: _buildCheckBoxIcon('assets/images/male.png', 'ذكر'),
-      inactiveBorderColor: AppColors.primaryColor,
-    );
-  }
-
-  Widget _buildFemaleGenderCheckBox() {
-    return GFCheckbox(
-      type: GFCheckboxType.circle,
-      activeBgColor: AppColors.white,
-      activeBorderColor: AppColors.primaryColor,
-      onChanged: (value) {
-        debugPrint("value: $value");
-        controller.selectedGender.value = Gender.female;
-      },
-      value: controller.selectedGender.value == Gender.female,
-      size: 180.0,
-      inactiveIcon: _buildCheckBoxIcon('assets/images/female.png', 'أنثى'),
-      activeIcon: _buildCheckBoxIcon('assets/images/female.png', 'أنثى'),
-      inactiveBorderColor: AppColors.primaryColor,
     );
   }
 }

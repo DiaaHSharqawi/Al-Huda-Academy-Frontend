@@ -9,6 +9,7 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_project_logo.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/role.dart';
@@ -26,29 +27,39 @@ class RoleSelectionRegisterScreen extends GetView<RegisterController> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 250,
-                  child: _buildImageLogo(),
-                ),
-                SizedBox(height: sizeBoxColumnSpace * 2),
-                _buildPleaseChooseText(),
-                Obx(
-                  () {
-                    return Column(
+            child: Obx(
+              () => controller.isLoading.value
+                  ? SizedBox(
+                      height: Get.height,
+                      width: Get.width,
+                      child: const Center(
+                        child: CustomLoadingWidget(
+                          width: 500.0,
+                          height: 500.0,
+                          imagePath: AppImages.loadingImage,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: sizeBoxColumnSpace * 4),
-                        _buildRoleSelection(),
-                        SizedBox(height: sizeBoxColumnSpace * 5),
+                        SizedBox(
+                          height: 250,
+                          child: _buildImageLogo(),
+                        ),
+                        SizedBox(height: sizeBoxColumnSpace * 2),
+                        _buildPleaseChooseText(),
+                        Column(
+                          children: [
+                            SizedBox(height: sizeBoxColumnSpace * 2),
+                            _buildRoleSelection(),
+                            SizedBox(height: sizeBoxColumnSpace * 2),
+                          ],
+                        ),
+                        _buildChooseButton(context),
                       ],
-                    );
-                  },
-                ),
-                _buildChooseButton(context),
-              ],
+                    ),
             ),
           ),
         ),
@@ -93,6 +104,8 @@ class RoleSelectionRegisterScreen extends GetView<RegisterController> {
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
         onPressed: () {
+          controller.isSubmitting(true);
+
           if (!context.mounted) return;
           if (controller.selectedRole.value == Role.notSelected) {
             CustomAwesomeDialog.showAwesomeDialog(
@@ -101,10 +114,11 @@ class RoleSelectionRegisterScreen extends GetView<RegisterController> {
               'يرجى اختيار النوع للاستمرار',
               "يرجى اختيار نوع المستخدم للمتابعة: طالب أو مشرف.",
             );
+            //controller.isSubmitting(false);
           } else {
             debugPrint("Role selected: ${controller.selectedRole.value}");
             debugPrint("Navigate to qualifications screen");
-            controller.isSubmitting.value = false;
+            controller.isSubmitting(false);
             controller.navigateToCredentialScreen();
           }
         },
@@ -113,56 +127,85 @@ class RoleSelectionRegisterScreen extends GetView<RegisterController> {
   }
 
   Widget _buildPleaseChooseText() {
-    return const CustomGoogleTextWidget(
-      text: 'التسجيل كـ',
-      fontSize: 28.0,
-      fontWeight: FontWeight.bold,
-    );
-  }
-
-  Widget _buildRoleSelection() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildStudentRoleCheckBox(),
-        const SizedBox(width: 20.0),
-        _buildSupervisorRoleCheckBox(),
+        CustomGoogleTextWidget(
+          text: 'التسجيل كـ',
+          fontSize: 28.0,
+          fontWeight: FontWeight.bold,
+        ),
+        SizedBox(width: 10.0),
+        CustomGoogleTextWidget(
+          text: '*',
+          fontSize: 28.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
       ],
     );
   }
 
-  Widget _buildStudentRoleCheckBox() {
-    return GFCheckbox(
-      type: GFCheckboxType.circle,
-      activeBgColor: AppColors.white,
-      activeBorderColor: AppColors.primaryColor,
-      onChanged: (value) {
-        debugPrint("Role Participant selected: $value");
-        controller.selectedRole.value = Role.participant;
-      },
-      value: controller.selectedRole.value == Role.participant,
-      size: 180.0,
-      inactiveIcon: _buildCheckBoxIcon('assets/images/student.png', 'طالب'),
-      activeIcon: _buildCheckBoxIcon('assets/images/student.png', 'طالب'),
-      inactiveBorderColor: AppColors.primaryColor,
-    );
-  }
-
-  Widget _buildSupervisorRoleCheckBox() {
-    return GFCheckbox(
-      type: GFCheckboxType.circle,
-      activeBgColor: AppColors.white,
-      activeBorderColor: AppColors.primaryColor,
-      onChanged: (value) {
-        controller.selectedRole.value = Role.supervisor;
-        debugPrint("Role supervisor selected: $value");
-      },
-      value: controller.selectedRole.value == Role.supervisor,
-      size: 180.0,
-      inactiveIcon: _buildCheckBoxIcon('assets/images/supervisor.png', 'مشرف'),
-      activeIcon: _buildCheckBoxIcon('assets/images/supervisor.png', 'مشرف'),
-      inactiveBorderColor: AppColors.primaryColor,
+  Widget _buildRoleSelection() {
+    return Column(
+      children: [
+        if (controller.selectedRole.value == Role.notSelected &&
+            controller.isSubmitting.value)
+          const CustomGoogleTextWidget(
+            text: "يرجى اختيار نوع المستخدم للمتابعة:\n طالب أو مشرف.",
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        const SizedBox(height: 20.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: controller.roles.take(2).map((role) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: controller.selectedRole.value?.name == role.roleName
+                        ? AppColors.primaryColor
+                        : Colors.grey,
+                    width: controller.selectedRole.value?.name == role.roleName
+                        ? 3.0
+                        : 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                child: GFCheckbox(
+                  type: GFCheckboxType.circle,
+                  activeBgColor: AppColors.white,
+                  onChanged: (value) {
+                    controller.selectedRole.value =
+                        role.roleName == Role.participant.name
+                            ? Role.participant
+                            : Role.supervisor;
+                    debugPrint("Role selected: $role");
+                    controller.selectedRoleId.value = role.id.toString();
+                    debugPrint(
+                        "controller.selectedRoleId: ${controller.selectedRoleId.value}");
+                  },
+                  value: controller.selectedRole.value?.name == role.roleName,
+                  size: 180.0,
+                  inactiveIcon: _buildCheckBoxIcon(
+                    'assets/images/${role.roleName}.png',
+                    role.roleNameAr.toString(),
+                  ),
+                  activeIcon: _buildCheckBoxIcon(
+                    'assets/images/${role.roleName}.png',
+                    role.roleNameAr.toString(),
+                  ),
+                  inactiveBorderColor: Colors.grey,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 

@@ -108,7 +108,15 @@ class AdminRequestsForCreatingGroupScreen
                       studentsCount: controller
                           .requestsForCreatingGroupsModelsList[index].capacity!
                           .toString(),
-                      onDetailsPressed: () {},
+                      onDetailsPressed: () {
+                        debugPrint(
+                            "Group id: ${controller.requestsForCreatingGroupsModelsList[index].id}");
+
+                        controller.navigateToRequestsForCreatingGroupDetails(
+                            controller
+                                .requestsForCreatingGroupsModelsList[index].id!
+                                .toString());
+                      },
                     ),
                   );
                 }
@@ -117,8 +125,6 @@ class AdminRequestsForCreatingGroupScreen
                   return const SizedBox.shrink();
                 }
                 return null;
-
-                //    return _buildLoadingIndicator();
               },
             ),
           );
