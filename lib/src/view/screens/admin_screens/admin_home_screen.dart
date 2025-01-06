@@ -5,6 +5,7 @@ import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/admin_controllers/admin_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_card.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
@@ -28,11 +29,73 @@ class AdminHomeScreen extends GetView<AdminController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildGroupSection(),
+                const SizedBox(
+                  height: 32.0,
+                ),
+                const Divider(
+                  color: AppColors.blackColor,
+                  thickness: 2.0,
+                ),
+                const SizedBox(
+                  height: 32.0,
+                ),
+                _buildSupervisorSection(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSupervisorSection() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSupervisorHeaderText(),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildSupervisorCard(),
+      ],
+    );
+  }
+
+  Widget _buildSupervisorHeaderText() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: const CustomGoogleTextWidget(
+        text: 'المشرفين',
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildSupervisorCard() {
+    return CustomCard(
+      marginListTile: 16.0,
+      paddingListTile: 32.0,
+      gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
+      cardText: 'المشرفين',
+      cardTextSize: 18.0,
+      cardInnerBoxShadowColor: const Color(0xFF365FF4),
+      cardTextColor: AppColors.blackColor,
+      avatarCard: const Icon(
+        Icons.supervisor_account_rounded,
+        color: AppColors.blackColor,
+        size: 40.0,
+      ),
+      icon: const Icon(
+        Icons.arrow_forward_ios,
+        color: AppColors.blackColor,
+        size: 40.0,
+      ),
+      onTap: () {
+        controller.navigateToAdminSupervisorDashboardScreen();
+      },
     );
   }
 

@@ -10,4 +10,8 @@ class AdminController extends GetxController {
   void navigateToAdminGroupDashboardScreen() {
     Get.toNamed(AppRoutes.adminGroupDashboard);
   }
+
+  void navigateToAdminSupervisorDashboardScreen() {
+    Get.toNamed(AppRoutes.adminSupervisorDashboard);
+  }
 }

@@ -140,99 +140,15 @@ class AdminRequestsForCreatingGroupScreen
 
   Widget _buildPagination() {
     return PaginationWidget(
+      queryParams: controller.queryParams,
       currentPage: controller.currentPage,
       totalPages: controller.totalPages,
-      fetchRequestsForCreatingGroup: controller.fetchRequestsForCreatingGroup,
+      dataFetchingFunction: controller.fetchRequestsForCreatingGroup,
       primaryColor: AppColors.primaryColor,
       textColor: AppColors.white,
     );
   }
 
-/*
-  Widget _buildPagination() {
-    return Obx(() {
-      if (controller.totalPages <= 1) {
-        return const SizedBox.shrink();
-      }
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: controller.currentPage.value > 1
-                    ? () async {
-                        //  controller.currentPage.value--;
-                        controller.currentPage.update(
-                          (val) => controller.currentPage.value--,
-                        );
-                        await controller.fetchRequestsForCreatingGroup();
-                      }
-                    : null,
-              ),
-              ...List.generate(controller.totalPages, (index) {
-                if (index == 0 ||
-                    index == controller.totalPages - 1 ||
-                    (index >= controller.currentPage.value - 2 &&
-                        index <= controller.currentPage.value)) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: CustomButton(
-                      backgroundColor: controller.currentPage.value == index + 1
-                          ? AppColors.primaryColor.withOpacity(0.8)
-                          : AppColors.primaryColor,
-                      foregroundColor: AppColors.white,
-                      buttonText: '${index + 1}',
-                      buttonTextColor: AppColors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      onPressed: () async {
-                        //controller.currentPage.value = index + 1;
-                        //
-                        controller.currentPage.update(
-                          (val) => controller.currentPage.value = index + 1,
-                        );
-                        await controller.fetchRequestsForCreatingGroup();
-                      },
-                    ),
-                  );
-                } else if (index == controller.currentPage.value - 3 ||
-                    index == controller.currentPage.value + 1) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
-                    child: CustomGoogleTextWidget(
-                      text: '...',
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.blackColor,
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              }),
-              IconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onPressed: controller.currentPage.value < controller.totalPages
-                    ? () async {
-                        //  controller.currentPage.value++;
-                        controller.currentPage.update(
-                          (val) => controller.currentPage.value++,
-                        );
-                        await controller.fetchRequestsForCreatingGroup();
-                      }
-                    : null,
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-*/
   Widget _buildRequestsForCreatingGroups() {
     return const Padding(
       padding: EdgeInsets.all(16.0),
@@ -620,51 +536,6 @@ class AdminRequestsForCreatingGroupScreen
     );
   }
 
-/*
-  Widget _buildCurrentMemorizationGroupCard() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: GFListTile(
-        avatar: const GFAvatar(
-          backgroundImage: AssetImage('assets/images/meeting.png'),
-          backgroundColor: Colors.transparent,
-          shape: GFAvatarShape.standard,
-          size: 40.0,
-        ),
-        radius: 8.0,
-        color: AppColors.secondaryColor,
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.all(32.0),
-        selected: true,
-        subTitle: const Center(
-          child: CustomGoogleTextWidget(
-            text: 'الحلقات الحالية',
-            fontSize: 18.0,
-            textAlign: TextAlign.center,
-            fontWeight: FontWeight.bold,
-            color: AppColors.blackColor,
-          ),
-        ),
-        icon: const Icon(
-          Icons.arrow_forward_ios,
-          color: AppColors.blackColor,
-          size: 40.0,
-        ),
-        onTap: () {},
-        shadow: const BoxShadow(
-          color: AppColors.primaryColor,
-          blurRadius: 10.0,
-          spreadRadius: 3.0,
-          offset: Offset(0.0, 0.0),
-          blurStyle: BlurStyle.inner,
-        ),
-      ),
-    );
-  }
-*/
   PreferredSize _buildAppBar() {
     return const CustomAppBar(
       showBackArrow: true,

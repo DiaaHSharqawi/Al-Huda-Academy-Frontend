@@ -17,8 +17,6 @@ class AdminRequestsForCreatingGroupService extends GetxService {
 
   var appService = Get.find<AppService>();
 
-//  Future<List<void>> fetchRequestsForCreatingGroup() async {}
-
   Future<List<Gender>> getGenderList() async {
     final url = Uri.parse("$alHudaBaseURL/gender");
     debugPrint("$url");

@@ -63,4 +63,7 @@ class AppRoutes {
   static String adminRequestsForCreatingGroup =
       "/admin/requests-for-creating-group";
   static String adminRequestedGroupDetails = "/admin/requested-group-details";
+  static String adminSupervisorDashboard = "/admin/supervisor-dashboard";
+  static String adminSupervisorRequestsRegistration =
+      "/admin/supervisor-requests-registration";
 }

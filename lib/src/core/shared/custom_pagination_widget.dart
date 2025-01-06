@@ -6,18 +6,19 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart
 class PaginationWidget extends StatelessWidget {
   final RxInt currentPage;
   final RxInt totalPages;
-  final Future<void> Function() fetchRequestsForCreatingGroup;
+  final Future<void> Function() dataFetchingFunction;
   final Color primaryColor;
   final Color textColor;
+  final RxMap<String, dynamic> queryParams;
 
-  const PaginationWidget({
-    super.key,
-    required this.currentPage,
-    required this.totalPages,
-    required this.fetchRequestsForCreatingGroup,
-    required this.primaryColor,
-    required this.textColor,
-  });
+  const PaginationWidget(
+      {super.key,
+      required this.currentPage,
+      required this.totalPages,
+      required this.dataFetchingFunction,
+      required this.primaryColor,
+      required this.textColor,
+      required this.queryParams});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class PaginationWidget extends StatelessWidget {
                 onPressed: currentPage.value > 1
                     ? () async {
                         currentPage.value--;
-                        await fetchRequestsForCreatingGroup();
+                        await dataFetchingFunction();
                       }
                     : null,
               ),
@@ -58,9 +59,13 @@ class PaginationWidget extends StatelessWidget {
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       onPressed: () async {
-                        currentPage
-                            .update((val) => currentPage.value = index + 1);
-                        await fetchRequestsForCreatingGroup();
+                        currentPage.value = index + 1;
+
+                        debugPrint("****");
+                        debugPrint("currentPage.value : ${currentPage.value}");
+                        queryParams['page'] = index + 1;
+
+                        await dataFetchingFunction();
                       },
                     ),
                   );
@@ -84,7 +89,7 @@ class PaginationWidget extends StatelessWidget {
                 onPressed: currentPage.value < totalPages.value
                     ? () async {
                         currentPage.value++;
-                        await fetchRequestsForCreatingGroup();
+                        await dataFetchingFunction();
                       }
                     : null,
               ),
