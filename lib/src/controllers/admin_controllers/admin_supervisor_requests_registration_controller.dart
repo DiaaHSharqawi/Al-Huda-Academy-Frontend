@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/admin/admin_supervisor_requests_registration_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/admin/supervisor_requests_registration_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/sort_order_enum.dart';
@@ -46,6 +47,16 @@ class AdminSupervisorRequestsRegistrationController extends GetxController {
 
   var supervisorRequestsRegistrationList =
       RxList<SupervisorRequestsRegistration>();
+
+  void navigateToSupervisorRequestRegistrationDetailsScreen(
+      String supervisorId) {
+    debugPrint("navigateToSupervisorRequestRegistrationDetailsScreen");
+
+    Get.toNamed(
+      AppRoutes.adminSupervisorRequestRegistrationDetails,
+      arguments: supervisorId,
+    );
+  }
 
   Future<void> fetchSupervisorRequestsRegistration() async {
     try {

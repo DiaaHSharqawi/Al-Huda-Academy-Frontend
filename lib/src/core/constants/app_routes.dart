@@ -66,4 +66,6 @@ class AppRoutes {
   static String adminSupervisorDashboard = "/admin/supervisor-dashboard";
   static String adminSupervisorRequestsRegistration =
       "/admin/supervisor-requests-registration";
+  static String adminSupervisorRequestRegistrationDetails =
+      "/admin/supervisor-request-registration/details";
 }

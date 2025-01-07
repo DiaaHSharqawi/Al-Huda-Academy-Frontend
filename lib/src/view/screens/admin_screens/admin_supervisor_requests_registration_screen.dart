@@ -16,7 +16,6 @@ class AdminSupervisorRequestsRegistrationScreen
   const AdminSupervisorRequestsRegistrationScreen({super.key});
 
   @override
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -55,7 +54,7 @@ class AdminSupervisorRequestsRegistrationScreen
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
                               children: [
-                                _buildRequestsForSupervisorRegistrationList(),
+                                _buildRequestsForSupervisorRegistrationTable(),
                               ],
                             ),
                           ),
@@ -117,7 +116,7 @@ class AdminSupervisorRequestsRegistrationScreen
     );
   }
 
-  Widget _buildRequestsForSupervisorRegistrationList() {
+  Widget _buildRequestsForSupervisorRegistrationTable() {
     return Column(
       children: [
         Obx(() {
@@ -206,7 +205,16 @@ class AdminSupervisorRequestsRegistrationScreen
                           onPressed: () async {
                             // Handle accept request logic
                             debugPrint("Accept request");
-                            // Add your logic here
+
+                            debugPrint(
+                                " supevisor id: ${controller.supervisorRequestsRegistrationList[0].id}");
+
+                            controller
+                                .navigateToSupervisorRequestRegistrationDetailsScreen(
+                              controller
+                                  .supervisorRequestsRegistrationList[0].id!
+                                  .toString(),
+                            );
                           },
                         ),
                       ),
