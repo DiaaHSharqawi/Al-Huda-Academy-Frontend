@@ -95,10 +95,12 @@ class CredentialDetailsRegisterScreen extends GetView<RegisterController> {
               } else {
                 if (!context.mounted) return;
                 CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  'خطأ',
-                  (result as Map<String, dynamic>)['message'],
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: 'خطأ',
+                  description: (result as Map<String, dynamic>)['message'],
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
                 );
               }
             },

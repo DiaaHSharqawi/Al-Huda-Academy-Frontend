@@ -87,10 +87,12 @@ class SelectProfileImageRegisterScreen extends GetView<RegisterController> {
             if (controller.selectedProfileImage.value ==
                 ProfileImage.notSelected) {
               CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.info,
-                'يرجى اختيار صورة شخصية',
-                "يرجى اختيار صورة شخصية للمتابعة",
+                context: context,
+                dialogType: DialogType.info,
+                title: 'يرجى اختيار صورة شخصية',
+                description: "يرجى اختيار صورة شخصية للمتابعة",
+                btnOkOnPress: () {},
+                btnCancelOnPress: null,
               );
             } else {
               if (!context.mounted) return;
@@ -111,20 +113,25 @@ class SelectProfileImageRegisterScreen extends GetView<RegisterController> {
               if (!context.mounted) return;
               if (registerResult is Map && registerResult['success']) {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.success,
-                  'تم التسجيل بنجاح',
-                  (registerResult)['message'],
+                  context: context,
+                  dialogType: DialogType.success,
+                  title: 'تم التسجيل بنجاح',
+                  description: (registerResult)['message'],
+                  btnOkOnPress: () {
+                    controller.navigateToLoginScreen();
+                  },
+                  btnCancelOnPress: null,
                 );
-                controller.navigateToLoginScreen();
               } else {
                 controller.isSubmitting(false);
 
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  'حدث خطأ',
-                  (registerResult as Map)['message'],
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: 'حدث خطأ',
+                  description: (registerResult as Map)['message'],
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
                 );
               }
             }

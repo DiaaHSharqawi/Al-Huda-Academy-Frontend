@@ -164,3 +164,8 @@ class ResetPasswordScreenLanguageConstants {
   static String enterVerificationCode =
       "reset_password_screen.enter_the_verification_code_sent_to_your_email";
 }
+
+class ButtonLanguageConstants {
+  static String ok = "shared.ok";
+  static String cancel = "shared.cancel";
+}

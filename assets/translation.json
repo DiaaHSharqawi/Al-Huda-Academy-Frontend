@@ -223,6 +223,14 @@
        }
     },
     "shared":{
+        "ok":{
+            "en":"Ok",
+            "ar":"حسناً"
+        },
+        "cancel":{
+            "en":"Cancel",
+            "ar":"الغاء"
+        },
         "academy_name": {
             "en": "Al-Huda Academy",
             "ar": "اكاديمية الهدى للقران الكريم"

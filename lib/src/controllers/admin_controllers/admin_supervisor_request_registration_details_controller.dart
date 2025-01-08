@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/admin/admin_supervisor_request_registration_details_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/account_statuses/account_statuses_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/admin/supervisor_request_registration_details_response_model.dart';
 
 class AdminSupervisorRequestRegistrationDetailsController
@@ -14,6 +15,8 @@ class AdminSupervisorRequestRegistrationDetailsController
 
   var isLoading = false.obs;
   var supervisorIdRequestRegistrationDetails = ''.obs;
+
+  final List<AccountStatus> accountStatuses = [];
 
   var supervisorRequestRegistrationDetails =
       Rxn<SupervisorRequestRegistrationDetails>();
@@ -30,6 +33,7 @@ class AdminSupervisorRequestRegistrationDetailsController
       isLoading(true);
 
       await fetchSupervisorRequestsRegistrationDetails();
+      await getAccountStatusList();
     } catch (e) {
       debugPrint(
           'Error in onInit AdminSupervisorRequestRegistrationDetailsController: $e');
@@ -67,6 +71,18 @@ class AdminSupervisorRequestRegistrationDetailsController
           'Error fetching requests for supervisorRequestRegistrationDetailsResponseModel: $e');
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> getAccountStatusList() async {
+    var accountStatusesResponse =
+        await _adminSupervisorRequestRegistrationDetailsService
+            .getAccountStatusList();
+
+    debugPrint("accountStatusesResponse");
+    debugPrint(accountStatusesResponse.toString());
+    if (accountStatusesResponse.isNotEmpty) {
+      accountStatuses.addAll(accountStatusesResponse);
     }
   }
 }

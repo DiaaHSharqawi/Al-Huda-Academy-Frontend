@@ -492,10 +492,12 @@ class QualificationsRegisterScreens extends GetView<RegisterController> {
               debugPrint("Result: $result");
               if (result is Map && result['status'] == false) {
                 CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  'خطأ',
-                  result['message'],
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: 'خطأ',
+                  description: result['message'],
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
                 );
               } else {
                 debugPrint('Navigate to the next screen');

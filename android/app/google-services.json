@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "332476297097",
+    "project_id": "al-huda-academy-project",
+    "storage_bucket": "al-huda-academy-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332476297097:android:2be6affc04dd3b46ef3b58",
+        "android_client_info": {
+          "package_name": "com.example.moltqa_al_quran_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt6onGnkvPAjXdkzoo_UBp1j27IySXlBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

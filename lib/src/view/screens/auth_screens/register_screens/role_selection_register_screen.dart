@@ -109,10 +109,12 @@ class RoleSelectionRegisterScreen extends GetView<RegisterController> {
           if (!context.mounted) return;
           if (controller.selectedRole.value == Role.notSelected) {
             CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.info,
-              'يرجى اختيار النوع للاستمرار',
-              "يرجى اختيار نوع المستخدم للمتابعة: طالب أو مشرف.",
+              context: context,
+              dialogType: DialogType.info,
+              title: 'يرجى اختيار النوع للاستمرار',
+              description: "يرجى اختيار نوع المستخدم للمتابعة: طالب أو مشرف.",
+              btnOkOnPress: () {},
+              btnCancelOnPress: null,
             );
             //controller.isSubmitting(false);
           } else {

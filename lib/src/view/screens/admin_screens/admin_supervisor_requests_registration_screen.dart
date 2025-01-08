@@ -211,9 +211,7 @@ class AdminSupervisorRequestsRegistrationScreen
 
                             controller
                                 .navigateToSupervisorRequestRegistrationDetailsScreen(
-                              controller
-                                  .supervisorRequestsRegistrationList[0].id!
-                                  .toString(),
+                              request.id!.toString(),
                             );
                           },
                         ),

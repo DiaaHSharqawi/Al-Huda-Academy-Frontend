@@ -472,18 +472,23 @@ class SupervisorCreateMemorizationGroupContentScreen
 
               if (response['statusCode'] == 201) {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.success,
-                  "تم انشاء المجموعة بنجاح",
-                  response['message'],
+                  context: context,
+                  dialogType: DialogType.success,
+                  title: "تم انشاء المجموعة بنجاح",
+                  description: response['message'],
+                  btnOkOnPress: () {
+                    controller.navigateToSupervisorDashboardScreen();
+                  },
+                  btnCancelOnPress: null,
                 );
-                controller.navigateToSupervisorDashboardScreen();
               } else {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  "حدث خطأ",
-                  response['message'],
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: "حدث خطأ",
+                  description: response['message'],
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
                 );
               }
             },

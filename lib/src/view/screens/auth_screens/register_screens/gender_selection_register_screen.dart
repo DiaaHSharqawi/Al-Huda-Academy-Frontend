@@ -98,10 +98,12 @@ class GenderSelectionRegisterScreen extends GetView<RegisterController> {
           if (!context.mounted) return;
           if (controller.selectedGender.value == Gender.notSelected) {
             CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.info,
-              'يرجى اختيار نوع الجنس  ',
-              " يرجى اختيار نوع الجنس للمتابعة: ذكر أو أنثى.",
+              context: context,
+              dialogType: DialogType.info,
+              title: 'يرجى اختيار نوع الجنس  ',
+              description: " يرجى اختيار نوع الجنس للمتابعة: ذكر أو أنثى.",
+              btnOkOnPress: () {},
+              btnCancelOnPress: null,
             );
           } else {
             controller.isSubmitting(false);

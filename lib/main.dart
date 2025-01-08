@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -7,11 +8,14 @@ import 'package:moltqa_al_quran_frontend/src/core/localization/change_localizati
 import 'package:moltqa_al_quran_frontend/src/core/localization/translation.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:toastification/toastification.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() async {
   //debugPaintSizeEnabled = true;
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
+
   await AppTranslation.loadTranslations();
 
   try {
@@ -20,6 +24,21 @@ void main() async {
   } catch (e) {
     debugPrint("Error loading .env file: ${e.runtimeType} - $e");
   }
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: dotenv.env['FIREBASE_API_KEY']!,
+      appId: dotenv.env['FIREBASE_APP_ID']!,
+      messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+      projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    ),
+  );
+
+  String? token = await FirebaseMessaging.instance.getToken();
+  debugPrint("Firebase Messaging Token: $token");
+
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize(dotenv.env['ONESIGNAL_APP_ID']!);
+  OneSignal.Notifications.requestPermission(true);
 
   runApp(const AlHudaAcademy());
 }

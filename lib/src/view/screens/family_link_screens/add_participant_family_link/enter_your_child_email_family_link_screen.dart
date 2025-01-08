@@ -144,26 +144,36 @@ class EnterYourChildEmailFamilyLinkScreen
 
               if (statusCode == 200) {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.success,
-                  'تم إرسال الكود بنجاح',
-                  'تم إرسال كود التحقق إلى البريد الإلكتروني المدخل بنجاح. يرجى التحقق من البريد الإلكتروني الخاص بطفلك وإدخال الكود لإتمام عملية ربط الحسابات.',
+                  context: context,
+                  dialogType: DialogType.success,
+                  title: 'تم إرسال الكود بنجاح',
+                  description:
+                      'تم إرسال كود التحقق إلى البريد الإلكتروني المدخل بنجاح. يرجى التحقق من البريد الإلكتروني الخاص بطفلك وإدخال الكود لإتمام عملية ربط الحسابات.',
+                  btnOkOnPress: () {
+                    controller.navigateToEnterYourChildVerificationCodeScreen();
+                  },
+                  btnCancelOnPress: null,
                 );
-                controller.navigateToEnterYourChildVerificationCodeScreen();
               } else if (statusCode == 409) {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                    context,
-                    DialogType.error,
-                    'خطأ',
-                    responseMessage ?? '  حدث خطأ ما تم ارسال الكود مسبقا');
-
-                controller.navigateToEnterYourChildVerificationCodeScreen();
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: 'خطأ',
+                  description:
+                      responseMessage ?? '  حدث خطأ ما تم ارسال الكود مسبقا',
+                  btnOkOnPress: () {
+                    controller.navigateToEnterYourChildVerificationCodeScreen();
+                  },
+                  btnCancelOnPress: null,
+                );
               } else {
                 CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  'حدث خطأ',
-                  responseMessage ?? 'حدث خطأ ما',
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: 'حدث خطأ',
+                  description: responseMessage ?? 'حدث خطأ ما',
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
                 );
               }
             },

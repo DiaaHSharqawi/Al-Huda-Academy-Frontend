@@ -164,10 +164,12 @@ class SupervisorCreateGroupScreen
                   controller.navigateToCreateMemorizationGroupContentScreen();
                 } else {
                   await CustomAwesomeDialog.showAwesomeDialog(
-                    context,
-                    DialogType.error,
-                    'خطأ',
-                    getGroupByGroupName['message'],
+                    context: context,
+                    dialogType: DialogType.error,
+                    title: 'خطأ',
+                    description: getGroupByGroupName['message'],
+                    btnOkOnPress: () {},
+                    btnCancelOnPress: null,
                   );
                 }
               }),

@@ -17,6 +17,7 @@ class UserInformation {
         _id = id,
         _memberId = memberId;
 
+  int get getId => int.parse(_id);
   Role get getRole => _role;
   set role(Role role) => _role = role;
 

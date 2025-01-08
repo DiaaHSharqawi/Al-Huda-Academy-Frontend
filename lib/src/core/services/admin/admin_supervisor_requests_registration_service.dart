@@ -14,7 +14,7 @@ class AdminSupervisorRequestsRegistrationService extends GetxService {
   Future<SupervisorRequestsRegistrationResponseModel>
       fetchSupervisorRequestsRegistration(Map<String, dynamic> filter) async {
     String supervisorRequestsRegistrationURL =
-        "$alHudaBaseURL/admin/supervisor/requests/pending";
+        "$alHudaBaseURL/admin/supervisor/requests/registration/pending";
 
     final url = Uri.parse(supervisorRequestsRegistrationURL);
     final queryParameters = filter.map(

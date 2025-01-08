@@ -1,10 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/admin_controllers/admin_supervisor_request_registration_details_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
@@ -139,6 +140,7 @@ class AdminSupervisorRequestRegistrationDetailsScreen
                             width: 50.0,
                             height: 50.0,
                             child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
                               value: event == null
                                   ? null
                                   : event.cumulativeBytesLoaded.toDouble() /
@@ -169,7 +171,23 @@ class AdminSupervisorRequestRegistrationDetailsScreen
       fontWeight: FontWeight.bold,
       onPressed: () {
         debugPrint(" accept Button Pressed");
+        showAcceptSupervisorRequestDialog();
       },
+    );
+  }
+
+  void showAcceptSupervisorRequestDialog() {
+    debugPrint("accept Supervisor Request");
+
+    debugPrint("accept Button Pressed");
+
+    CustomAwesomeDialog.showAwesomeDialog(
+      context: Get.context!,
+      dialogType: DialogType.info,
+      title: "هل انت متأكد من قبول الطلب؟",
+      description: "سيتم قبول الطلب وسيتم ارسال اشعار للمستخدم بذلك",
+      btnOkOnPress: () {},
+      btnCancelOnPress: () {},
     );
   }
 
@@ -183,6 +201,14 @@ class AdminSupervisorRequestRegistrationDetailsScreen
       fontWeight: FontWeight.bold,
       onPressed: () {
         debugPrint("reject Button Pressed");
+        CustomAwesomeDialog.showAwesomeDialog(
+          context: Get.context!,
+          dialogType: DialogType.info,
+          title: "هل انت متأكد من رفض الطلب؟",
+          description: "سيتم رفض الطلب وسيتم ارسال اشعار للمستخدم بذلك",
+          btnOkOnPress: () {},
+          btnCancelOnPress: () {},
+        );
       },
     );
   }
@@ -317,7 +343,7 @@ class AdminSupervisorRequestRegistrationDetailsScreen
             child: CustomGoogleTextWidget(
               text:
                   "${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().day}/${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().month}/${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().year}\n"
-                  "${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().hour}:${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().minute} ${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().hour >= 12 ? 'مساءاً' : 'صباحاً'}",
+                  "${(controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().hour % 12 == 0 ? 12 : controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().hour % 12)}:${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().minute.toString().padLeft(2, '0')} ${controller.supervisorRequestRegistrationDetails.value!.createdAt!.toLocal().hour >= 12 ? 'مساءاً' : 'صباحاً'}",
               fontSize: 15.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,
@@ -362,6 +388,22 @@ class AdminSupervisorRequestRegistrationDetailsScreen
                     controller.supervisorRequestRegistrationDetails.value!
                         .profileImage!,
                     fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      }
+                    },
                     errorBuilder: (context, error, stackTrace) {
                       return const CustomGoogleTextWidget(
                         text: "الصورة غير متوفرة",

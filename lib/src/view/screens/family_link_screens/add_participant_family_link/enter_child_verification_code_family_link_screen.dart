@@ -115,8 +115,14 @@ class EnterChildVerificationCodeFamilyLinkScreen
             controller.navigateToChildAccountLinkedSuccessfullyScreen();
           } else {
             if (!context.mounted) return;
-            CustomAwesomeDialog.showAwesomeDialog(context, DialogType.error,
-                'خطأ', responseResult?.message ?? 'حدث خطأ ما');
+            CustomAwesomeDialog.showAwesomeDialog(
+              context: context,
+              dialogType: DialogType.error,
+              title: 'خطأ',
+              description: responseResult?.message ?? 'حدث خطأ ما',
+              btnOkOnPress: () {},
+              btnCancelOnPress: null,
+            );
           }
         },
         isEnabled: controller.isEnabled.value,
