@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
@@ -7,7 +6,6 @@ import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
-import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_under_review_dialog.dart';
@@ -73,20 +71,6 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
         bottomNavigationBar: SupervisorCustomBottomNavigationBar(),
       ),
     );
-  }
-
-  void _showUnderReviewDialog(BuildContext context) {
-    if (!controller.dialogShown.value) {
-      controller.dialogShown.value = true;
-      CustomAwesomeDialog.showAwesomeDialog(
-        context: context,
-        dialogType: DialogType.info,
-        title: 'تحت المراجعة',
-        description: 'حسابك قيد المراجعة من قبل الادارة',
-        btnOkOnPress: controller.navigateToLoginScreen,
-        dismissOnTouchOutside: false,
-      );
-    }
   }
 
   Widget _buildGroupHeaderText() {
