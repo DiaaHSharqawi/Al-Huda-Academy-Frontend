@@ -100,8 +100,6 @@ class LoginController extends GetxController {
     } else if (roleName == 'admin') {
       Get.toNamed(AppRoutes.adminHomeScreen);
     }
-
-    // Get.toNamed(AppRoutes.home);
   }
 
   void navigateToRegisterScreen() {

@@ -14,13 +14,16 @@ class CustomAwesomeDialog {
     required String description,
     VoidCallback? btnOkOnPress,
     VoidCallback? btnCancelOnPress,
+    bool dismissOnTouchOutside = true,
+    String? btnOkText,
   }) async {
     final AppService appService = Get.find<AppService>();
     final String fontFamily =
         appService.isRtl.value ? AppFonts.arabicFont : AppFonts.englishFont;
 
     return AwesomeDialog(
-      btnOkText: ButtonLanguageConstants.ok.tr,
+      dismissOnTouchOutside: dismissOnTouchOutside,
+      btnOkText: btnOkText ?? ButtonLanguageConstants.ok.tr,
       btnCancelText: ButtonLanguageConstants.cancel.tr,
       context: context,
       dialogType: dialogType,

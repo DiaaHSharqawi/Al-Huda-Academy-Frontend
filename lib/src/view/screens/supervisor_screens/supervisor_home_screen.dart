@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
@@ -6,8 +7,10 @@ import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
+import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_under_review_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class SupervisorHomeScreen extends GetView<SupervisorController> {
@@ -42,33 +45,48 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
           backgroundColor: AppColors.primaryColor,
           child: const SizedBox.expand(),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // createANewGroup(),
-                  _buildGroupHeaderText(),
-                  const SizedBox(
-                    height: 16.0,
+        body: appService.user.value?.getAccountStatus.englishName ==
+                "under review"
+            ? CustomSupervisorAccountUnderReviewDialog(controller: controller)
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // createANewGroup(),
+                        _buildGroupHeaderText(),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        _buildGroupCard(),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
+                    ),
                   ),
-                  _buildGroupCard(),
-                  //  _buildCreateAWeeklyPlan(),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  //_buildSupervisorGroups(),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
         bottomNavigationBar: SupervisorCustomBottomNavigationBar(),
       ),
     );
+  }
+
+  void _showUnderReviewDialog(BuildContext context) {
+    if (!controller.dialogShown.value) {
+      controller.dialogShown.value = true;
+      CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.info,
+        title: 'تحت المراجعة',
+        description: 'حسابك قيد المراجعة من قبل الادارة',
+        btnOkOnPress: controller.navigateToLoginScreen,
+        dismissOnTouchOutside: false,
+      );
+    }
   }
 
   Widget _buildGroupHeaderText() {
@@ -204,151 +222,4 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
       ),
     );
   }
-/*
-  Widget _buildCreateAWeeklyPlan() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: GFListTile(
-        avatar: const GFAvatar(
-          backgroundImage: AssetImage('assets/images/weekly_plan.png'),
-          backgroundColor: Colors.transparent,
-          shape: GFAvatarShape.standard,
-          size: 40.0,
-        ),
-        radius: 8.0,
-        color: const Color(0xFFF9FBF7).withOpacity(0.8),
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.all(32.0),
-        selected: true,
-        subTitle: const CustomGoogleTextWidget(
-          text: 'انشاء خطة اسبوعية',
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
-        ),
-        icon: const Icon(
-          Icons.add,
-          color: AppColors.primaryColor,
-          size: 40.0,
-        ),
-        onTap: () {
-          // Navigate to the weekly plan creation screen
-        },
-        shadow: const BoxShadow(
-          color: AppColors.primaryColor,
-          blurRadius: 10.0,
-          spreadRadius: 3.0,
-          offset: Offset(0.0, 0.0),
-          blurStyle: BlurStyle.inner,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSupervisorGroups() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: SizedBox(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: CustomGoogleTextWidget(
-                      text: "المجموعة الحالية",
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      CustomGoogleTextWidget(
-                        text: "عرض الكل",
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryColor,
-                      ),
-                      SizedBox(
-                        width: 8.0,
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: AppColors.primaryColor,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            GFListTile(
-              radius: 8.0,
-              color: const Color(0xFFF9FBF7).withOpacity(0.8),
-              margin: const EdgeInsets.all(16.0),
-              padding: const EdgeInsets.all(32.0),
-              selected: false,
-              title: const CustomGoogleTextWidget(
-                text: 'المجموعة الأولى',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-              subTitle: const CustomGoogleTextWidget(
-                text: 'عدد طلاب المجموعة ',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-              icon: Row(
-                children: [
-                  const Icon(
-                    Icons.groups,
-                    color: AppColors.primaryColor,
-                    size: 40.0,
-                  ),
-                  const SizedBox(
-                    width: 16.0,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                // Navigate to the groups screen
-              },
-              shadow: const BoxShadow(
-                color: AppColors.primaryColor,
-                blurRadius: 10.0,
-                spreadRadius: 3.0,
-                offset: Offset(0.0, 0.0),
-                blurStyle: BlurStyle.inner,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-*/
 }
