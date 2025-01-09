@@ -53,6 +53,7 @@ class AdminSupervisorRequestsRegistrationScreen
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _buildRequestsForSupervisorRegistrationTable(),
                               ],
@@ -118,12 +119,17 @@ class AdminSupervisorRequestsRegistrationScreen
 
   Widget _buildRequestsForSupervisorRegistrationTable() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Obx(() {
           if (controller.supervisorRequestsRegistrationList.isEmpty) {
             return const Center(
+              heightFactor: 10,
               child: CustomGoogleTextWidget(
-                text: 'لا يوجد بيانات لعرضها',
+                text: 'لا توجد طلبات تسجيل للمشرفين حالياً',
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: AppColors.blackColor,
               ),
             );
           }
@@ -209,7 +215,7 @@ class AdminSupervisorRequestsRegistrationScreen
                             debugPrint(
                                 " supevisor id: ${controller.supervisorRequestsRegistrationList[0].id}");
 
-                            controller
+                            await controller
                                 .navigateToSupervisorRequestRegistrationDetailsScreen(
                               request.id!.toString(),
                             );

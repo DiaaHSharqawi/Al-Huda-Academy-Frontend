@@ -48,14 +48,23 @@ class AdminSupervisorRequestsRegistrationController extends GetxController {
   var supervisorRequestsRegistrationList =
       RxList<SupervisorRequestsRegistration>();
 
-  void navigateToSupervisorRequestRegistrationDetailsScreen(
-      String supervisorId) {
+  var shouldRefreshData = false.obs;
+
+  Future<void> navigateToSupervisorRequestRegistrationDetailsScreen(
+      String supervisorId) async {
     debugPrint("navigateToSupervisorRequestRegistrationDetailsScreen");
 
-    Get.toNamed(
+    var result = await Get.toNamed(
       AppRoutes.adminSupervisorRequestRegistrationDetails,
       arguments: supervisorId,
     );
+    debugPrint("result: $result");
+
+    if (result != null) {
+      debugPrint("shouldRefreshData.listen");
+      supervisorRequestsRegistrationList.clear();
+      await fetchSupervisorRequestsRegistration();
+    }
   }
 
   Future<void> fetchSupervisorRequestsRegistration() async {

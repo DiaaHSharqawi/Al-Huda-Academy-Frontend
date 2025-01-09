@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/account_statuses/account_statuses_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/admin/accept_supervisor_request_registration_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/admin/reject_supervisor_request_registration_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/admin/supervisor_request_registration_details_response_model.dart';
 
 class AdminSupervisorRequestRegistrationDetailsService extends GetxService {
@@ -96,6 +98,102 @@ class AdminSupervisorRequestRegistrationDetailsService extends GetxService {
     } catch (e) {
       debugPrint("Error: $e");
       return [];
+    }
+  }
+
+  Future<AcceptSupervisorRequestRegistrationResponseModel>
+      acceptSupervisorRequestRegistration(
+    String supervisorId,
+    String accountStatusId,
+  ) async {
+    debugPrint("accept Supervisor Request Registration");
+
+    String acceptSupervisorRequestRegistrationRoute =
+        "$alHudaBaseURL/admin/supervisor/requests/registration/pending/$supervisorId/accept";
+    String? lang = appService.languageStorage.read('language');
+
+    try {
+      final url = Uri.parse(acceptSupervisorRequestRegistrationRoute);
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+        body: {
+          'accountStatusId': accountStatusId,
+        },
+      );
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        debugPrint("Supervisor request registration accepted successfully");
+        return AcceptSupervisorRequestRegistrationResponseModel(
+          statusCode: response.statusCode,
+          success: true,
+          message: data['message'],
+        );
+      } else {
+        return AcceptSupervisorRequestRegistrationResponseModel(
+          statusCode: response.statusCode,
+          success: false,
+          message: data['message'],
+        );
+      }
+    } catch (e) {
+      debugPrint("Exception occurred: $e");
+      return AcceptSupervisorRequestRegistrationResponseModel(
+        statusCode: 500,
+        message:
+            "An error occurred while resetting the password. Please try again.",
+        success: false,
+      );
+    }
+  }
+
+  Future<RejectSupervisorRequestRegistrationResponseModel>
+      rejectSupervisorRequestRegistration(
+    String supervisorId,
+    String accountStatusId,
+  ) async {
+    debugPrint("reject Supervisor Request Registration");
+
+    String rejectSupervisorRequestRegistrationRoute =
+        "$alHudaBaseURL/admin/supervisor/requests/registration/pending/$supervisorId/reject";
+    String? lang = appService.languageStorage.read('language');
+
+    try {
+      final url = Uri.parse(rejectSupervisorRequestRegistrationRoute);
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+        body: {
+          'accountStatusId': accountStatusId,
+        },
+      );
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        debugPrint("Supervisor request registration rejected successfully");
+        return RejectSupervisorRequestRegistrationResponseModel(
+          statusCode: response.statusCode,
+          success: true,
+          message: data['message'],
+        );
+      } else {
+        return RejectSupervisorRequestRegistrationResponseModel(
+          statusCode: response.statusCode,
+          success: false,
+          message: data['message'],
+        );
+      }
+    } catch (e) {
+      debugPrint("Exception occurred: $e");
+      return RejectSupervisorRequestRegistrationResponseModel(
+        statusCode: 500,
+        message:
+            "An error occurred while resetting the password. Please try again.",
+        success: false,
+      );
     }
   }
 }

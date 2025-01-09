@@ -8,6 +8,8 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/admin/accept_supervisor_request_registration_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/admin/reject_supervisor_request_registration_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -185,8 +187,41 @@ class AdminSupervisorRequestRegistrationDetailsScreen
       context: Get.context!,
       dialogType: DialogType.info,
       title: "هل انت متأكد من قبول الطلب؟",
-      description: "سيتم قبول الطلب وسيتم ارسال اشعار للمستخدم بذلك",
-      btnOkOnPress: () {},
+      description: "سيتم قبول الطلب",
+      btnOkOnPress: () async {
+        debugPrint("btnOkOnPress");
+
+        AcceptSupervisorRequestRegistrationResponseModel
+            acceptSupervisorRequestRegistrationResponseModel =
+            await controller.acceptSupervisorRequestRegistration();
+
+        debugPrint(
+            "acceptSupervisorRequestRegistrationResponseModel: $acceptSupervisorRequestRegistrationResponseModel");
+
+        if (acceptSupervisorRequestRegistrationResponseModel.statusCode ==
+            200) {
+          CustomAwesomeDialog.showAwesomeDialog(
+            context: Get.context!,
+            dialogType: DialogType.success,
+            title: "تم قبول الطلب بنجاح",
+            description: "تم قبول الطلب بنجاح",
+            btnOkOnPress: () {
+              controller.navigateToAdminSupervisorRequests();
+            },
+            btnCancelOnPress: null,
+          );
+        } else {
+          CustomAwesomeDialog.showAwesomeDialog(
+            context: Get.context!,
+            dialogType: DialogType.error,
+            title: "فشل في قبول الطلب",
+            description:
+                acceptSupervisorRequestRegistrationResponseModel.message!,
+            btnOkOnPress: () {},
+            btnCancelOnPress: null,
+          );
+        }
+      },
       btnCancelOnPress: () {},
     );
   }
@@ -205,8 +240,41 @@ class AdminSupervisorRequestRegistrationDetailsScreen
           context: Get.context!,
           dialogType: DialogType.info,
           title: "هل انت متأكد من رفض الطلب؟",
-          description: "سيتم رفض الطلب وسيتم ارسال اشعار للمستخدم بذلك",
-          btnOkOnPress: () {},
+          description: "سيتم رفض الطلب",
+          btnOkOnPress: () async {
+            debugPrint("btnOkOnPress");
+
+            RejectSupervisorRequestRegistrationResponseModel
+                rejectSupervisorRequestRegistrationResponseModel =
+                await controller.rejectSupervisorRequestRegistration();
+
+            debugPrint(
+                "rejectSupervisorRequestRegistrationResponseModel: $rejectSupervisorRequestRegistrationResponseModel");
+
+            if (rejectSupervisorRequestRegistrationResponseModel.statusCode ==
+                200) {
+              CustomAwesomeDialog.showAwesomeDialog(
+                context: Get.context!,
+                dialogType: DialogType.success,
+                title: "تم قبول الطلب بنجاح",
+                description: "تم قبول الطلب بنجاح",
+                btnOkOnPress: () {
+                  controller.navigateToAdminSupervisorRequests();
+                },
+                btnCancelOnPress: null,
+              );
+            } else {
+              CustomAwesomeDialog.showAwesomeDialog(
+                context: Get.context!,
+                dialogType: DialogType.error,
+                title: "فشل في قبول الطلب",
+                description:
+                    rejectSupervisorRequestRegistrationResponseModel.message!,
+                btnOkOnPress: () {},
+                btnCancelOnPress: null,
+              );
+            }
+          },
           btnCancelOnPress: () {},
         );
       },
