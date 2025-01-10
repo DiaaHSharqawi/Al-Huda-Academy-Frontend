@@ -29,14 +29,10 @@ class SupervisorMemorizationGroupDashboardScreen
                 children: [
                   _buildGroupDashboardHeaderText(),
                   _buildCurrentMemorizationGroupCard(),
-                  _buildRequestsForcreatingMemorizationGroupCard(),
                   _buildCreateANewGroupCard(),
-
-                  //  _buildCreateAWeeklyPlan(),
                   const SizedBox(
                     height: 16.0,
                   ),
-                  //_buildSupervisorGroups(),
                 ],
               ),
             ),
@@ -78,50 +74,6 @@ class SupervisorMemorizationGroupDashboardScreen
     );
   }
 
-  Widget _buildRequestsForcreatingMemorizationGroupCard() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: GFListTile(
-        avatar: const GFAvatar(
-          backgroundImage: AssetImage('assets/images/islam.png'),
-          backgroundColor: Colors.transparent,
-          shape: GFAvatarShape.standard,
-          size: 40.0,
-        ),
-        radius: 8.0,
-        color: AppColors.secondaryColor,
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.all(32.0),
-        selected: true,
-        subTitle: const Center(
-          child: CustomGoogleTextWidget(
-            text: 'طلبات انشاء الحلقات',
-            fontSize: 18.0,
-            textAlign: TextAlign.center,
-            fontWeight: FontWeight.bold,
-            color: AppColors.blackColor,
-          ),
-        ),
-        icon: const Icon(
-          Icons.arrow_forward_ios,
-          color: AppColors.blackColor,
-          size: 40.0,
-        ),
-        onTap: () {},
-        shadow: const BoxShadow(
-          color: AppColors.primaryColor,
-          blurRadius: 10.0,
-          spreadRadius: 3.0,
-          offset: Offset(0.0, 0.0),
-          blurStyle: BlurStyle.inner,
-        ),
-      ),
-    );
-  }
-
   Widget _buildCurrentMemorizationGroupCard() {
     return Card(
       elevation: 5,
@@ -154,7 +106,9 @@ class SupervisorMemorizationGroupDashboardScreen
           color: AppColors.blackColor,
           size: 40.0,
         ),
-        onTap: () {},
+        onTap: () {
+          controller.navigateToCurrentGroupsScreen();
+        },
         shadow: const BoxShadow(
           color: AppColors.primaryColor,
           blurRadius: 10.0,
@@ -212,188 +166,4 @@ class SupervisorMemorizationGroupDashboardScreen
       ),
     );
   }
-
-  /*Widget _buildOverviewSection() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: GFListTile(
-        avatar: const GFAvatar(
-          backgroundImage: AssetImage('assets/images/quran.png'),
-          backgroundColor: Colors.transparent,
-          shape: GFAvatarShape.standard,
-          size: 40.0,
-        ),
-        radius: 8.0,
-        color: const Color(0xFFF9FBF7).withOpacity(0.8),
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.all(32.0),
-        selected: true,
-        subTitle: const CustomGoogleTextWidget(
-          text: 'المعلومات الشخصية',
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
-        ),
-        icon: const Icon(
-          Icons.arrow_forward_ios,
-          color: AppColors.primaryColor,
-          size: 40.0,
-        ),
-        onTap: () {
-          // Navigate to the group creation screen
-        },
-        shadow: const BoxShadow(
-            color: AppColors.primaryColor, blurRadius: 10.0, spreadRadius: 3),
-      ),
-    );
-  }*/
-/*
-  Widget _buildCreateAWeeklyPlan() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: GFListTile(
-        avatar: const GFAvatar(
-          backgroundImage: AssetImage('assets/images/weekly_plan.png'),
-          backgroundColor: Colors.transparent,
-          shape: GFAvatarShape.standard,
-          size: 40.0,
-        ),
-        radius: 8.0,
-        color: const Color(0xFFF9FBF7).withOpacity(0.8),
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.all(32.0),
-        selected: true,
-        subTitle: const CustomGoogleTextWidget(
-          text: 'انشاء خطة اسبوعية',
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
-        ),
-        icon: const Icon(
-          Icons.add,
-          color: AppColors.primaryColor,
-          size: 40.0,
-        ),
-        onTap: () {
-          // Navigate to the weekly plan creation screen
-        },
-        shadow: const BoxShadow(
-          color: AppColors.primaryColor,
-          blurRadius: 10.0,
-          spreadRadius: 3.0,
-          offset: Offset(0.0, 0.0),
-          blurStyle: BlurStyle.inner,
-        ),
-      ),
-    );
-  }*/
-/*
-  Widget _buildSupervisorGroups() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: SizedBox(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: CustomGoogleTextWidget(
-                      text: "الحلقة الحالية",
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      CustomGoogleTextWidget(
-                        text: "عرض الكل",
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryColor,
-                      ),
-                      SizedBox(
-                        width: 8.0,
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: AppColors.primaryColor,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            GFListTile(
-              radius: 8.0,
-              color: const Color(0xFFF9FBF7).withOpacity(0.8),
-              margin: const EdgeInsets.all(16.0),
-              padding: const EdgeInsets.all(32.0),
-              selected: false,
-              title: const CustomGoogleTextWidget(
-                text: 'الحلقة الأولى',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-              subTitle: const CustomGoogleTextWidget(
-                text: 'عدد طلاب الحلقة ',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-              icon: Row(
-                children: [
-                  const Icon(
-                    Icons.groups,
-                    color: AppColors.primaryColor,
-                    size: 40.0,
-                  ),
-                  const SizedBox(
-                    width: 16.0,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                // Navigate to the groups screen
-              },
-              shadow: const BoxShadow(
-                color: AppColors.primaryColor,
-                blurRadius: 10.0,
-                spreadRadius: 3.0,
-                offset: Offset(0.0, 0.0),
-                blurStyle: BlurStyle.inner,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-*/
 }

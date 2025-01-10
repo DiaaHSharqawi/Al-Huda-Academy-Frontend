@@ -13,4 +13,8 @@ class SupervisorMemorizationGroupDashboardController extends GetxController {
   void navigateToCreateGroupScreen() {
     Get.toNamed(AppRoutes.createGroupSupervisorScreen);
   }
+
+  void navigateToCurrentGroupsScreen() {
+    Get.toNamed(AppRoutes.supervisorCurrentGroupsScreen);
+  }
 }

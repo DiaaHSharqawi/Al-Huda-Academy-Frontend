@@ -47,6 +47,7 @@ class AppRoutes {
   static String createGroupSupervisorScreen = "/supervisor/create-group";
   static String supervisorCreateMemorizationGroupContentScreen =
       "/supervisor/create-group-content";
+  static String supervisorCurrentGroupsScreen = "/supervisor/current-groups";
 
   // Participant Screens
   static String participant = "/participant";

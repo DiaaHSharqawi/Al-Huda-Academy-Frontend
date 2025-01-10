@@ -14,11 +14,13 @@ class CustomGroupCard extends StatelessWidget {
   final String? days;
   final String? groupTime;
   final String? groupSupervisorName;
+  final String? groupDescription;
 
   const CustomGroupCard({
     super.key,
     required this.groupName,
     required this.onDetailsPressed,
+    this.groupDescription,
     this.groupSupervisorName,
     this.studentsCount,
     this.language,
@@ -60,6 +62,9 @@ class CustomGroupCard extends StatelessWidget {
           groupSupervisorName == null
               ? const SizedBox.shrink()
               : _buildSupervisorGroup(),
+          groupDescription == null
+              ? const SizedBox.shrink()
+              : _buildGroupDescription(),
           studentsCount == null
               ? const SizedBox.shrink()
               : _buildStudentsCount(),
@@ -104,6 +109,45 @@ class CustomGroupCard extends StatelessWidget {
                   const SizedBox(width: 12.0),
                   CustomGoogleTextWidget(
                     text: groupSupervisorName!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGroupDescription() {
+    return Column(
+      children: [
+        const SizedBox(height: 16.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.supervised_user_circle,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "وصف المجموعة: ",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8.0),
+                  CustomGoogleTextWidget(
+                    text: groupDescription!,
                     fontSize: 16.0,
                     color: Colors.black,
                     overflow: TextOverflow.ellipsis,
