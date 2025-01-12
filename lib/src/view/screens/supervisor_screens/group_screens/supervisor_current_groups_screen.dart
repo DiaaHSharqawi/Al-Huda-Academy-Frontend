@@ -90,8 +90,8 @@ class SupervisorCurrentGroupsScreen
                       onDetailsPressed: () {
                         debugPrint("Details pressed");
                         controller.navigateToGroupDetailsScreen(
-                            //  controller.supervisorGroupsList[index].id!,
-                            );
+                          controller.supervisorGroupsList[index].id!.toString(),
+                        );
                       },
                     ));
               }

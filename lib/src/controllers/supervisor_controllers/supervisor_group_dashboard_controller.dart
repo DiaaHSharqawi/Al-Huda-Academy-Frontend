@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_dashboard_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/group_dashboard_response_model.dart';
 
@@ -8,6 +9,8 @@ class SupervisorGroupDashboardController extends GetxController {
   SupervisorGroupDashboardController(this._supervisorGroupDashboardService);
 
   var isLoading = false.obs;
+
+  var groupId = "".obs;
 
   var groupDashboard = Rxn<GroupDashboard>();
 
@@ -18,6 +21,11 @@ class SupervisorGroupDashboardController extends GetxController {
     debugPrint("onInit");
 
     try {
+      debugPrint("get arguments: ${Get.arguments.toString()}");
+      groupId.value = Get.arguments;
+
+      debugPrint("Group ID: ${groupId.value}");
+
       await fetchSupervisorGroupDashboard();
     } catch (e) {
       // Handle the error
@@ -33,8 +41,8 @@ class SupervisorGroupDashboardController extends GetxController {
     try {
       GroupDashboardResponseModel groupDashboardResponseModel =
           await _supervisorGroupDashboardService.fetchSupervisorGroupDashboard(
-        "1",
-        {"filter": "filter"},
+        groupId.value,
+        {},
       );
 
       if (groupDashboardResponseModel.statusCode == 200) {
@@ -55,5 +63,17 @@ class SupervisorGroupDashboardController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  void navigateToParticipantJoinRequestScreen() {}
+
+  void navigateToGroupJoinRequestScreen(String groupId) {
+    debugPrint("Navigate to Group Join Request Screen");
+    debugPrint("Group ID: $groupId");
+
+    Get.toNamed(
+      AppRoutes.supervisorGroupJoinRequest,
+      arguments: groupId,
+    );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
-import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_memorization_group_dashboard_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_memorization_groups_dashboard_service.dart';
 
-class SupervisorMemorizationGroupDashboardController extends GetxController {
-  final SupervisorMemorizationGroupDashboardService
+class SupervisorMemorizationGroupsDashboardController extends GetxController {
+  final SupervisorMemorizationGroupsDashboardService
       // ignore: unused_field
       _supervisorMemorizationGroupDashboardService;
 
-  SupervisorMemorizationGroupDashboardController(
+  SupervisorMemorizationGroupsDashboardController(
       this._supervisorMemorizationGroupDashboardService);
 
   void navigateToCreateGroupScreen() {

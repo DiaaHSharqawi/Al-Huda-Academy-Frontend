@@ -154,9 +154,17 @@ class SupervisorCurrentGroupsController extends GetxController {
     }
   }
 
-  void navigateToGroupDetailsScreen() {
+  void navigateToGroupDetailsScreen(
+    String groupId,
+  ) {
     debugPrint("navigateToGroupDetailsScreen");
 
-    Get.toNamed(AppRoutes.supervisorGroupDashboardScreen);
+    debugPrint("groupId");
+    debugPrint(groupId);
+
+    Get.toNamed(
+      AppRoutes.supervisorGroupDashboardScreen,
+      arguments: groupId,
+    );
   }
 }

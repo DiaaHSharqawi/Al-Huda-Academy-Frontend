@@ -3,15 +3,15 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
-import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_memorization_group_dashboard_controller.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_memorization_groups_dashboard_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
-class SupervisorMemorizationGroupDashboardScreen
-    extends GetView<SupervisorMemorizationGroupDashboardController> {
-  const SupervisorMemorizationGroupDashboardScreen({super.key});
+class SupervisorMemorizationGroupsDashboardScreen
+    extends GetView<SupervisorMemorizationGroupsDashboardController> {
+  const SupervisorMemorizationGroupsDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

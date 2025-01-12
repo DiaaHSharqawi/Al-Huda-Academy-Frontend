@@ -56,12 +56,36 @@ class CustomGroupJoinRequest extends StatelessWidget {
                       radius: 40.0,
                       backgroundColor: Colors.transparent,
                       child: ClipOval(
-                        child: Image.network(
-                          imagePath!,
-                          fit: BoxFit.cover,
-                          width: 80.0,
-                          height: double.infinity,
-                        ),
+                        child: imagePath != null
+                            ? Image.network(
+                                imagePath!,
+                                fit: BoxFit.cover,
+                                width: 80.0,
+                                height: double.infinity,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  }
+                                },
+                              )
+                            : const CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
                       ),
                     ),
                   ),

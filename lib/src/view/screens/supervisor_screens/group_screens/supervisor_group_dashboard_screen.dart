@@ -35,20 +35,23 @@ class SupervisorGroupDashboardScreen
                       imagePath: AppImages.loadingImage,
                     );
                   } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildGroupHeaderText(),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        _buildGroupMembersCard(),
-                        const SizedBox(
-                          height: 64.0,
-                        ),
-                        _buildGroupJoinRequestSection(),
-                      ],
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildGroupHeaderText(),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          _buildGroupMembersCard(),
+                          const SizedBox(
+                            height: 64.0,
+                          ),
+                          _buildGroupJoinRequestSection(),
+                        ],
+                      ),
                     );
                   }
                 },
@@ -84,10 +87,10 @@ class SupervisorGroupDashboardScreen
               if (controller
                   .groupDashboard.value!.groupJoinRequestsDashboard.isEmpty) {
                 return const Center(
+                  heightFactor: 4.0,
                   child: CustomGoogleTextWidget(
-                    text: 'لا يوجد بيانات لعرضها',
+                    text: 'لا يوجد اي طلبات انضمام حالياً',
                     fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
                     color: AppColors.blackColor,
                   ),
                 );
@@ -117,6 +120,7 @@ class SupervisorGroupDashboardScreen
                             .groupJoinRequestsDashboard[index]
                             .participant!
                             .profileImage!,
+                        onTap: () {},
                       ),
                     );
                   },
@@ -130,36 +134,42 @@ class SupervisorGroupDashboardScreen
   }
 
   Widget _buildGroupJoinRequestHeader() {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CustomGoogleTextWidget(
+        const CustomGoogleTextWidget(
           text: "طلبات الانضمام",
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
           color: AppColors.blackColor,
         ),
-        SizedBox(
+        const SizedBox(
           width: 8.0,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            CustomGoogleTextWidget(
-              text: "عرض الكل",
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-            ),
-            SizedBox(
-              width: 16.0,
-            ),
-            FaIcon(
-              FontAwesomeIcons.arrowLeft,
-              color: AppColors.primaryColor,
-              size: 25.0,
-            ),
-          ],
+        GestureDetector(
+          onTap: () {
+            controller
+                .navigateToGroupJoinRequestScreen(controller.groupId.value);
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomGoogleTextWidget(
+                text: "عرض الكل",
+                fontSize: 16.0,
+                color: AppColors.primaryColor,
+              ),
+              SizedBox(
+                width: 16.0,
+              ),
+              FaIcon(
+                FontAwesomeIcons.arrowLeft,
+                color: AppColors.primaryColor,
+                size: 25.0,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -189,7 +199,7 @@ class SupervisorGroupDashboardScreen
 
   Widget _buildGroupHeaderText() {
     return Container(
-      margin: const EdgeInsets.only(top: 24.0),
+      margin: const EdgeInsets.only(top: 16.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: CustomGoogleTextWidget(
