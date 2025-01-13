@@ -58,6 +58,7 @@ class MemorizationGroupDetails {
     required this.groupGoal,
     required this.languages,
     required this.teachingMethod,
+    required this.quranMemorizingAmount,
     required this.supervisor,
     required this.surahs,
     required this.juzas,
@@ -80,6 +81,7 @@ class MemorizationGroupDetails {
   final List<DayGroupDetails> days;
   final GroupStatusDetails? groupStatus;
   final GroupGoalDetails? groupGoal;
+  final QuranMemorizingAmount? quranMemorizingAmount;
   final List<LanguageGroupDetails> languages;
   final TeachingMethodGroupDetails? teachingMethod;
   final SupervisorGroupDetails? supervisor;
@@ -127,6 +129,9 @@ class MemorizationGroupDetails {
       supervisor: json["Supervisor"] == null
           ? null
           : SupervisorGroupDetails.fromJson(json["Supervisor"]),
+      quranMemorizingAmount: json["QuranMemorizingAmount"] == null
+          ? null
+          : QuranMemorizingAmount.fromJson(json["QuranMemorizingAmount"]),
       surahs: json["surahs"] == null
           ? []
           : List<SurahQuran>.from(
@@ -170,6 +175,37 @@ class MemorizationGroupDetails {
   @override
   String toString() {
     return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $teachingMethodId, $createdAt, $supervisorId, $gender, $days, $groupStatus, $groupGoal, $languages, $teachingMethod, $supervisor, $surahs, $juzas, $extracts, ";
+  }
+}
+
+class QuranMemorizingAmount {
+  QuranMemorizingAmount({
+    required this.id,
+    required this.amountArabic,
+    required this.amountEnglish,
+  });
+
+  final int? id;
+  final String? amountArabic;
+  final String? amountEnglish;
+
+  factory QuranMemorizingAmount.fromJson(Map<String, dynamic> json) {
+    return QuranMemorizingAmount(
+      id: json["id"],
+      amountArabic: json["amountArabic"],
+      amountEnglish: json["amountEnglish"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "amountArabic": amountArabic,
+        "amountEnglish": amountEnglish,
+      };
+
+  @override
+  String toString() {
+    return "$id, $amountArabic, $amountEnglish, ";
   }
 }
 

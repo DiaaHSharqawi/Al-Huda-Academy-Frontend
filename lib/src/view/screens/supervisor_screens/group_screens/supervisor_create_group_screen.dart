@@ -3,8 +3,10 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/create_group_supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
@@ -14,7 +16,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart
 import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_gender_group_enum.dart';
-import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/quran_memorizing_amount/quran_memorizing_amount_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class SupervisorCreateGroupScreen
@@ -75,6 +77,10 @@ class SupervisorCreateGroupScreen
                         const SizedBox(
                           height: 32.0,
                         ),
+                        _buildQuranMemorizingAmount(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
                         _buildContinueButton(context),
                       ],
                     ),
@@ -83,6 +89,76 @@ class SupervisorCreateGroupScreen
         ),
       ),
     );
+  }
+
+  Widget _buildQuranMemorizingAmount() {
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              CustomGoogleTextWidget(
+                text: 'معدل انجاز الحلقة يومياً',
+                fontFamily: AppFonts.arabicFont,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+              SizedBox(width: 8.0),
+              CustomGoogleTextWidget(
+                text: ' *',
+                color: Colors.red,
+                fontSize: 32.0,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (controller.quranMemorizingAmounts.isNotEmpty)
+            GFDropdown(
+              dropdownColor: Colors.white,
+              focusColor: Colors.white,
+              items: controller.quranMemorizingAmounts.map((entry) {
+                return DropdownMenuItem<QuranMemorizingAmount>(
+                  key: Key(entry.id.toString()),
+                  value: entry,
+                  child: CustomGoogleTextWidget(
+                    text: entry.amountArabic!,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                debugPrint('newValue: $newValue');
+
+                controller.selectedQuranMemorizingAmountId.value =
+                    newValue!.id.toString();
+
+                debugPrint(
+                    "controller.selectedQuranMemorizingAmountId: ${controller.selectedQuranMemorizingAmountId.value}");
+              },
+              value: controller.quranMemorizingAmounts.firstWhereOrNull(
+                  (entry) =>
+                      entry.id.toString() ==
+                      controller.selectedQuranMemorizingAmountId.value),
+              hint: const CustomGoogleTextWidget(
+                text: 'اختر معدل الانجاز',
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+              borderRadius: BorderRadius.circular(5),
+              border: const BorderSide(color: Colors.black, width: 1),
+            ),
+          if (controller.isSubmitting.value &&
+              controller.selectedQuranMemorizingAmountId.value.isEmpty)
+            const CustomGoogleTextWidget(
+              text: 'يرجى اختيار معدل الانجاز',
+              color: Colors.red,
+              fontSize: 14.0,
+            ),
+        ],
+      );
+    });
   }
 
   Widget _buildGroupObjective() {
@@ -350,7 +426,7 @@ class SupervisorCreateGroupScreen
         const SizedBox(
           height: 16.0,
         ),
-        CustomAuthTextFormField(
+        CustomTextFormField(
           textFormHintText: "أكتب هنا",
           controller: controller.groupNameController,
           textFormFieldValidator: GroupValidations.validateGroupName,

@@ -11,7 +11,18 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
 
     debugPrint("Get.args: ${Get.arguments}");
 
-    await fetchMemorizationGroupDetails();
+    groupId.value = Get.arguments;
+    groupId.refresh();
+
+    try {
+      isLoading(true);
+
+      await fetchMemorizationGroupDetails();
+    } catch (e) {
+      debugPrint('Error in onInit: $e');
+    } finally {
+      isLoading(false);
+    }
   }
 
   String convertTo12HourFormat(String timeString) {
@@ -40,11 +51,6 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
   );
 
   Future<void> fetchMemorizationGroupDetails() async {
-    isLoading.value = true;
-
-    groupId.value = Get.arguments;
-    groupId.refresh();
-
     debugPrint("groupId fetch memo group details: ${groupId.toString()}");
 
     debugPrint("groupId: ${groupId.toString()}");
@@ -67,8 +73,6 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching memorization group details, controller: $e');
-    } finally {
-      isLoading.value = false;
     }
   }
 }

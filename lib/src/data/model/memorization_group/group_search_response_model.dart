@@ -60,6 +60,8 @@ class GroupSearchModel {
     required this.groupStatus,
     required this.groupGoal,
     required this.languages,
+    required this.quranMemorizingAmount,
+    required this.groupCompletionRateId,
   });
 
   final int? id;
@@ -79,6 +81,8 @@ class GroupSearchModel {
   final GroupSearchResponseStatus? groupStatus;
   final GroupSearchResponseGoal? groupGoal;
   final List<GroupSearchResponseLanguage> languages;
+  final QuranMemorizingAmount? quranMemorizingAmount;
+  final int? groupCompletionRateId;
 
   factory GroupSearchModel.fromJson(Map<String, dynamic> json) {
     return GroupSearchModel(
@@ -92,8 +96,12 @@ class GroupSearchModel {
       groupGoalId: json["group_goal_id"],
       genderId: json["gender_id"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
+      groupCompletionRateId: json["group_completion_rate_id"],
       supervisorId: json["supervisor_id"],
       teachingMethodId: json["teaching_method_id"],
+      quranMemorizingAmount: json["QuranMemorizingAmount"] == null
+          ? null
+          : QuranMemorizingAmount.fromJson(json["QuranMemorizingAmount"]),
       gender: json["Gender"] == null
           ? null
           : GroupSearchResponseGender.fromJson(json["Gender"]),
@@ -137,6 +145,26 @@ class GroupSearchModel {
   @override
   String toString() {
     return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $createdAt, $supervisorId, $teachingMethodId, $gender, $days, $groupStatus, $groupGoal, $languages, ";
+  }
+}
+
+class QuranMemorizingAmount {
+  QuranMemorizingAmount({
+    required this.id,
+    required this.amountArabic,
+    required this.amountEnglish,
+  });
+
+  final int? id;
+  final String? amountArabic;
+  final String? amountEnglish;
+
+  factory QuranMemorizingAmount.fromJson(Map<String, dynamic> json) {
+    return QuranMemorizingAmount(
+      id: json["id"],
+      amountArabic: json["amountArabic"],
+      amountEnglish: json["amountEnglish"],
+    );
   }
 }
 

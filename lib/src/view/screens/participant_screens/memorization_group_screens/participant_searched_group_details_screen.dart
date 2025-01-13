@@ -89,6 +89,7 @@ class ParticipantSearchedGroupDetailsScreen
         _buildGroupDays(),
         _buildGroupGender(),
         _buildSuperVisorGroupDetails(),
+        _buildGroupCompletionRate(),
         _buildGroupContent(),
         const SizedBox(
           height: 12.0,
@@ -646,6 +647,38 @@ class ParticipantSearchedGroupDetailsScreen
             child: CustomGoogleTextWidget(
               text:
                   controller.memorizationGroupDetails.value!.groupDescription!,
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+              color: AppColors.blackColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGroupCompletionRate() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.description,
+            color: AppColors.primaryColor,
+          ),
+          const SizedBox(width: 16.0),
+          const Expanded(
+            child: CustomGoogleTextWidget(
+              text: "معدل انجاز\n الحلقة يومياً",
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+              color: AppColors.blackColor,
+            ),
+          ),
+          Expanded(
+            child: CustomGoogleTextWidget(
+              text: controller.memorizationGroupDetails.value!
+                  .quranMemorizingAmount!.amountArabic!,
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,

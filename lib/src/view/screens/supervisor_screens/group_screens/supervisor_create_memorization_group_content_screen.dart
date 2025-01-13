@@ -276,19 +276,27 @@ class SupervisorCreateMemorizationGroupContentScreen
                                                     const EdgeInsets.all(8.0),
                                                 child: CustomTextFormField(
                                                   textFormFieldValidator:
-                                                      GroupValidations
-                                                          .validateAyat,
+                                                      (value) =>
+                                                          GroupValidations
+                                                              .validateAyat(
+                                                    value,
+                                                    surah.numberOfAyahs!,
+                                                  ),
                                                   maxLines: 1,
-                                                  autovalidateMode:
-                                                      AutovalidateMode
+                                                  iconName: Icons
+                                                      .format_list_numbered_rtl,
+                                                  autovalidateMode: controller
+                                                          .isSubmitting.value
+                                                      ? AutovalidateMode.always
+                                                      : AutovalidateMode
                                                           .onUserInteraction,
                                                   controller: controller
                                                           .textControllers[
                                                       surah.id!]!,
-                                                  enableBorder: false,
                                                   textFormLabelText:
                                                       "ادخل الايات",
                                                   textFormHintText: "5-1,15-10",
+                                                  enableBorder: false,
                                                   onChanged: (value) {
                                                     controller
                                                         .textControllers[

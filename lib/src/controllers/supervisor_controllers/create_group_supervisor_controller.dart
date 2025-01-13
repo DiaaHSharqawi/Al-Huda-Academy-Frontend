@@ -14,6 +14,7 @@ import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/days_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/quran_memorizing_amount/quran_memorizing_amount_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
 class SupervisorCreateGroupController extends GetxController {
@@ -31,6 +32,7 @@ class SupervisorCreateGroupController extends GetxController {
       await getSurahList();
       await getJuzaList();
       await getGroupGoalList();
+      await getQuranMemorizingAmountList();
 
       final appService = Get.find<AppService>();
       supervisorId.value = appService.user.value!.getMemberId();
@@ -84,6 +86,9 @@ class SupervisorCreateGroupController extends GetxController {
   final List<Juza> juzas = [];
   var selectedJuzzas = [].obs;
 
+  final List<QuranMemorizingAmount> quranMemorizingAmounts = [];
+  var selectedQuranMemorizingAmountId = "".obs;
+
   var ayatForSurahs = [{}].obs;
   Map<int, TextEditingController> textControllers = {};
 
@@ -112,6 +117,18 @@ class SupervisorCreateGroupController extends GetxController {
             selectedTeachingMethod.value.name)
         .id
         .toString();
+  }
+
+  Future<void> getQuranMemorizingAmountList() async {
+    var quranMemorizingAmountResponse =
+        await _createMemorizationGroupService.getQuranMemorizingAmountList();
+
+    debugPrint("quranMemorizingAmountResponse");
+    debugPrint(quranMemorizingAmountResponse.toString());
+
+    if (quranMemorizingAmountResponse.isNotEmpty) {
+      quranMemorizingAmounts.addAll(quranMemorizingAmountResponse);
+    }
   }
 
   Future<Map<String, dynamic>> createANewMemorizationGroup() async {
@@ -162,6 +179,7 @@ class SupervisorCreateGroupController extends GetxController {
       'groupGender': selectedGender.value.name,
       'selectedGroupObjectiveId': selectedGroupObjectiveId.value,
       'teachingMehodId': selectedTeachingMethodId.value,
+      'group_completion_rate_id': selectedQuranMemorizingAmountId.value,
       'extracts': selectedTeachingMethodId.value == "5"
           ? jsonEncode(
               textControllers.map(
@@ -217,6 +235,7 @@ class SupervisorCreateGroupController extends GetxController {
         'participants_gender_id': selectedGenderId.value,
         'group_goal_id': selectedGroupObjectiveId.value,
         'teaching_method_id': selectedTeachingMethodId.value,
+        'group_completion_rate_id': selectedQuranMemorizingAmountId.value,
         'surah_ids': (selectedTeachingMethodId.value == "4")
             ? selectedSurahs
                 .map((surah) => int.parse(surah.id.toString()))
@@ -324,6 +343,7 @@ class SupervisorCreateGroupController extends GetxController {
       'selectedDays': selectedDays.toList().toString(),
       'groupGender': selectedGender.value.name,
       'selectedGroupObjectiveId': selectedGroupObjectiveId.value,
+      'group_completion_rate_id': selectedQuranMemorizingAmountId.value,
     });
 
     if (errors != null) {

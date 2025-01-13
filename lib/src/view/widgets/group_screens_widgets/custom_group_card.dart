@@ -14,6 +14,7 @@ class CustomGroupCard extends StatelessWidget {
   final String? groupTime;
   final String? groupSupervisorName;
   final String? groupDescription;
+  final String? groupCompletionRate;
 
   const CustomGroupCard({
     super.key,
@@ -27,6 +28,7 @@ class CustomGroupCard extends StatelessWidget {
     this.groupGender,
     this.days,
     this.groupTime,
+    this.groupCompletionRate,
   });
 
   @override
@@ -66,6 +68,9 @@ class CustomGroupCard extends StatelessWidget {
           studentsCount == null
               ? const SizedBox.shrink()
               : _buildStudentsCount(),
+          groupCompletionRate == null
+              ? const SizedBox.shrink()
+              : _buildGroupCompletionRate(),
           groupGender == null
               ? const SizedBox.shrink()
               : _buildParticipantGender(),
@@ -75,6 +80,45 @@ class CustomGroupCard extends StatelessWidget {
           _buildDetailsButton(),
         ],
       ),
+    );
+  }
+
+  Widget _buildGroupCompletionRate() {
+    return Column(
+      children: [
+        const SizedBox(height: 16.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.supervised_user_circle,
+              color: AppColors.primaryColor,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "معدل انجاز الحلقة",
+                    fontSize: 18.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12.0),
+                  CustomGoogleTextWidget(
+                    text: groupCompletionRate!,
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

@@ -35,8 +35,10 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
   var isFilterApplied = false.obs;
 
-  var page = 1.obs;
+  var currentPage = 1.obs;
   var limit = 10.obs;
+
+  final List<int> dropDownItems = [1, 3, 5, 7, 10];
 
   var queryParams = <String, dynamic>{}.obs;
 
@@ -49,7 +51,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       isLoading.value = true;
 
       queryParams.value = {
-        'page': page.value,
+        'page': currentPage.value,
         'limit': limit.value,
       };
       await getSurahList();
@@ -71,7 +73,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       (_) {
         if (searchQuery.value.isEmpty) {
           memorizationGroups.clear();
-          page.value = 1;
+          currentPage.value = 1;
         }
 
         debugPrint("Debounced query triggered: ${searchQuery.value}");
@@ -102,79 +104,52 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
   final ParticipantSearchMemorizationGroupService
       _participantSearchMemorizationGroupService;
   ParticipantSearchMemorizationGroupController(
-      this._participantSearchMemorizationGroupService) {
-    scrollController.addListener(scrollListener);
-  }
-
+      this._participantSearchMemorizationGroupService);
 
   Future<void> fetchMemorizationGroup() async {
-    debugPrint("fetchMemorizationGroup");
-    debugPrint("queryParams");
-    debugPrint(queryParams.toString());
-
-    GroupSearchResponseModel groupSearchResponseModel =
-        await _participantSearchMemorizationGroupService
-            .fetchMemorizationGroup(queryParams);
-
-    if (groupSearchResponseModel.statusCode == 200 &&
-        groupSearchResponseModel.groupSearchModels.isNotEmpty) {
-      debugPrint("groupSearchResponseModel");
-      debugPrint(groupSearchResponseModel.groupSearchModels.first.toString());
-
-      memorizationGroups.addAll(groupSearchResponseModel.groupSearchModels);
-
-      debugPrint("memorizationGroups*****");
-      debugPrint(memorizationGroups.toString());
-
-      debugPrint(memorizationGroups.length.toString());
-
-      totalPages = groupSearchResponseModel.metaData!.totalPages!;
-
-      totalMemorizationGroups =
-          groupSearchResponseModel.metaData!.totalNumberOfMemorizationGroup!;
-    } else if (groupSearchResponseModel.statusCode == 404) {
+    try {
+      isLoading(true);
       memorizationGroups.clear();
-      page.value = 1;
+
+      debugPrint("fetchMemorizationGroup");
+      debugPrint("queryParams");
+      debugPrint(queryParams.toString());
+
+      GroupSearchResponseModel groupSearchResponseModel =
+          await _participantSearchMemorizationGroupService
+              .fetchMemorizationGroup(queryParams);
+
+      if (groupSearchResponseModel.statusCode == 200 &&
+          groupSearchResponseModel.groupSearchModels.isNotEmpty) {
+        debugPrint("groupSearchResponseModel");
+        debugPrint(groupSearchResponseModel.groupSearchModels.first.toString());
+
+        memorizationGroups.addAll(groupSearchResponseModel.groupSearchModels);
+
+        debugPrint("memorizationGroups*****");
+        debugPrint(memorizationGroups.toString());
+
+        debugPrint(memorizationGroups.length.toString());
+
+        totalPages.value = groupSearchResponseModel.metaData!.totalPages!;
+
+        totalMemorizationGroups =
+            groupSearchResponseModel.metaData!.totalNumberOfMemorizationGroup!;
+      } else if (groupSearchResponseModel.statusCode == 404) {
+        memorizationGroups.clear();
+        currentPage.value = 1;
+      }
+    } catch (e) {
+      debugPrint('Error fetching memorization groups: $e');
+    } finally {
+      isLoading(false);
     }
   }
 
   var isMoreDataLoading = false.obs;
 
-  late int totalPages;
+  var totalPages = 1.obs;
   late int totalMemorizationGroups;
-
-  Future<void> scrollListener() async {
-    debugPrint("scrollListener");
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent) {
-      await loadMoreData();
-    }
-  }
-
-  Future<void> loadMoreData() async {
-    debugPrint("load more .............................");
-    debugPrint("${isMoreDataLoading.value}");
-    debugPrint("cuurent page value : ${page.value}");
-    debugPrint("totalPages : $totalPages");
-    if (memorizationGroups.length < totalMemorizationGroups) {
-      isMoreDataLoading.value = true;
-      debugPrint("page.value <= totalPages : ${page.value <= totalPages}");
-      scrollController.jumpTo(scrollController.position.pixels + 1);
-
-      if (page.value <= totalPages) {
-        page.value += 1;
-        queryParams.update('page', (value) => page.value,
-            ifAbsent: () => page.value);
-
-        await fetchMemorizationGroup().then((_) {
-          debugPrint("page value  become a: ${page.value}");
-
-          double savedScrollPosition = scrollController.position.pixels;
-          scrollController.jumpTo(savedScrollPosition + 1);
-        });
-      }
-    }
-  }
 
   Future<void> getSurahList() async {
     var surahs =
@@ -256,7 +231,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     // queryParams.clear();
     // clearFilterQueryParams();
 
-    page.value = 1;
+    currentPage.value = 1;
     limit.value = 10;
 
     if (searchController.text.isNotEmpty) {

@@ -10,6 +10,7 @@ import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/days_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/quran_memorizing_amount/quran_memorizing_amount_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
 class CreateMemorizationGroupService extends GetxService {
@@ -56,6 +57,8 @@ class CreateMemorizationGroupService extends GetxService {
           'participants_gender_id': createModelMap['participants_gender_id'],
           'group_goal_id': createModelMap['group_goal_id'],
           'teaching_method_id': createModelMap['teaching_method_id'],
+          'quran_memorizing_amount_id':
+              createModelMap['quran_memorizing_amount_id'],
           'surah_ids': createModelMap['surah_ids'],
           'juza_ids': createModelMap['juza_ids'],
           'extracts': createModelMap['extracts'],
@@ -148,6 +151,45 @@ class CreateMemorizationGroupService extends GetxService {
         'success': false,
         'message': 'حدث خطأ ما',
       };
+    }
+  }
+
+  Future<List<QuranMemorizingAmount>> getQuranMemorizingAmountList() async {
+    final url = Uri.parse("$alHudaBaseURL/quran-memorizing-amount");
+    debugPrint("$url");
+
+    String? lang = appService.languageStorage.read('language');
+    debugPrint("lang device : $lang");
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Accept-Language': lang ?? 'en',
+        },
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      QuranMemorizingAmountResponseModel quranMemorizingAmountResponseModel =
+          QuranMemorizingAmountResponseModel.fromJson(data);
+
+      debugPrint("*-*-*-*-*-");
+      debugPrint(quranMemorizingAmountResponseModel.toString());
+      debugPrint("Data: $data");
+
+      if (data['success']) {
+        debugPrint("quranMemorizingAmountResponseModel list: ${data['data']}");
+        return quranMemorizingAmountResponseModel.quranMemorizingAmount;
+      } else {
+        debugPrint(
+            "Failed to get quranMemorizingAmountResponseModel list: ${data['message']}");
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
     }
   }
 

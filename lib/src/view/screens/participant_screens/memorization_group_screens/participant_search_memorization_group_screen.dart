@@ -4,7 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_search_memorization_group_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_pagination_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_show_boxes_drop_down_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filtter.dart';
@@ -134,60 +136,85 @@ class ParticipantSearchMemorizationGroupScreen
           ),
         );
       }
-      return NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            //  debugPrint("Notification: $notification");
-            if (notification is ScrollUpdateNotification) {
-              if (notification.scrollDelta != null) {
-                // debugPrint("Scrolling");
-                return false;
-              }
-            }
-            return true;
-          },
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            controller: controller.scrollController,
-            itemCount: controller.memorizationGroups.length +
-                (controller.isMoreDataLoading.value ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < controller.memorizationGroups.length) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  width: double.infinity,
-                  child: CustomGroupCard(
-                    groupTime:
-                        "${controller.memorizationGroups[index].startTime!} - ${controller.memorizationGroups[index].endTime!}",
-                    days: controller.memorizationGroups[index].days
-                        .map((day) => day.nameAr)
-                        .join(', '),
-                    groupName: controller.memorizationGroups[index].groupName!,
-                    groupGoal: controller
-                        .memorizationGroups[index].groupGoal!.groupGoalAr!,
-                    groupGender:
-                        controller.memorizationGroups[index].gender!.nameAr!,
-                    onDetailsPressed: () {
-                      debugPrint("Details pressed");
-                      debugPrint(
-                          "Group id: ${controller.memorizationGroups[index].id}");
-                      debugPrint("index: $index");
-                      controller.navigateToGroupDetailsScreen(
-                        controller.memorizationGroups[index].id!.toString(),
-                      );
-                    },
-                  ),
-                );
-              }
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              controller: controller.scrollController,
+              itemCount: controller.memorizationGroups.length +
+                  (controller.isMoreDataLoading.value ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < controller.memorizationGroups.length) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    width: double.infinity,
+                    child: CustomGroupCard(
+                      groupTime:
+                          "${controller.memorizationGroups[index].startTime!} - ${controller.memorizationGroups[index].endTime!}",
+                      days: controller.memorizationGroups[index].days
+                          .map((day) => day.nameAr)
+                          .join(', '),
+                      groupName:
+                          controller.memorizationGroups[index].groupName!,
+                      groupCompletionRate: controller.memorizationGroups[index]
+                          .quranMemorizingAmount?.amountArabic!,
+                      groupGoal: controller
+                          .memorizationGroups[index].groupGoal!.groupGoalAr!,
+                      groupGender:
+                          controller.memorizationGroups[index].gender!.nameAr!,
+                      onDetailsPressed: () {
+                        debugPrint("Details pressed");
+                        debugPrint(
+                            "Group id: ${controller.memorizationGroups[index].id}");
+                        debugPrint("index: $index");
+                        controller.navigateToGroupDetailsScreen(
+                          controller.memorizationGroups[index].id!.toString(),
+                        );
+                      },
+                    ),
+                  );
+                }
 
-              if (index == controller.totalMemorizationGroups) {
-                return const SizedBox.shrink();
-              }
+                if (index == controller.totalMemorizationGroups) {
+                  return const SizedBox.shrink();
+                }
 
-              return _buildLoadingIndicator();
-            },
-          ));
+                return _buildLoadingIndicator();
+              },
+            ),
+            const SizedBox(height: 16.0),
+            Obx(
+              () => controller.memorizationGroups.isEmpty
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: [
+                        CustomDropdownWidget(
+                          dropDownItems: controller.dropDownItems,
+                          limit: controller.limit,
+                          queryParams: controller.queryParams,
+                          fetcherFunction: controller.fetchMemorizationGroup,
+                        ),
+                        _buildPagination(),
+                      ],
+                    ),
+            ),
+          ],
+        ),
+      );
     });
+  }
+
+  Widget _buildPagination() {
+    return PaginationWidget(
+      queryParams: controller.queryParams,
+      currentPage: controller.currentPage,
+      totalPages: controller.totalPages,
+      dataFetchingFunction: controller.fetchMemorizationGroup,
+      primaryColor: AppColors.primaryColor,
+      textColor: AppColors.white,
+    );
   }
 
   Widget _buildFilterDialog(BuildContext context) {
