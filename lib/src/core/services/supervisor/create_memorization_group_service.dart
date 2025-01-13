@@ -9,7 +9,6 @@ import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_m
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/days_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
@@ -55,7 +54,6 @@ class CreateMemorizationGroupService extends GetxService {
           'days': createModelMap['days'],
           'supervisor_id': appService.user.value!.getMemberId(),
           'participants_gender_id': createModelMap['participants_gender_id'],
-          'participants_level_id': createModelMap['participants_level_id'],
           'group_goal_id': createModelMap['group_goal_id'],
           'teaching_method_id': createModelMap['teaching_method_id'],
           'surah_ids': createModelMap['surah_ids'],
@@ -214,46 +212,6 @@ class CreateMemorizationGroupService extends GetxService {
         return genderResponseModel.genders;
       } else {
         debugPrint("Failed to get gender list: ${data['message']}");
-        return [];
-      }
-    } catch (e) {
-      debugPrint("Error: $e");
-      return [];
-    }
-  }
-
-  Future<List<ParticipantLevel>> getParticipantLevelList() async {
-    final url = Uri.parse("$alHudaBaseURL/participant-level");
-    debugPrint("$url");
-    String? lang = appService.languageStorage.read('language');
-    debugPrint("lang device : $lang");
-    try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Accept-Language': lang ?? 'en',
-        },
-      ).timeout(const Duration(seconds: 10));
-
-      debugPrint('Response status: ${response.statusCode}');
-      debugPrint('Response body: ${response.body}');
-
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      ParticipantLevelResponseModel participantLevelResponseModel =
-          ParticipantLevelResponseModel.fromJson(data);
-
-      debugPrint("*-*-*-*-*-");
-      debugPrint(participantLevelResponseModel.toString());
-
-      debugPrint("Data: $data");
-      if (data['success']) {
-        debugPrint(
-            "participantLevelResponseModel  list: ${participantLevelResponseModel.participantLevels}");
-        return participantLevelResponseModel.participantLevels;
-      } else {
-        debugPrint(
-            "Failed to get participantLevelResponseModel list: ${data['message']}");
         return [];
       }
     } catch (e) {

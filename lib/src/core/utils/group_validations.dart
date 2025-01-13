@@ -16,26 +16,6 @@ class GroupValidations {
     ])(groupName);
   }
 
-  static String? validateGroupLevel(String? groupLevelId) {
-    debugPrint("groupLevelId: $groupLevelId");
-    return FormBuilderValidators.compose([
-      FormBuilderValidators.required(
-        errorText: "من فضلك اختر مستوى المجموعة",
-      ),
-      FormBuilderValidators.integer(
-        errorText: "من فضلك أدخل مستوى صحيح",
-      ),
-      FormBuilderValidators.min(
-        1,
-        errorText: "مستوى المجموعة يجب أن يكون بين 1 و 5",
-      ),
-      FormBuilderValidators.max(
-        5,
-        errorText: "مستوى المجموعة يجب أن يكون بين 1 و 5",
-      ),
-    ])(groupLevelId);
-  }
-
   static String? validateGroupGender(String? groupGender) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
@@ -309,10 +289,7 @@ class GroupValidations {
       final groupGenderError = validateGroupGender(values['groupGender']);
       if (groupGenderError != null) errors['groupGender'] = groupGenderError;
     }
-    if (values['groupLevelId'] != null) {
-      final groupLevelError = validateGroupLevel(values['groupLevelId']);
-      if (groupLevelError != null) errors['groupLevelId'] = groupLevelError;
-    }
+
     if (values['selectedGroupObjectiveId'] != null) {
       final groupGoalError =
           validateGroupObjective(values['selectedGroupObjectiveId']);

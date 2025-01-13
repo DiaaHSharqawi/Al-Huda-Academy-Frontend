@@ -11,7 +11,6 @@ import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_m
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_search_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
@@ -29,8 +28,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
   final List<Language> groupLanguages = [];
 
   final List<TeachingMethod> teachingMethods = [];
-
-  final List<ParticipantLevel> participantLevel = [];
 
   var memorizationGroups = RxList<GroupSearchModel>();
 
@@ -61,7 +58,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       await getGroupGoalList();
       await getGroupLanguagesList();
       await getTeachingMethodsList();
-      await getParticipantLevelList();
 
       await fetchMemorizationGroup();
     } catch (e) {
@@ -101,11 +97,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
   var selectedSurahs = <Surah>[].obs;
 
-  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(0, 2));
-
   var selectedJuzzas = [].obs;
-
-  var selectedStudentLevelRange = const RangeValues(0, 3).obs;
 
   final ParticipantSearchMemorizationGroupService
       _participantSearchMemorizationGroupService;
@@ -114,7 +106,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     scrollController.addListener(scrollListener);
   }
 
-  var selectedStudentLevel = 0.obs;
 
   Future<void> fetchMemorizationGroup() async {
     debugPrint("fetchMemorizationGroup");
@@ -244,19 +235,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     }
   }
 
-  Future<void> getParticipantLevelList() async {
-    var participantLevelResponse =
-        await _participantSearchMemorizationGroupService
-            .getParticipantLevelList();
-    debugPrint("participantLevelResponse");
-    debugPrint(participantLevelResponse.toString());
-    if (participantLevelResponse.isNotEmpty) {
-      debugPrint("added participantLevelResponse");
-      debugPrint(participantLevelResponse.toString());
-      participantLevel.addAll(participantLevelResponse);
-    }
-  }
-
   Future<void> getTeachingMethodsList() async {
     var teachingMethodsResponse =
         await _participantSearchMemorizationGroupService
@@ -348,38 +326,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       }
     }
 
-    if (selectedParticipantLevels.value.start != 0 ||
-        selectedParticipantLevels.value.end != 2) {
-      final levelMap = {
-        1: "junior",
-        2: "average",
-        3: "advanced",
-        1.5: "junior-average",
-        2.5: "average-advanced",
-      };
-
-      final start = selectedParticipantLevels.value.start;
-      final end = selectedParticipantLevels.value.end;
-
-      debugPrint("start: $start, end: $end");
-
-      if (start == end) {
-        queryParams['participants_level_id'] = participantLevel
-            .firstWhere((level) => level.participantLevelEn == levelMap[start])
-            .id;
-      } else {
-        debugPrint("levelMap[(start + end) ]: ${[(start + end) / 2]}");
-        debugPrint(
-            "levelMap[(start + end) / 2]: ${levelMap[(start + end) / 2]}");
-        ParticipantLevel? level = participantLevel.firstWhere(
-            (level) => level.participantLevelEn == levelMap[(start + end) / 2]);
-
-        debugPrint("level *****: $level");
-
-        queryParams['participants_level_id'] = level.id;
-      }
-    }
-
     debugPrint(queryParams.toString());
 
     memorizationGroups.clear();
@@ -400,7 +346,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     //  selectedPartOfQuranType.value = SelectedPartOfQuranFiltter.surahs;
     selectedSurahs.clear();
     selectedJuzzas.clear();
-    selectedStudentLevelRange.value = const RangeValues(0, 2);
   }
 
   void navigateToGroupDetailsScreen(String groupId) {

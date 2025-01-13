@@ -10,7 +10,6 @@ import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_m
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_search_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
@@ -271,46 +270,6 @@ class ParticipantSearchMemorizationGroupService extends GetxService {
       } else {
         debugPrint(
             "Failed to get teachingMethodsResponseModel list: ${data['message']}");
-        return [];
-      }
-    } catch (e) {
-      debugPrint("Error: $e");
-      return [];
-    }
-  }
-
-  Future<List<ParticipantLevel>> getParticipantLevelList() async {
-    final url = Uri.parse("$alHudaBaseURL/participant-level");
-    debugPrint("$url");
-    String? lang = appService.languageStorage.read('language');
-    debugPrint("lang device : $lang");
-    try {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Accept-Language': lang ?? 'en',
-        },
-      ).timeout(const Duration(seconds: 10));
-
-      debugPrint('Response status: ${response.statusCode}');
-      debugPrint('Response body: ${response.body}');
-
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      ParticipantLevelResponseModel participantLevelResponseModel =
-          ParticipantLevelResponseModel.fromJson(data);
-
-      debugPrint("*-*-*-*-*-");
-      debugPrint(participantLevelResponseModel.toString());
-
-      debugPrint("Data: $data");
-      if (data['success']) {
-        debugPrint(
-            "participantLevelResponseModel  list: ${participantLevelResponseModel.participantLevels}");
-        return participantLevelResponseModel.participantLevels;
-      } else {
-        debugPrint(
-            "Failed to get participantLevelResponseModel list: ${data['message']}");
         return [];
       }
     } catch (e) {

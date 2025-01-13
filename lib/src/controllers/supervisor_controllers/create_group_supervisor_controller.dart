@@ -13,7 +13,6 @@ import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_m
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/days_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
@@ -28,15 +27,10 @@ class SupervisorCreateGroupController extends GetxController {
 
       await getDaysList();
       await getGendersList();
-      await getParticipantLevelList();
       await getTeachingMethodsList();
       await getSurahList();
       await getJuzaList();
       await getGroupGoalList();
-
-      setSelectedLevelId();
-      debugPrint(
-          "selectedParticipantLevelId: ${selectedParticipantLevelId.value}");
 
       final appService = Get.find<AppService>();
       supervisorId.value = appService.user.value!.getMemberId();
@@ -72,10 +66,6 @@ class SupervisorCreateGroupController extends GetxController {
 
   final List<Gender> genders = [];
 
-  final List<ParticipantLevel> participantLevels = [];
-  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(1, 1));
-  var selectedParticipantLevelId = "".obs;
-
   final RxList<String> selectedDays = <String>[].obs;
 
   var selectedGender = SupervisorGenderGroupEnum.notSelected.obs;
@@ -85,7 +75,7 @@ class SupervisorCreateGroupController extends GetxController {
   var selectedTeachingMethod = GroupTeachingMethodEnum.all.obs;
   var selectedTeachingMethodId = "".obs;
 
-  var selectedGroupObjective = GroupObjectiveEnum.all.obs;
+  var selectedGroupObjective = GroupObjectiveEnum.notSelected.obs;
   var selectedGroupObjectiveId = "".obs;
 
   final List<Surah> surahs = [];
@@ -170,7 +160,6 @@ class SupervisorCreateGroupController extends GetxController {
       'selectedEndTime': endTime,
       'selectedDays': selectedDays.toList().toString(),
       'groupGender': selectedGender.value.name,
-      'groupLevelId': selectedParticipantLevelId.value, // p level
       'selectedGroupObjectiveId': selectedGroupObjectiveId.value,
       'teachingMehodId': selectedTeachingMethodId.value,
       'extracts': selectedTeachingMethodId.value == "5"
@@ -226,7 +215,6 @@ class SupervisorCreateGroupController extends GetxController {
         'days': selectedDays.toList(),
         'supervisor_id': supervisorId,
         'participants_gender_id': selectedGenderId.value,
-        'participants_level_id': selectedParticipantLevelId.value, // p level
         'group_goal_id': selectedGroupObjectiveId.value,
         'teaching_method_id': selectedTeachingMethodId.value,
         'surah_ids': (selectedTeachingMethodId.value == "4")
@@ -309,39 +297,6 @@ class SupervisorCreateGroupController extends GetxController {
     }
   }
 
-  void setSelectedLevelId() {
-    final levelMap = {
-      1: "junior",
-      2: "average",
-      3: "advanced",
-      1.5: "junior-average",
-      2.5: "average-advanced",
-    };
-
-    final start = selectedParticipantLevels.value.start;
-    final end = selectedParticipantLevels.value.end;
-
-    debugPrint("start: $start, end: $end");
-    int? levelId;
-
-    if (start == end) {
-      levelId = participantLevels
-          .firstWhere((level) => level.participantLevelEn == levelMap[start])
-          .id;
-    } else {
-      //  debugPrint("levelMap[(start + end) ]: ${[(start + end) / 2]}");
-      // debugPrint("levelMap[(start + end) / 2]: ${levelMap[(start + end) / 2]}");
-      ParticipantLevel? level = participantLevels.firstWhere(
-          (level) => level.participantLevelEn == levelMap[(start + end) / 2]);
-
-      //debugPrint("level *****: $level");
-
-      levelId = level.id;
-    }
-
-    selectedParticipantLevelId.value = levelId.toString();
-  }
-
   Future<Map<String, dynamic>> getGroupByGroupName() async {
     debugPrint('Creating a new memorization group');
     String startTime = selectedStartTime.value
@@ -368,7 +323,6 @@ class SupervisorCreateGroupController extends GetxController {
       'selectedEndTime': endTime,
       'selectedDays': selectedDays.toList().toString(),
       'groupGender': selectedGender.value.name,
-      'groupLevelId': selectedParticipantLevelId.value,
       'selectedGroupObjectiveId': selectedGroupObjectiveId.value,
     });
 
@@ -419,14 +373,6 @@ class SupervisorCreateGroupController extends GetxController {
         await _createMemorizationGroupService.getGendersList();
     if (gendersResponse.isNotEmpty) {
       genders.addAll(gendersResponse);
-    }
-  }
-
-  Future<void> getParticipantLevelList() async {
-    var participantLevelResponse =
-        await _createMemorizationGroupService.getParticipantLevelList();
-    if (participantLevelResponse.isNotEmpty) {
-      participantLevels.addAll(participantLevelResponse);
     }
   }
 

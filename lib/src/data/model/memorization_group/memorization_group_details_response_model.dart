@@ -49,14 +49,12 @@ class MemorizationGroupDetails {
     required this.groupStatusId,
     required this.groupGoalId,
     required this.genderId,
-    required this.participantsLevelId,
     required this.teachingMethodId,
     required this.createdAt,
     required this.supervisorId,
     required this.gender,
     required this.days,
     required this.groupStatus,
-    required this.participantLevel,
     required this.groupGoal,
     required this.languages,
     required this.teachingMethod,
@@ -75,14 +73,12 @@ class MemorizationGroupDetails {
   final int? groupStatusId;
   final int? groupGoalId;
   final int? genderId;
-  final int? participantsLevelId;
   final int? teachingMethodId;
   final DateTime? createdAt;
   final int? supervisorId;
   final GenderGroupDetails? gender;
   final List<DayGroupDetails> days;
   final GroupStatusDetails? groupStatus;
-  final ParticipantLevelGroupDetails? participantLevel;
   final GroupGoalDetails? groupGoal;
   final List<LanguageGroupDetails> languages;
   final TeachingMethodGroupDetails? teachingMethod;
@@ -105,7 +101,6 @@ class MemorizationGroupDetails {
       groupStatusId: json["group_status_id"],
       groupGoalId: json["group_goal_id"],
       genderId: json["gender_id"],
-      participantsLevelId: json["participants_level_id"],
       teachingMethodId: json["teaching_method_id"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       supervisorId: json["supervisor_id"],
@@ -119,9 +114,6 @@ class MemorizationGroupDetails {
       groupStatus: json["GroupStatus"] == null
           ? null
           : GroupStatusDetails.fromJson(json["GroupStatus"]),
-      participantLevel: json["ParticipantLevel"] == null
-          ? null
-          : ParticipantLevelGroupDetails.fromJson(json["ParticipantLevel"]),
       groupGoal: json["GroupGoal"] == null
           ? null
           : GroupGoalDetails.fromJson(json["GroupGoal"]),
@@ -160,14 +152,12 @@ class MemorizationGroupDetails {
         "group_status_id": groupStatusId,
         "group_goal_id": groupGoalId,
         "gender_id": genderId,
-        "participants_level_id": participantsLevelId,
         "teaching_method_id": teachingMethodId,
         "createdAt": createdAt?.toIso8601String(),
         "supervisor_id": supervisorId,
         "Gender": gender?.toJson(),
         "Days": days.map((x) => x.toJson()).toList(),
         "GroupStatus": groupStatus?.toJson(),
-        "ParticipantLevel": participantLevel?.toJson(),
         "GroupGoal": groupGoal?.toJson(),
         "Languages": languages.map((x) => x.toJson()).toList(),
         "TeachingMethod": teachingMethod?.toJson(),
@@ -179,7 +169,7 @@ class MemorizationGroupDetails {
 
   @override
   String toString() {
-    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $participantsLevelId, $teachingMethodId, $createdAt, $supervisorId, $gender, $days, $groupStatus, $participantLevel, $groupGoal, $languages, $teachingMethod, $supervisor, $surahs, $juzas, $extracts, ";
+    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $teachingMethodId, $createdAt, $supervisorId, $gender, $days, $groupStatus, $groupGoal, $languages, $teachingMethod, $supervisor, $surahs, $juzas, $extracts, ";
   }
 }
 
@@ -663,45 +653,6 @@ class GroupLanguage {
   @override
   String toString() {
     return "$id, $groupId, $languageId, $createdAt, $updatedAt, ";
-  }
-}
-
-class ParticipantLevelGroupDetails {
-  ParticipantLevelGroupDetails({
-    required this.id,
-    required this.participantLevelEn,
-    required this.participantLevelAr,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  final int? id;
-  final String? participantLevelEn;
-  final String? participantLevelAr;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  factory ParticipantLevelGroupDetails.fromJson(Map<String, dynamic> json) {
-    return ParticipantLevelGroupDetails(
-      id: json["id"],
-      participantLevelEn: json["participant_level_en"],
-      participantLevelAr: json["participant_level_ar"],
-      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "participant_level_en": participantLevelEn,
-        "participant_level_ar": participantLevelAr,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
-      };
-
-  @override
-  String toString() {
-    return "$id, $participantLevelEn, $participantLevelAr, $createdAt, $updatedAt, ";
   }
 }
 

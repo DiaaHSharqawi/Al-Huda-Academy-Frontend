@@ -10,7 +10,6 @@ class CustomGroupCard extends StatelessWidget {
   final String? groupGoal;
   final String? groupGender;
   final VoidCallback onDetailsPressed;
-  final String? participantsLevel;
   final String? days;
   final String? groupTime;
   final String? groupSupervisorName;
@@ -26,7 +25,6 @@ class CustomGroupCard extends StatelessWidget {
     this.language,
     this.groupGoal,
     this.groupGender,
-    this.participantsLevel,
     this.days,
     this.groupTime,
   });
@@ -71,9 +69,6 @@ class CustomGroupCard extends StatelessWidget {
           groupGender == null
               ? const SizedBox.shrink()
               : _buildParticipantGender(),
-          participantsLevel == null
-              ? const SizedBox.shrink()
-              : _buildParticipantLevel(),
           days == null ? const SizedBox.shrink() : _buildGroupDays(),
           groupTime == null ? const SizedBox.shrink() : _buildGroupTime(),
           const SizedBox(height: 16.0),
@@ -230,45 +225,6 @@ class CustomGroupCard extends StatelessWidget {
                   const SizedBox(width: 12.0),
                   CustomGoogleTextWidget(
                     text: days!,
-                    fontSize: 16.0,
-                    color: Colors.black,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildParticipantLevel() {
-    return Column(
-      children: [
-        const SizedBox(height: 16.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.school,
-              color: AppColors.primaryColor,
-            ),
-            const SizedBox(width: 8.0),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const CustomGoogleTextWidget(
-                    text: "المستوى",
-                    fontSize: 18.0,
-                    color: Colors.black,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(width: 12.0),
-                  CustomGoogleTextWidget(
-                    text: participantsLevel!,
                     fontSize: 16.0,
                     color: Colors.black,
                     overflow: TextOverflow.ellipsis,

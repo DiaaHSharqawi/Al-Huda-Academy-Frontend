@@ -83,7 +83,6 @@ class ParticipantSearchedGroupDetailsScreen
         _buildTableHeader(),
         _buildGroupName(),
         _buildGroupGoal(),
-        _buildGroupLevel(),
         _buildGroupDescription(),
         _buildGroupTime(),
         _buildGroupCapacity(),
@@ -647,38 +646,6 @@ class ParticipantSearchedGroupDetailsScreen
             child: CustomGoogleTextWidget(
               text:
                   controller.memorizationGroupDetails.value!.groupDescription!,
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-              color: AppColors.blackColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGroupLevel() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.star,
-            color: AppColors.primaryColor,
-          ),
-          const SizedBox(width: 16.0),
-          const Expanded(
-            child: CustomGoogleTextWidget(
-              text: "المستوى",
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-              color: AppColors.blackColor,
-            ),
-          ),
-          Expanded(
-            child: CustomGoogleTextWidget(
-              text: controller.memorizationGroupDetails.value!.participantLevel!
-                  .participantLevelAr!,
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,

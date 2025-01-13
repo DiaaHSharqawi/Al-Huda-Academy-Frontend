@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/components/bottom_sheet/gf_bottom_sheet.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_join_request_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/supervisor_group_join_requests_response_model.dart';
 
@@ -24,6 +25,9 @@ class SupervisorGroupJoinRequestController extends GetxController {
   var totalRecords = 0.obs;
 
   var queryParams = <String, dynamic>{}.obs;
+
+  final GFBottomSheetController gfBottomSheetController =
+      GFBottomSheetController();
 
   @override
   Future<void> onInit() async {

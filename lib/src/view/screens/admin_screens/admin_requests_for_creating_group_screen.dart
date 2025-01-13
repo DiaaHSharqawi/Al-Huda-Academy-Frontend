@@ -237,10 +237,6 @@ class AdminRequestsForCreatingGroupScreen
             const SizedBox(
               height: 16.0,
             ),
-            _buildStudentsLevelFiltter(),
-            const SizedBox(
-              height: 16.0,
-            ),
             _buildSearchOrderFiltter(context),
           ],
         ),
@@ -399,81 +395,6 @@ class AdminRequestsForCreatingGroupScreen
                 controller.selectedGroupObjective.value = value;
               }
             },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStudentsLevelFiltter() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "مستوى الطلاب",
-        fontSize: 16.0,
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() {
-                if (controller.participantLevels.length < 3) {
-                  return const Center(
-                    child: Text('Not enough data to display slider'),
-                  );
-                }
-                double minLevel =
-                    controller.participantLevels.first.id!.toDouble();
-                double maxLevel =
-                    controller.participantLevels[2].id!.toDouble();
-
-                debugPrint(
-                    "Min level: $minLevel , Max level: $maxLevel ,controller.participantLevel.length ${controller.participantLevels.length}");
-                return Column(
-                  children: [
-                    RangeSlider(
-                      activeColor: AppColors.primaryColor,
-                      inactiveColor: Colors.grey,
-                      values: RangeValues(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel),
-                      ),
-                      min: minLevel,
-                      max: maxLevel,
-                      divisions: 2,
-                      labels: RangeLabels(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                      ),
-                      onChanged: (RangeValues values) {
-                        debugPrint("Selected values: $values");
-                        controller.selectedParticipantLevels.value = values;
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:
-                          controller.participantLevels.take(3).map((level) {
-                        return CustomGoogleTextWidget(
-                          text: level.participantLevelAr!,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.blackColor,
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                );
-              }),
-            ],
           ),
         ),
       ],

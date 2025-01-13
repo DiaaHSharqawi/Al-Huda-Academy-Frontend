@@ -71,10 +71,6 @@ class SupervisorCreateGroupScreen
                         const SizedBox(
                           height: 32.0,
                         ),
-                        _buildGroupLevel(),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
                         _buildGroupObjective(),
                         const SizedBox(
                           height: 32.0,
@@ -129,6 +125,19 @@ class SupervisorCreateGroupScreen
             ),
           );
         }),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Obx(() => (controller.selectedGroupObjective.value ==
+                    GroupObjectiveEnum.notSelected &&
+                controller.isSubmitting.value)
+            ? const CustomGoogleTextWidget(
+                text: "يرجى اختيار الهدف من المجموعة",
+                fontSize: 14.0,
+                fontWeight: FontWeight.normal,
+                color: Colors.red,
+              )
+            : const SizedBox.shrink()),
       ],
     );
   }
@@ -174,88 +183,6 @@ class SupervisorCreateGroupScreen
                 }
               }),
         ));
-  }
-
-  Widget _buildGroupLevel() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CustomGoogleTextWidget(
-          text: "اختر مستوى المجموعة",
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-        const SizedBox(
-          height: 16.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() {
-                if (controller.participantLevels.length < 3) {
-                  return const Center(
-                    child: Text('Not enough data to display slider'),
-                  );
-                }
-                double minLevel =
-                    controller.participantLevels.first.id!.toDouble();
-                double maxLevel =
-                    controller.participantLevels[2].id!.toDouble();
-
-                debugPrint(
-                    "Min level: $minLevel , Max level: $maxLevel ,controller.participantLevel.length ${controller.participantLevels.length}");
-                return Column(
-                  children: [
-                    RangeSlider(
-                      activeColor: AppColors.primaryColor,
-                      inactiveColor: Colors.grey,
-                      values: RangeValues(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel),
-                      ),
-                      min: minLevel,
-                      max: maxLevel,
-                      divisions: 2,
-                      labels: RangeLabels(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                      ),
-                      onChanged: (RangeValues values) {
-                        debugPrint("Selected values: $values");
-                        controller.selectedParticipantLevels.value = values;
-                        controller.setSelectedLevelId();
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:
-                          controller.participantLevels.take(3).map((level) {
-                        return CustomGoogleTextWidget(
-                          text: level.participantLevelAr!,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.blackColor,
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                );
-              }),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildGroupGender() {
@@ -309,7 +236,20 @@ class SupervisorCreateGroupScreen
               },
             ),
           ],
-        )
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Obx(() => (controller.selectedGender.value ==
+                    SupervisorGenderGroupEnum.notSelected &&
+                controller.isSubmitting.value)
+            ? const CustomGoogleTextWidget(
+                text: "يرجى اختيار جنس المجموعة",
+                fontSize: 14.0,
+                fontWeight: FontWeight.normal,
+                color: Colors.red,
+              )
+            : const SizedBox.shrink()),
       ],
     );
   }
@@ -350,6 +290,18 @@ class SupervisorCreateGroupScreen
                 );
               }).toList(),
             )),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Obx(() =>
+            (controller.selectedDays.isEmpty && controller.isSubmitting.value)
+                ? const CustomGoogleTextWidget(
+                    text: "يرجى اختيار ايام المجموعة",
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.red,
+                  )
+                : const SizedBox.shrink()),
       ],
     );
   }
@@ -399,7 +351,7 @@ class SupervisorCreateGroupScreen
           height: 16.0,
         ),
         CustomAuthTextFormField(
-          textFormHintText: "مجموعة عمر بن الخطاب",
+          textFormHintText: "أكتب هنا",
           controller: controller.groupNameController,
           textFormFieldValidator: GroupValidations.validateGroupName,
           autovalidateMode: controller.isSubmitting.value
@@ -456,13 +408,14 @@ class SupervisorCreateGroupScreen
         const SizedBox(
           height: 16.0,
         ),
-        CustomAuthTextFormField(
+        CustomTextFormField(
           textFormHintText: '12',
           controller: controller.groupCapacityController,
           textFormFieldValidator: GroupValidations.validateGroupCapacity,
           autovalidateMode: controller.isSubmitting.value
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
+          keyboardType: TextInputType.number,
         ),
       ],
     );

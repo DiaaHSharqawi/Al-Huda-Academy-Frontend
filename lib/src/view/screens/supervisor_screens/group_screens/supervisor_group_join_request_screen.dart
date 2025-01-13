@@ -5,6 +5,7 @@ import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_box.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_pagination_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_show_boxes_drop_down_widget.dart';
@@ -50,7 +51,7 @@ class SupervisorGroupJoinRequestScreen
                           const SizedBox(
                             height: 16.0,
                           ),
-                          _buildGroupJoinRequestSection(),
+                          _buildGroupJoinRequestSection(context),
                         ],
                       ),
                     );
@@ -65,7 +66,7 @@ class SupervisorGroupJoinRequestScreen
     );
   }
 
-  Widget _buildGroupJoinRequestSection() {
+  Widget _buildGroupJoinRequestSection(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,12 +74,12 @@ class SupervisorGroupJoinRequestScreen
         const SizedBox(
           height: 32.0,
         ),
-        _buildGroupJoinRequestList(),
+        _buildGroupJoinRequestList(context),
       ],
     );
   }
 
-  Widget _buildGroupJoinRequestList() {
+  Widget _buildGroupJoinRequestList(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -111,7 +112,9 @@ class SupervisorGroupJoinRequestScreen
                             boxColor: AppColors.primaryColor.withOpacity(0.2),
                             imagePath: controller.groupJoinRequestsList[index]
                                 .participant?.profileImage!,
-                            onTap: () {},
+                            onTap: () {
+                              _showModalBottomSheet(context, index: index);
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -138,6 +141,280 @@ class SupervisorGroupJoinRequestScreen
                   ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<dynamic> _showModalBottomSheet(BuildContext context, {int? index}) {
+    return showModalBottomSheet(
+      backgroundColor: Colors.white,
+      useSafeArea: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(24.0),
+          width: double.infinity,
+          height: 600,
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CustomGoogleTextWidget(
+                    text: "تفاصيل طلب الانضمام",
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                  const SizedBox(
+                    height: 16.0,
+                  ),
+                  const SizedBox(
+                    height: 16.0,
+                  ),
+                  _buildProfileDetailsRow(index!),
+                  const SizedBox(
+                    height: 32.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(child: _buildAcceptRequestButton()),
+                      const SizedBox(width: 16.0),
+                      Expanded(child: _buildRejectRequestButton()),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileDetailsRow(int index) {
+    return Column(
+      children: [
+        _buildParticipantProfileImage(index),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildProfileDetailsRowHeader(),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildParticipantFullName(index),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildParticipantAge(index),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildParticipantMemorizingAmount(index),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildParticipantProfileMoreDetails(),
+      ],
+    );
+  }
+
+  Widget _buildProfileDetailsRowHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            color: AppColors.primaryColor.withOpacity(0.2),
+            child: const CustomGoogleTextWidget(
+              text: "التفاصيل",
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+              color: AppColors.blackColor,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            color: AppColors.primaryColor.withOpacity(0.2),
+            child: const CustomGoogleTextWidget(
+              text: "المعلومات",
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+              color: AppColors.blackColor,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildParticipantMemorizingAmount(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const Expanded(
+          child: CustomGoogleTextWidget(
+            text: "كمية القدرة على الحفظ",
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Expanded(
+          child: CustomGoogleTextWidget(
+            text:
+                "${controller.groupJoinRequestsList[index].participant!.quranMemorizingAmount!.amountArabic} ",
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildParticipantProfileMoreDetails() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      child: CustomButton(
+        foregroundColor: AppColors.white,
+        backgroundColor: Colors.blueAccent,
+        buttonText: 'عرض المزيد',
+        buttonTextColor: AppColors.white,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold,
+        onPressed: () {
+          // Handle button press
+        },
+      ),
+    );
+  }
+
+  Widget _buildParticipantAge(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const Expanded(
+          child: CustomGoogleTextWidget(
+            text: "عمر المشترك",
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Expanded(
+          child: CustomGoogleTextWidget(
+            text:
+                "${DateTime.now().year - controller.groupJoinRequestsList[index].participant!.dateOfBirth!.year} سنة",
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildParticipantFullName(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const Expanded(
+          child: CustomGoogleTextWidget(
+            text: "اسم المشترك",
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Expanded(
+          child: CustomGoogleTextWidget(
+            text:
+                controller.groupJoinRequestsList[index].participant!.fullName!,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAcceptRequestButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: CustomButton(
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primaryColor,
+        buttonText: "قبول الطلب",
+        buttonTextColor: AppColors.white,
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        onPressed: () {
+          // Handle accept request
+        },
+      ),
+    );
+  }
+
+  Widget _buildRejectRequestButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: CustomButton(
+        foregroundColor: AppColors.white,
+        backgroundColor: Colors.red,
+        buttonText: 'رفض الطلب',
+        buttonTextColor: AppColors.white,
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        onPressed: () {
+          // Handle accept request
+        },
+      ),
+    );
+  }
+
+  Widget _buildParticipantProfileImage(int index) {
+    return CircleAvatar(
+      foregroundColor: Colors.white,
+      radius: 80.0,
+      backgroundColor: Colors.transparent,
+      child: ClipOval(
+        child: Image.network(
+          controller.groupJoinRequestsList[index].participant!.profileImage!,
+          fit: BoxFit.cover,
+          width: 120.0,
+          height: 120.0,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

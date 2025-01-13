@@ -8,7 +8,6 @@ import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_se
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/sort_order_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 
 class AdminRequestsForCreatingGroupController extends GetxController {
   final AdminRequestsForCreatingGroupService
@@ -31,10 +30,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
   final List<Gender> genders = [];
   var selectedGender = GenderSearchFiltter.notSelected.obs;
   var selectedGenderId = ''.obs;
-
-  final List<ParticipantLevel> participantLevels = [];
-  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(1, 2));
-  var selectedParticipantLevelId = ''.obs;
 
   final List<GroupGoal> groupGoals = [];
   var selectedGroupObjective = GroupObjectiveSearchFiltter.all.obs;
@@ -63,9 +58,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
 
       await getGroupGoalList();
       setSelectedGoalId();
-
-      await getParticipantLevelList();
-      setParticipantLevelId();
 
       queryParams.value = {
         'page': currentPage.value,
@@ -99,39 +91,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
 
   void navigateToRequestsForCreatingGroupDetails(String id) {
     Get.toNamed(AppRoutes.adminRequestedGroupDetails, arguments: id);
-  }
-
-  void setParticipantLevelId() {
-    final levelMap = {
-      1: "junior",
-      2: "average",
-      3: "advanced",
-      1.5: "junior-average",
-      2.5: "average-advanced",
-    };
-
-    final start = selectedParticipantLevels.value.start;
-    final end = selectedParticipantLevels.value.end;
-
-    debugPrint("start: $start, end: $end");
-    int? levelId;
-
-    if (start == end) {
-      levelId = participantLevels
-          .firstWhere((level) => level.participantLevelEn == levelMap[start])
-          .id;
-    } else {
-      //  debugPrint("levelMap[(start + end) ]: ${[(start + end) / 2]}");
-      // debugPrint("levelMap[(start + end) / 2]: ${levelMap[(start + end) / 2]}");
-      ParticipantLevel? level = participantLevels.firstWhere(
-          (level) => level.participantLevelEn == levelMap[(start + end) / 2]);
-
-      //debugPrint("level *****: $level");
-
-      levelId = level.id;
-    }
-
-    selectedParticipantLevelId.value = levelId.toString();
   }
 
   void setSelectedGenderId() {
@@ -171,7 +130,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
     debugPrint("searchController.text: ${searchController.text}");
     debugPrint("selectedGender: ${selectedGender.value}");
     debugPrint("selectedGroupObjective: ${selectedGroupObjective.value}");
-    debugPrint("selectedParticipantLevels: ${selectedParticipantLevels.value}");
 
     if (searchController.text.isNotEmpty) {
       queryParams['groupName'] = searchController.text;
@@ -189,16 +147,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
       queryParams['group_goal_id'] = selectedGroupObjectiveId.value;
 
       debugPrint("selectedGroupObjective: ${selectedGroupObjective.value}");
-    }
-
-    if (((selectedParticipantLevels.value.start != 1 ||
-            selectedParticipantLevels.value.end != 3) &&
-        isFilterApplied.value)) {
-      setParticipantLevelId();
-
-      debugPrint(
-          "selectedParticipantLevelId: ${selectedParticipantLevelId.value}");
-      queryParams['participants_level_id'] = selectedParticipantLevelId.value;
     }
 
     if (sortOrder.value != SortOrder.notSelected) {
@@ -222,9 +170,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
     selectedGender.value = GenderSearchFiltter.notSelected;
     selectedGroupObjective.value = GroupObjectiveSearchFiltter.all;
 
-    selectedParticipantLevels.value = const RangeValues(1, 3);
-    selectedParticipantLevelId.value = "";
-
     sortOrder.value = SortOrder.notSelected;
 
     searchController.clear();
@@ -242,18 +187,6 @@ class AdminRequestsForCreatingGroupController extends GetxController {
     debugPrint(gendersResponse.toString());
     if (gendersResponse.isNotEmpty) {
       genders.addAll(gendersResponse);
-    }
-  }
-
-  Future<void> getParticipantLevelList() async {
-    var participantLevelResponse =
-        await _adminRequestsForCreatingGroupService.getParticipantLevelList();
-    debugPrint("participantLevelResponse");
-    debugPrint(participantLevelResponse.toString());
-    if (participantLevelResponse.isNotEmpty) {
-      debugPrint("added participantLevelResponse");
-      debugPrint(participantLevelResponse.toString());
-      participantLevels.addAll(participantLevelResponse);
     }
   }
 

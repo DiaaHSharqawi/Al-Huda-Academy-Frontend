@@ -101,16 +101,24 @@ class SupervisorGroupJoinRequestParticipant {
   SupervisorGroupJoinRequestParticipant({
     required this.fullName,
     required this.profileImage,
+    required this.quranMemorizingAmount,
+    required this.dateOfBirth,
   });
 
   final String? fullName;
   final String? profileImage;
+  final QuranMemorizingAmount? quranMemorizingAmount;
+  final DateTime? dateOfBirth;
 
   factory SupervisorGroupJoinRequestParticipant.fromJson(
       Map<String, dynamic> json) {
     return SupervisorGroupJoinRequestParticipant(
       fullName: json["fullName"],
       profileImage: json["profileImage"],
+      quranMemorizingAmount: json["QuranMemorizingAmount"] == null
+          ? null
+          : QuranMemorizingAmount.fromJson(json["QuranMemorizingAmount"]),
+      dateOfBirth: DateTime.tryParse(json["dateOfBirth"] ?? ""),
     );
   }
 
@@ -122,6 +130,37 @@ class SupervisorGroupJoinRequestParticipant {
   @override
   String toString() {
     return "$fullName, $profileImage, ";
+  }
+}
+
+class QuranMemorizingAmount {
+  QuranMemorizingAmount({
+    required this.id,
+    required this.amountArabic,
+    required this.amountEnglish,
+  });
+
+  final int? id;
+  final String? amountArabic;
+  final String? amountEnglish;
+
+  factory QuranMemorizingAmount.fromJson(Map<String, dynamic> json) {
+    return QuranMemorizingAmount(
+      id: json["id"],
+      amountArabic: json["amountArabic"],
+      amountEnglish: json["amountEnglish"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "amountArabic": amountArabic,
+        "amountEnglish": amountEnglish,
+      };
+
+  @override
+  String toString() {
+    return "$id, $amountArabic, $amountEnglish, ";
   }
 }
 

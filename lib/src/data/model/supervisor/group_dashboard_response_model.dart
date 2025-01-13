@@ -80,7 +80,6 @@ class GroupDetailsDashboard {
     required this.groupStatusId,
     required this.groupGoalId,
     required this.genderId,
-    required this.participantsLevelId,
     required this.teachingMethodId,
     required this.createdAt,
     required this.supervisorId,
@@ -95,7 +94,6 @@ class GroupDetailsDashboard {
   final int? groupStatusId;
   final int? groupGoalId;
   final int? genderId;
-  final int? participantsLevelId;
   final int? teachingMethodId;
   final DateTime? createdAt;
   final int? supervisorId;
@@ -111,7 +109,6 @@ class GroupDetailsDashboard {
       groupStatusId: json["group_status_id"],
       groupGoalId: json["group_goal_id"],
       genderId: json["gender_id"],
-      participantsLevelId: json["participants_level_id"],
       teachingMethodId: json["teaching_method_id"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       supervisorId: json["supervisor_id"],
@@ -128,7 +125,6 @@ class GroupDetailsDashboard {
         "group_status_id": groupStatusId,
         "group_goal_id": groupGoalId,
         "gender_id": genderId,
-        "participants_level_id": participantsLevelId,
         "teaching_method_id": teachingMethodId,
         "createdAt": createdAt?.toIso8601String(),
         "supervisor_id": supervisorId,
@@ -136,7 +132,7 @@ class GroupDetailsDashboard {
 
   @override
   String toString() {
-    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $participantsLevelId, $teachingMethodId, $createdAt, $supervisorId, ";
+    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $teachingMethodId, $createdAt, $supervisorId, ";
   }
 }
 
