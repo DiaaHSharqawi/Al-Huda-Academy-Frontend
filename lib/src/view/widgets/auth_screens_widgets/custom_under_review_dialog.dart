@@ -21,6 +21,7 @@ class CustomSupervisorAccountUnderReviewDialog extends StatelessWidget {
           description: 'حسابك قيد المراجعة من قبل الادارة',
           btnOkOnPress: controller.navigateToLoginScreen,
           dismissOnTouchOutside: false,
+          dismissOnBackKeyPress: false,
           btnOkText: 'تسجيل الخروج',
         );
       }

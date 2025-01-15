@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -5,8 +6,10 @@ import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_searched_group_details_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/participant/send_request_to_join_group_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class ParticipantSearchedGroupDetailsScreen
@@ -47,7 +50,7 @@ class ParticipantSearchedGroupDetailsScreen
                           const SizedBox(
                             height: 16.0,
                           ),
-                          _buildJoinGroupButton(),
+                          _buildJoinGroupButton(context),
                         ],
                       ),
                     ),
@@ -58,7 +61,7 @@ class ParticipantSearchedGroupDetailsScreen
     );
   }
 
-  Widget _buildJoinGroupButton() {
+  Widget _buildJoinGroupButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: CustomButton(
@@ -70,9 +73,66 @@ class ParticipantSearchedGroupDetailsScreen
         fontWeight: FontWeight.bold,
         onPressed: () {
           debugPrint("Join Group Button Pressed");
+          _showDialog(context);
         },
       ),
     );
+  }
+
+  Future _showDialog(BuildContext context) {
+    const dialogType = DialogType.info;
+    const title = 'طلب الإنضمام';
+    const description = 'هل تريد تقديم طلب للإنضمام إلى هذه المجموعة؟';
+
+    return CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: dialogType,
+        title: title,
+        description: description,
+        btnOkOnPress: () async {
+          debugPrint("btnOkOnPress");
+
+          await _handelJoinGroup(context);
+        },
+        btnCancelOnPress: () {});
+  }
+
+  Future<void> _handelJoinGroup(BuildContext context) async {
+    SendRequestToJoinGroupResponseModel sendRequestToJoinGroupResponseModel =
+        await controller.sendRequestToJoinGroup();
+
+    if (sendRequestToJoinGroupResponseModel.statusCode == 200) {
+      const dialogType = DialogType.success;
+      const title = 'تم تقديم الطلب';
+      const description = 'تم تقديم طلبك للإنضمام إلى المجموعة بنجاح.';
+
+      if (!context.mounted) return;
+
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: dialogType,
+        title: title,
+        description: description,
+        dismissOnBackKeyPress: false,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          controller.navigateToSearchGroupScreen();
+        },
+      );
+    } else {
+      if (!context.mounted) return;
+
+      const dialogType = DialogType.error;
+      const title = 'فشل تقديم الطلب';
+
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: dialogType,
+        title: title,
+        description: sendRequestToJoinGroupResponseModel.message!,
+        btnOkOnPress: () {},
+      );
+    }
   }
 
   Widget _buildGroupDetails() {
@@ -248,7 +308,6 @@ class ParticipantSearchedGroupDetailsScreen
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: SizedBox(
-        height: 350,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

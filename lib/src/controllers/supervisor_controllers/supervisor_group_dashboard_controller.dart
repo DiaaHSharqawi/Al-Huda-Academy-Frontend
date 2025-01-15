@@ -65,15 +65,19 @@ class SupervisorGroupDashboardController extends GetxController {
     }
   }
 
-  void navigateToParticipantJoinRequestScreen() {}
-
-  void navigateToGroupJoinRequestScreen(String groupId) {
+  Future<void> navigateToGroupJoinRequestScreen(String groupId) async {
     debugPrint("Navigate to Group Join Request Screen");
     debugPrint("Group ID: $groupId");
 
-    Get.toNamed(
+    var result = await Get.toNamed(
       AppRoutes.supervisorGroupJoinRequest,
       arguments: groupId,
     );
+
+    debugPrint("result *--->: $result");
+
+    debugPrint("shouldRefreshData ");
+    groupDashboard.value = null;
+    await fetchSupervisorGroupDashboard();
   }
 }

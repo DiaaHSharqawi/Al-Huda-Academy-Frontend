@@ -86,9 +86,12 @@ class LoginController extends GetxController {
     debugPrint(appService.user.toJson().toString());
 
     try {
-      await OneSignal.User.addTags(
-        {"user": appService.user.value!.getId},
-      );
+      /*await OneSignal.User.addTagWithKey(
+        "user${appService.user.value!.getId}",
+        appService.user.value!.getId,
+      );*/
+
+      await OneSignal.login(appService.user.value!.getId.toString());
     } catch (e) {
       debugPrint("Error adding OneSignal tags: $e");
     }

@@ -1,9 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_group_join_request_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_box.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
@@ -11,6 +13,8 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_pagination_widge
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_show_boxes_drop_down_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/accept_supervisor_group_join_request_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/reject_supervisor_group_join_request_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
@@ -113,6 +117,14 @@ class SupervisorGroupJoinRequestScreen
                             imagePath: controller.groupJoinRequestsList[index]
                                 .participant?.profileImage!,
                             onTap: () {
+                              controller.selectedParticipantId.value =
+                                  controller.groupJoinRequestsList[index]
+                                      .participantId
+                                      .toString();
+
+                              debugPrint(
+                                  "Selected participant id: ${controller.selectedParticipantId.value}");
+
                               _showModalBottomSheet(context, index: index);
                             },
                           ),
@@ -179,9 +191,13 @@ class SupervisorGroupJoinRequestScreen
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(child: _buildAcceptRequestButton()),
+                      Expanded(
+                        child: _buildAcceptRequestButton(context),
+                      ),
                       const SizedBox(width: 16.0),
-                      Expanded(child: _buildRejectRequestButton()),
+                      Expanded(
+                        child: _buildRejectRequestButton(context),
+                      ),
                     ],
                   ),
                 ],
@@ -354,7 +370,7 @@ class SupervisorGroupJoinRequestScreen
     );
   }
 
-  Widget _buildAcceptRequestButton() {
+  Widget _buildAcceptRequestButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: CustomButton(
@@ -364,14 +380,110 @@ class SupervisorGroupJoinRequestScreen
         buttonTextColor: AppColors.white,
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
-        onPressed: () {
-          // Handle accept request
+        onPressed: () async {
+          _buildAcceptRequestConfirmationDialog(context);
         },
       ),
     );
   }
 
-  Widget _buildRejectRequestButton() {
+  Future<void> refreshData() async {
+    controller.groupJoinRequestsList.clear();
+    controller.clearFilterQueryParams();
+
+    await controller.fetchGroupJoinRequests();
+  }
+
+  Future<void> _buildAcceptRequestConfirmationDialog(BuildContext context) {
+    return CustomAwesomeDialog.showAwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      title: "تأكيد قبول الطلب",
+      description: "هل تريد قبول الطلب؟",
+      btnOkOnPress: () {
+        _handelAcceptRequest(context);
+      },
+      btnCancelOnPress: () {},
+    );
+  }
+
+  void _handelAcceptRequest(BuildContext context) async {
+    AcceptSupervisorGroupJoinRequestResponseModel
+        acceptSupervisorGroupJoinRequestResponseModel =
+        await controller.acceptGroupJoinRequest();
+
+    if (acceptSupervisorGroupJoinRequestResponseModel.statusCode == 200) {
+      if (!context.mounted) return;
+
+      debugPrint("Group join request accepted successfully");
+
+      CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        title: "تم قبول الطلب",
+        description: acceptSupervisorGroupJoinRequestResponseModel.message!,
+        btnOkOnPress: () async {
+          await refreshData();
+
+          if (!context.mounted) return;
+
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      if (!context.mounted) return;
+
+      debugPrint("Failed to accept group join request");
+
+      CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        title: "فشل في قبول الطلب",
+        description: acceptSupervisorGroupJoinRequestResponseModel.message!,
+        btnOkOnPress: () {},
+      );
+    }
+  }
+
+  void _handelRejectRequest(BuildContext context) async {
+    RejectSupervisorGroupJoinRequestResponseModel
+        rejectSupervisorGroupJoinRequestResponseModel =
+        await controller.rejectGroupJoinRequest();
+
+    if (rejectSupervisorGroupJoinRequestResponseModel.statusCode == 200) {
+      if (!context.mounted) return;
+
+      debugPrint("Group join request rejected successfully");
+
+      CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        title: "تم رفض الطلب",
+        description: rejectSupervisorGroupJoinRequestResponseModel.message!,
+        btnOkOnPress: () async {
+          await refreshData();
+
+          if (!context.mounted) return;
+
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      if (!context.mounted) return;
+
+      debugPrint("Failed to accept group join request");
+
+      CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        title: "فشل في قبول الطلب",
+        description: rejectSupervisorGroupJoinRequestResponseModel.message!,
+        btnOkOnPress: () {},
+      );
+    }
+  }
+
+  Widget _buildRejectRequestButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: CustomButton(
@@ -382,9 +494,22 @@ class SupervisorGroupJoinRequestScreen
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
         onPressed: () {
-          // Handle accept request
+          _buildRejectRequestConfirmationDialog(context);
         },
       ),
+    );
+  }
+
+  Future<void> _buildRejectRequestConfirmationDialog(BuildContext context) {
+    return CustomAwesomeDialog.showAwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      title: "تأكيد رفض الطلب",
+      description: "هل انت متأكد من رفض الطلب؟",
+      btnOkOnPress: () {
+        _handelRejectRequest(context);
+      },
+      btnCancelOnPress: () {},
     );
   }
 

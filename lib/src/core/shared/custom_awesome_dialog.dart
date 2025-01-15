@@ -15,6 +15,7 @@ class CustomAwesomeDialog {
     VoidCallback? btnOkOnPress,
     VoidCallback? btnCancelOnPress,
     bool dismissOnTouchOutside = true,
+    bool dismissOnBackKeyPress = true,
     String? btnOkText,
   }) async {
     final AppService appService = Get.find<AppService>();
@@ -29,6 +30,7 @@ class CustomAwesomeDialog {
       dialogType: dialogType,
       title: title,
       desc: description,
+      dismissOnBackKeyPress: dismissOnBackKeyPress,
       buttonsTextStyle: GoogleFonts.getFont(
         color: Colors.white,
         fontFamily,

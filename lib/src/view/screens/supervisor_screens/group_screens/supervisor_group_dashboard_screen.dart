@@ -4,7 +4,6 @@ import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_group_dashboard_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
-import 'package:moltqa_al_quran_frontend/src/core/shared/custom_box.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_card.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
@@ -83,6 +82,61 @@ class SupervisorGroupDashboardScreen
       child: SingleChildScrollView(
         child: Column(
           children: [
+            Obx(
+              () {
+                if (controller
+                    .groupDashboard.value!.groupJoinRequestsDashboard.isEmpty) {
+                  return const Center(
+                    heightFactor: 4.0,
+                    child: CustomGoogleTextWidget(
+                      text: 'لا يوجد اي طلبات انضمام حالياً',
+                      fontSize: 18.0,
+                      color: AppColors.blackColor,
+                    ),
+                  );
+                } else {
+                  return CustomCard(
+                    paddingListTile: 24.0,
+                    marginListTile: 32.0,
+                    gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
+                    cardText:
+                        'عدد طلبات الانضمام: ${controller.groupDashboard.value!.groupJoinRequestsDashboard.length}',
+                    cardTextSize: 18.0,
+                    cardInnerBoxShadowColor:
+                        Colors.deepOrangeAccent.withOpacity(0.8),
+                    cardTextColor: AppColors.blackColor,
+                    avatarCard: const FaIcon(
+                      FontAwesomeIcons.userPlus,
+                      color: Colors.black87,
+                      size: 30.0,
+                    ),
+                    icon: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.blackColor,
+                      size: 30.0,
+                    ),
+                    onTap: () {
+                      controller.navigateToGroupJoinRequestScreen(
+                        controller.groupId.value,
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+/*
+  Widget _buildGroupJoinRequestList() {
+    return SizedBox(
+      height: 240.0,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
             Obx(() {
               if (controller
                   .groupDashboard.value!.groupJoinRequestsDashboard.isEmpty) {
@@ -132,6 +186,7 @@ class SupervisorGroupDashboardScreen
       ),
     );
   }
+*/
 
   Widget _buildGroupJoinRequestHeader() {
     return Row(

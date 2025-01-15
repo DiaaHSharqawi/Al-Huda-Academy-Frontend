@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/participant/participant_searched_group_details_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/memorization_group_details_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/participant/send_request_to_join_group_response_model.dart';
 
 class ParticipantSearchedGroupDetailsController extends GetxController {
   @override
@@ -42,6 +43,7 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
   var groupId = "".obs;
 
   var isLoading = false.obs;
+  var loader = false.obs;
 
   final ParticipantSearchedGroupDetailsService
       _participantSearchedGroupDetailsService;
@@ -74,5 +76,33 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
     } catch (e) {
       debugPrint('Error fetching memorization group details, controller: $e');
     }
+  }
+
+  Future<SendRequestToJoinGroupResponseModel> sendRequestToJoinGroup() async {
+    try {
+      loader(true);
+
+      SendRequestToJoinGroupResponseModel sendRequestToJoinGroupResponseModel =
+          await _participantSearchedGroupDetailsService
+              .sendRequestToJoinGroup(groupId.toString());
+
+      debugPrint(
+          "sendRequestToJoinGroupResponseModel: $sendRequestToJoinGroupResponseModel");
+
+      return sendRequestToJoinGroupResponseModel;
+    } catch (e) {
+      debugPrint('Error sending request to join group: $e');
+      return SendRequestToJoinGroupResponseModel(
+        statusCode: 500,
+        success: false,
+        message: "Failed to send request to join group",
+      );
+    } finally {
+      loader(false);
+    }
+  }
+
+  void navigateToSearchGroupScreen() {
+    Get.back();
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/bottom_sheet/gf_bottom_sheet.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_join_request_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/accept_supervisor_group_join_request_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/reject_supervisor_group_join_request_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/supervisor/supervisor_group_join_requests_response_model.dart';
 
 class SupervisorGroupJoinRequestController extends GetxController {
@@ -28,6 +30,8 @@ class SupervisorGroupJoinRequestController extends GetxController {
 
   final GFBottomSheetController gfBottomSheetController =
       GFBottomSheetController();
+
+  var selectedParticipantId = "".obs;
 
   @override
   Future<void> onInit() async {
@@ -105,5 +109,61 @@ class SupervisorGroupJoinRequestController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  Future<AcceptSupervisorGroupJoinRequestResponseModel>
+      acceptGroupJoinRequest() async {
+    debugPrint("acceptGroupJoinRequest");
+
+    try {
+      AcceptSupervisorGroupJoinRequestResponseModel
+          acceptSupervisorGroupJoinRequestResponseModel =
+          await _supervisorGroupJoinRequestService.acceptGroupJoinRequest(
+        groupId.value,
+        selectedParticipantId.value,
+      );
+
+      return acceptSupervisorGroupJoinRequestResponseModel;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return AcceptSupervisorGroupJoinRequestResponseModel(
+        statusCode: 500,
+        success: false,
+        message: "Failed to accept supervisor group join request",
+      );
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<RejectSupervisorGroupJoinRequestResponseModel>
+      rejectGroupJoinRequest() async {
+    debugPrint("rejectGroupJoinRequest");
+
+    try {
+      RejectSupervisorGroupJoinRequestResponseModel
+          rejectSupervisorGroupJoinRequestResponseModel =
+          await _supervisorGroupJoinRequestService.rejectGroupJoinRequest(
+        groupId.value,
+        selectedParticipantId.value,
+      );
+
+      return rejectSupervisorGroupJoinRequestResponseModel;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return RejectSupervisorGroupJoinRequestResponseModel(
+        statusCode: 500,
+        success: false,
+        message: "Failed to accept supervisor group join request",
+      );
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  void navigateToGroupJoinRequestScreen() {
+    Get.back(
+      result: true,
+    );
   }
 }
