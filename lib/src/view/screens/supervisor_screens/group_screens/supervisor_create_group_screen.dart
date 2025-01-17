@@ -27,6 +27,7 @@ class SupervisorCreateGroupScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: Container(
           width: double.infinity,

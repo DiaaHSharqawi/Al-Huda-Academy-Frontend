@@ -61,7 +61,9 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
       MemorizationGroupDetailsResponseModel
           memorizationGroupDetailsResponseModel =
           await _participantSearchedGroupDetailsService
-              .fetchMemorizationGroupDetails(groupId.toString());
+              .fetchMemorizationGroupDetails(
+        groupId.toString(),
+      );
 
       debugPrint(
           "memorizationGroupDetailsResponseModel fetched : ${memorizationGroupDetailsResponseModel.memorizationGroup?.juzas.toString()}");
@@ -83,8 +85,9 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
       loader(true);
 
       SendRequestToJoinGroupResponseModel sendRequestToJoinGroupResponseModel =
-          await _participantSearchedGroupDetailsService
-              .sendRequestToJoinGroup(groupId.toString());
+          await _participantSearchedGroupDetailsService.sendRequestToJoinGroup(
+        groupId.toString(),
+      );
 
       debugPrint(
           "sendRequestToJoinGroupResponseModel: $sendRequestToJoinGroupResponseModel");

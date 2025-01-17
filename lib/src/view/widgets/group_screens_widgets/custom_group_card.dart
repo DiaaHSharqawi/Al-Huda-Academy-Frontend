@@ -15,6 +15,7 @@ class CustomGroupCard extends StatelessWidget {
   final String? groupSupervisorName;
   final String? groupDescription;
   final String? groupCompletionRate;
+  final int? recommendedFlag;
 
   const CustomGroupCard({
     super.key,
@@ -29,6 +30,7 @@ class CustomGroupCard extends StatelessWidget {
     this.days,
     this.groupTime,
     this.groupCompletionRate,
+    this.recommendedFlag,
   });
 
   @override
@@ -77,9 +79,46 @@ class CustomGroupCard extends StatelessWidget {
           days == null ? const SizedBox.shrink() : _buildGroupDays(),
           groupTime == null ? const SizedBox.shrink() : _buildGroupTime(),
           const SizedBox(height: 16.0),
+          (recommendedFlag == null || recommendedFlag == 0)
+              ? const SizedBox.shrink()
+              : _buildRecommendedFlag(),
+          const SizedBox(height: 16.0),
           _buildDetailsButton(),
         ],
       ),
+    );
+  }
+
+  Widget _buildRecommendedFlag() {
+    if (recommendedFlag != 1) {
+      return const SizedBox.shrink();
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: const Row(
+            children: [
+              Icon(
+                Icons.recommend,
+                color: AppColors.primaryColor,
+              ),
+              SizedBox(width: 8.0),
+              CustomGoogleTextWidget(
+                text: "مقترح لك",
+                fontSize: 18.0,
+                color: Colors.black,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

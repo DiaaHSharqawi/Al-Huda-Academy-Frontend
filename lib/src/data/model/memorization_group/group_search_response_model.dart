@@ -62,6 +62,7 @@ class GroupSearchModel {
     required this.languages,
     required this.quranMemorizingAmount,
     required this.groupCompletionRateId,
+    required this.recommendedFlag,
   });
 
   final int? id;
@@ -83,6 +84,7 @@ class GroupSearchModel {
   final List<GroupSearchResponseLanguage> languages;
   final QuranMemorizingAmount? quranMemorizingAmount;
   final int? groupCompletionRateId;
+  final int? recommendedFlag;
 
   factory GroupSearchModel.fromJson(Map<String, dynamic> json) {
     return GroupSearchModel(
@@ -99,6 +101,7 @@ class GroupSearchModel {
       groupCompletionRateId: json["group_completion_rate_id"],
       supervisorId: json["supervisor_id"],
       teachingMethodId: json["teaching_method_id"],
+      recommendedFlag: json["recommended_flag"],
       quranMemorizingAmount: json["QuranMemorizingAmount"] == null
           ? null
           : QuranMemorizingAmount.fromJson(json["QuranMemorizingAmount"]),

@@ -57,7 +57,8 @@ class ParticipantSearchedGroupDetailsService extends BaseGetxService {
   }
 
   Future<SendRequestToJoinGroupResponseModel> sendRequestToJoinGroup(
-      String groupId) async {
+    String groupId,
+  ) async {
     String sendRequestToJoinGroupRoute =
         "${super.getAlHudaBaseURL}/participant/groups/$groupId/send-request-to-join-group";
 
@@ -67,7 +68,7 @@ class ParticipantSearchedGroupDetailsService extends BaseGetxService {
     debugPrint("$url");
     String? lang = appService.languageStorage.read('language');
     debugPrint("lang device : $lang");
-
+    debugPrint("Token: ${await super.getToken()}");
     try {
       final response = await http.post(
         url,

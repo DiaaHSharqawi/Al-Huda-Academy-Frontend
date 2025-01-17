@@ -7,7 +7,6 @@ import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filt
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_search_filter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_langugue_filtter.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_search_response_model.dart';
@@ -20,8 +19,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
   final surahs = <Surah>[].obs;
 
   final List<Juza> juzas = [];
-
-  final List<Gender> genders = [];
 
   final List<GroupGoal> groupGoals = [];
 
@@ -56,7 +53,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       };
       await getSurahList();
       await getJuzaList();
-      await getGenderList();
       await getGroupGoalList();
       await getGroupLanguagesList();
       await getTeachingMethodsList();
@@ -170,16 +166,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     }
   }
 
-  Future<void> getGenderList() async {
-    var genders =
-        await _participantSearchMemorizationGroupService.getGenderList();
-    debugPrint("genders");
-    debugPrint(genders.toString());
-    if (genders.isNotEmpty) {
-      this.genders.addAll(genders);
-    }
-  }
-
   Future<void> getGroupGoalList() async {
     var groupGoalsResponse =
         await _participantSearchMemorizationGroupService.getGroupGoalList();
@@ -236,18 +222,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
     if (searchController.text.isNotEmpty) {
       queryParams['groupName'] = searchController.text;
-    }
-
-    if (selectedGender.value != GenderSearchFiltter.notSelected) {
-      debugPrint("selectedGender: ${selectedGender.value}");
-
-      final gender = genders.firstWhereOrNull(
-        (gender) => gender.nameEn == selectedGender.value.name,
-      );
-      debugPrint("selected  $gender");
-      if (gender != null) {
-        queryParams['gender_id'] = gender.id;
-      }
     }
 
     if (selectedGroupObjective.value != GroupObjectiveSearchFiltter.all) {

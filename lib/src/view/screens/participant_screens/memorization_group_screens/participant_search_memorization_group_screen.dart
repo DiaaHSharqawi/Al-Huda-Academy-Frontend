@@ -9,7 +9,6 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_show_boxes_drop_down_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_search_filter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_langugue_filtter.dart';
@@ -151,6 +150,8 @@ class ParticipantSearchMemorizationGroupScreen
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     width: double.infinity,
                     child: CustomGroupCard(
+                      recommendedFlag:
+                          controller.memorizationGroups[index].recommendedFlag!,
                       groupTime:
                           "${controller.memorizationGroups[index].startTime!} - ${controller.memorizationGroups[index].endTime!}",
                       days: controller.memorizationGroups[index].days
@@ -231,7 +232,6 @@ class ParticipantSearchMemorizationGroupScreen
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            _buildGenderFilter(),
             const SizedBox(
               height: 16.0,
             ),
@@ -553,60 +553,6 @@ class ParticipantSearchMemorizationGroupScreen
               if (value != null) {
                 debugPrint("Selected role: $value");
                 controller.selectedSupervisorLanguage.value = value;
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGenderFilter() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "الجنس",
-        fontSize: 16.0,
-      ),
-      children: [
-        ...controller.genders.map((gender) {
-          return Obx(
-            () => CustomRadioListTile<GenderSearchFiltter>(
-              title: CustomGoogleTextWidget(
-                text: gender.nameAr!,
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-                color: AppColors.blackColor,
-              ),
-              value: GenderSearchFiltter.values.firstWhere(
-                  (genderSearch) => genderSearch.name == gender.nameEn),
-              groupValue: controller.selectedGender.value,
-              selected:
-                  controller.selectedGender.value.toString() == gender.nameEn,
-              onChanged: (value) {
-                if (value != null) {
-                  debugPrint("Selected $value");
-                  controller.selectedGender.value = value;
-                }
-              },
-            ),
-          );
-        }),
-        Obx(
-          () => CustomRadioListTile<GenderSearchFiltter>(
-            title: const CustomGoogleTextWidget(
-              text: 'الكل',
-              fontSize: 16.0,
-              fontWeight: FontWeight.normal,
-              color: AppColors.blackColor,
-            ),
-            value: GenderSearchFiltter.both,
-            groupValue: controller.selectedGender.value,
-            selected:
-                controller.selectedGender.value == GenderSearchFiltter.both,
-            onChanged: (value) {
-              if (value != null) {
-                debugPrint("Selected role: $value");
-                controller.selectedGender.value = value;
               }
             },
           ),
