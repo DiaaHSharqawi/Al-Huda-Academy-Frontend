@@ -3,8 +3,10 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/create_group_supervisor_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
@@ -14,7 +16,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart
 import 'package:moltqa_al_quran_frontend/src/core/utils/group_validations.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_gender_group_enum.dart';
-import 'package:moltqa_al_quran_frontend/src/view/widgets/auth_screens_widgets/custom_auth_text_form_field.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/quran_memorizing_amount/quran_memorizing_amount_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class SupervisorCreateGroupScreen
@@ -25,6 +27,7 @@ class SupervisorCreateGroupScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: Container(
           width: double.infinity,
@@ -71,11 +74,11 @@ class SupervisorCreateGroupScreen
                         const SizedBox(
                           height: 32.0,
                         ),
-                        _buildGroupLevel(),
+                        _buildGroupObjective(),
                         const SizedBox(
                           height: 32.0,
                         ),
-                        _buildGroupObjective(),
+                        _buildQuranMemorizingAmount(),
                         const SizedBox(
                           height: 32.0,
                         ),
@@ -89,13 +92,88 @@ class SupervisorCreateGroupScreen
     );
   }
 
+  Widget _buildQuranMemorizingAmount() {
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              CustomGoogleTextWidget(
+                text: 'معدل انجاز الحلقة يومياً',
+                fontFamily: AppFonts.arabicFont,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+              SizedBox(width: 8.0),
+              CustomGoogleTextWidget(
+                text: ' *',
+                color: Colors.red,
+                fontSize: 32.0,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (controller.quranMemorizingAmounts.isNotEmpty)
+            GFDropdown(
+              dropdownColor: Colors.white,
+              focusColor: Colors.white,
+              items: controller.quranMemorizingAmounts.map((entry) {
+                return DropdownMenuItem<QuranMemorizingAmount>(
+                  key: Key(entry.id.toString()),
+                  value: entry,
+                  child: CustomGoogleTextWidget(
+                    text: entry.amountArabic!,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                debugPrint('newValue: $newValue');
+
+                controller.selectedQuranMemorizingAmountId.value =
+                    newValue!.id.toString();
+
+                debugPrint(
+                    "controller.selectedQuranMemorizingAmountId: ${controller.selectedQuranMemorizingAmountId.value}");
+              },
+              value: controller.quranMemorizingAmounts.firstWhereOrNull(
+                  (entry) =>
+                      entry.id.toString() ==
+                      controller.selectedQuranMemorizingAmountId.value),
+              hint: const CustomGoogleTextWidget(
+                text: 'اختر معدل الانجاز',
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+              borderRadius: BorderRadius.circular(5),
+              border: const BorderSide(color: Colors.black, width: 1),
+            ),
+          if (controller.isSubmitting.value &&
+              controller.selectedQuranMemorizingAmountId.value.isEmpty)
+            const CustomGoogleTextWidget(
+              text: 'يرجى اختيار معدل الانجاز',
+              color: Colors.red,
+              fontSize: 14.0,
+            ),
+        ],
+      );
+    });
+  }
+
   Widget _buildGroupObjective() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "الهدف من المجموعة",
-        fontSize: 16.0,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const CustomGoogleTextWidget(
+          text: "الهدف من المجموعة",
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
         ...controller.groupGoals.map((goal) {
           return Obx(
             () => CustomRadioListTile<GroupObjectiveEnum>(
@@ -124,6 +202,19 @@ class SupervisorCreateGroupScreen
             ),
           );
         }),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Obx(() => (controller.selectedGroupObjective.value ==
+                    GroupObjectiveEnum.notSelected &&
+                controller.isSubmitting.value)
+            ? const CustomGoogleTextWidget(
+                text: "يرجى اختيار الهدف من المجموعة",
+                fontSize: 14.0,
+                fontWeight: FontWeight.normal,
+                color: Colors.red,
+              )
+            : const SizedBox.shrink()),
       ],
     );
   }
@@ -159,96 +250,16 @@ class SupervisorCreateGroupScreen
                   controller.navigateToCreateMemorizationGroupContentScreen();
                 } else {
                   await CustomAwesomeDialog.showAwesomeDialog(
-                    context,
-                    DialogType.error,
-                    'خطأ',
-                    "اسم المجموعة موجود بالفعل، الرجاء اختيار اسم آخر",
+                    context: context,
+                    dialogType: DialogType.error,
+                    title: 'خطأ',
+                    description: getGroupByGroupName['message'],
+                    btnOkOnPress: () {},
+                    btnCancelOnPress: null,
                   );
                 }
               }),
         ));
-  }
-
-  Widget _buildGroupLevel() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CustomGoogleTextWidget(
-          text: "اختر مستوى المجموعة",
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-        const SizedBox(
-          height: 16.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() {
-                if (controller.participantLevels.length < 3) {
-                  return const Center(
-                    child: Text('Not enough data to display slider'),
-                  );
-                }
-                double minLevel =
-                    controller.participantLevels.first.id!.toDouble();
-                double maxLevel =
-                    controller.participantLevels[2].id!.toDouble();
-
-                debugPrint(
-                    "Min level: $minLevel , Max level: $maxLevel ,controller.participantLevel.length ${controller.participantLevels.length}");
-                return Column(
-                  children: [
-                    RangeSlider(
-                      activeColor: AppColors.primaryColor,
-                      inactiveColor: Colors.grey,
-                      values: RangeValues(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel),
-                      ),
-                      min: minLevel,
-                      max: maxLevel,
-                      divisions: 2,
-                      labels: RangeLabels(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                      ),
-                      onChanged: (RangeValues values) {
-                        debugPrint("Selected values: $values");
-                        controller.selectedParticipantLevels.value = values;
-                        controller.setSelectedLevelId();
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:
-                          controller.participantLevels.take(3).map((level) {
-                        return CustomGoogleTextWidget(
-                          text: level.participantLevelAr!,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.blackColor,
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                );
-              }),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildGroupGender() {
@@ -302,7 +313,20 @@ class SupervisorCreateGroupScreen
               },
             ),
           ],
-        )
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Obx(() => (controller.selectedGender.value ==
+                    SupervisorGenderGroupEnum.notSelected &&
+                controller.isSubmitting.value)
+            ? const CustomGoogleTextWidget(
+                text: "يرجى اختيار جنس المجموعة",
+                fontSize: 14.0,
+                fontWeight: FontWeight.normal,
+                color: Colors.red,
+              )
+            : const SizedBox.shrink()),
       ],
     );
   }
@@ -343,6 +367,18 @@ class SupervisorCreateGroupScreen
                 );
               }).toList(),
             )),
+        const SizedBox(
+          height: 16.0,
+        ),
+        Obx(() =>
+            (controller.selectedDays.isEmpty && controller.isSubmitting.value)
+                ? const CustomGoogleTextWidget(
+                    text: "يرجى اختيار ايام المجموعة",
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.red,
+                  )
+                : const SizedBox.shrink()),
       ],
     );
   }
@@ -391,8 +427,8 @@ class SupervisorCreateGroupScreen
         const SizedBox(
           height: 16.0,
         ),
-        CustomAuthTextFormField(
-          textFormHintText: "مجموعة عمر بن الخطاب",
+        CustomTextFormField(
+          textFormHintText: "أكتب هنا",
           controller: controller.groupNameController,
           textFormFieldValidator: GroupValidations.validateGroupName,
           autovalidateMode: controller.isSubmitting.value
@@ -449,13 +485,14 @@ class SupervisorCreateGroupScreen
         const SizedBox(
           height: 16.0,
         ),
-        CustomAuthTextFormField(
+        CustomTextFormField(
           textFormHintText: '12',
           controller: controller.groupCapacityController,
           textFormFieldValidator: GroupValidations.validateGroupCapacity,
           autovalidateMode: controller.isSubmitting.value
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
+          keyboardType: TextInputType.number,
         ),
       ],
     );

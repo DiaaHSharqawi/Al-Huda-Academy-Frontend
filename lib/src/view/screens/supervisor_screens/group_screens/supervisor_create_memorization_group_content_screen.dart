@@ -276,19 +276,27 @@ class SupervisorCreateMemorizationGroupContentScreen
                                                     const EdgeInsets.all(8.0),
                                                 child: CustomTextFormField(
                                                   textFormFieldValidator:
-                                                      GroupValidations
-                                                          .validateAyat,
+                                                      (value) =>
+                                                          GroupValidations
+                                                              .validateAyat(
+                                                    value,
+                                                    surah.numberOfAyahs!,
+                                                  ),
                                                   maxLines: 1,
-                                                  autovalidateMode:
-                                                      AutovalidateMode
+                                                  iconName: Icons
+                                                      .format_list_numbered_rtl,
+                                                  autovalidateMode: controller
+                                                          .isSubmitting.value
+                                                      ? AutovalidateMode.always
+                                                      : AutovalidateMode
                                                           .onUserInteraction,
                                                   controller: controller
                                                           .textControllers[
                                                       surah.id!]!,
-                                                  enableBorder: false,
                                                   textFormLabelText:
                                                       "ادخل الايات",
                                                   textFormHintText: "5-1,15-10",
+                                                  enableBorder: false,
                                                   onChanged: (value) {
                                                     controller
                                                         .textControllers[
@@ -472,18 +480,23 @@ class SupervisorCreateMemorizationGroupContentScreen
 
               if (response['statusCode'] == 201) {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.success,
-                  "تم انشاء المجموعة بنجاح",
-                  response['message'],
+                  context: context,
+                  dialogType: DialogType.success,
+                  title: "تم انشاء المجموعة بنجاح",
+                  description: response['message'],
+                  btnOkOnPress: () {
+                    controller.navigateToSupervisorDashboardScreen();
+                  },
+                  btnCancelOnPress: null,
                 );
-                controller.navigateToSupervisorDashboardScreen();
               } else {
                 await CustomAwesomeDialog.showAwesomeDialog(
-                  context,
-                  DialogType.error,
-                  "حدث خطأ",
-                  response['message'],
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: "حدث خطأ",
+                  description: response['message'],
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
                 );
               }
             },

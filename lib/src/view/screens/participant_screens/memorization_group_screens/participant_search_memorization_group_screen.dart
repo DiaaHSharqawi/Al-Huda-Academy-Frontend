@@ -4,10 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_search_memorization_group_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_pagination_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_radio_list_tile.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_show_boxes_drop_down_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_search_filter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_langugue_filtter.dart';
@@ -134,63 +135,87 @@ class ParticipantSearchMemorizationGroupScreen
           ),
         );
       }
-      return NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            //  debugPrint("Notification: $notification");
-            if (notification is ScrollUpdateNotification) {
-              if (notification.scrollDelta != null) {
-                // debugPrint("Scrolling");
-                return false;
-              }
-            }
-            return true;
-          },
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            controller: controller.scrollController,
-            itemCount: controller.memorizationGroups.length +
-                (controller.isMoreDataLoading.value ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < controller.memorizationGroups.length) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  width: double.infinity,
-                  child: CustomGroupCard(
-                    groupTime:
-                        "${controller.memorizationGroups[index].startTime!} - ${controller.memorizationGroups[index].endTime!}",
-                    days: controller.memorizationGroups[index].days
-                        .map((day) => day.nameAr)
-                        .join(', '),
-                    groupName: controller.memorizationGroups[index].groupName!,
-                    groupGoal: controller
-                        .memorizationGroups[index].groupGoal!.groupGoalAr!,
-                    studentsCount: 0.toString(),
-                    groupGender:
-                        controller.memorizationGroups[index].gender!.nameAr!,
-                    participantsLevel: controller.memorizationGroups[index]
-                        .participantLevel!.participantLevelAr!,
-                    onDetailsPressed: () {
-                      debugPrint("Details pressed");
-                      debugPrint(
-                          "Group id: ${controller.memorizationGroups[index].id}");
-                      debugPrint("index: $index");
-                      controller.navigateToGroupDetailsScreen(
-                        controller.memorizationGroups[index].id!.toString(),
-                      );
-                    },
-                  ),
-                );
-              }
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              controller: controller.scrollController,
+              itemCount: controller.memorizationGroups.length +
+                  (controller.isMoreDataLoading.value ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < controller.memorizationGroups.length) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    width: double.infinity,
+                    child: CustomGroupCard(
+                      recommendedFlag:
+                          controller.memorizationGroups[index].recommendedFlag!,
+                      groupTime:
+                          "${controller.memorizationGroups[index].startTime!} - ${controller.memorizationGroups[index].endTime!}",
+                      days: controller.memorizationGroups[index].days
+                          .map((day) => day.nameAr)
+                          .join(', '),
+                      groupName:
+                          controller.memorizationGroups[index].groupName!,
+                      groupCompletionRate: controller.memorizationGroups[index]
+                          .quranMemorizingAmount?.amountArabic!,
+                      groupGoal: controller
+                          .memorizationGroups[index].groupGoal!.groupGoalAr!,
+                      groupGender:
+                          controller.memorizationGroups[index].gender!.nameAr!,
+                      onDetailsPressed: () {
+                        debugPrint("Details pressed");
+                        debugPrint(
+                            "Group id: ${controller.memorizationGroups[index].id}");
+                        debugPrint("index: $index");
+                        controller.navigateToGroupDetailsScreen(
+                          controller.memorizationGroups[index].id!.toString(),
+                        );
+                      },
+                    ),
+                  );
+                }
 
-              if (index == controller.totalMemorizationGroups) {
-                return const SizedBox.shrink();
-              }
+                if (index == controller.totalMemorizationGroups) {
+                  return const SizedBox.shrink();
+                }
 
-              return _buildLoadingIndicator();
-            },
-          ));
+                return _buildLoadingIndicator();
+              },
+            ),
+            const SizedBox(height: 16.0),
+            Obx(
+              () => controller.memorizationGroups.isEmpty
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: [
+                        CustomDropdownWidget(
+                          dropDownItems: controller.dropDownItems,
+                          limit: controller.limit,
+                          queryParams: controller.queryParams,
+                          fetcherFunction: controller.fetchMemorizationGroup,
+                        ),
+                        _buildPagination(),
+                      ],
+                    ),
+            ),
+          ],
+        ),
+      );
     });
+  }
+
+  Widget _buildPagination() {
+    return PaginationWidget(
+      queryParams: controller.queryParams,
+      currentPage: controller.currentPage,
+      totalPages: controller.totalPages,
+      dataFetchingFunction: controller.fetchMemorizationGroup,
+      primaryColor: AppColors.primaryColor,
+      textColor: AppColors.white,
+    );
   }
 
   Widget _buildFilterDialog(BuildContext context) {
@@ -207,7 +232,6 @@ class ParticipantSearchMemorizationGroupScreen
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            _buildGenderFilter(),
             const SizedBox(
               height: 16.0,
             ),
@@ -223,7 +247,6 @@ class ParticipantSearchMemorizationGroupScreen
             const SizedBox(
               height: 16.0,
             ),
-            _buildStudentsLevel(),
           ],
         ),
       ),
@@ -240,14 +263,14 @@ class ParticipantSearchMemorizationGroupScreen
           ),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             // Clear filter logic
             Navigator.of(context).pop();
             controller.queryParams.clear();
             controller.memorizationGroups.clear();
             controller.clearFilterQueryParams();
 
-            controller.fetchMemorizationGroup();
+            await controller.fetchMemorizationGroup();
             controller.isFilterApplied.value = false;
           },
           child: const CustomGoogleTextWidget(
@@ -285,80 +308,6 @@ class ParticipantSearchMemorizationGroupScreen
       ),
       backgroundColor: Colors.white,
       elevation: 24.0,
-    );
-  }
-
-  Widget _buildStudentsLevel() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "مستوى الطلاب",
-        fontSize: 16.0,
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() {
-                if (controller.participantLevel.length < 3) {
-                  return const Center(
-                    child: Text('Not enough data to display slider'),
-                  );
-                }
-                double minLevel =
-                    controller.participantLevel.first.id!.toDouble();
-                double maxLevel = controller.participantLevel[2].id!.toDouble();
-
-                debugPrint(
-                    "Min level: $minLevel , Max level: $maxLevel ,controller.participantLevel.length ${controller.participantLevel.length}");
-                return Column(
-                  children: [
-                    RangeSlider(
-                      activeColor: AppColors.primaryColor,
-                      inactiveColor: Colors.grey,
-                      values: RangeValues(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel),
-                      ),
-                      min: minLevel,
-                      max: maxLevel,
-                      divisions: 2,
-                      labels: RangeLabels(
-                        controller.selectedParticipantLevels.value.start
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                        controller.selectedParticipantLevels.value.end
-                            .clamp(minLevel, maxLevel)
-                            .toString(),
-                      ),
-                      onChanged: (RangeValues values) {
-                        debugPrint("Selected values: $values");
-                        controller.selectedParticipantLevels.value = values;
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:
-                          controller.participantLevel.take(3).map((level) {
-                        return CustomGoogleTextWidget(
-                          text: level.participantLevelAr!,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.blackColor,
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                );
-              }),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -604,60 +553,6 @@ class ParticipantSearchMemorizationGroupScreen
               if (value != null) {
                 debugPrint("Selected role: $value");
                 controller.selectedSupervisorLanguage.value = value;
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGenderFilter() {
-    return ExpansionTile(
-      title: const CustomGoogleTextWidget(
-        text: "الجنس",
-        fontSize: 16.0,
-      ),
-      children: [
-        ...controller.genders.map((gender) {
-          return Obx(
-            () => CustomRadioListTile<GenderSearchFiltter>(
-              title: CustomGoogleTextWidget(
-                text: gender.nameAr!,
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-                color: AppColors.blackColor,
-              ),
-              value: GenderSearchFiltter.values.firstWhere(
-                  (genderSearch) => genderSearch.name == gender.nameEn),
-              groupValue: controller.selectedGender.value,
-              selected:
-                  controller.selectedGender.value.toString() == gender.nameEn,
-              onChanged: (value) {
-                if (value != null) {
-                  debugPrint("Selected $value");
-                  controller.selectedGender.value = value;
-                }
-              },
-            ),
-          );
-        }),
-        Obx(
-          () => CustomRadioListTile<GenderSearchFiltter>(
-            title: const CustomGoogleTextWidget(
-              text: 'الكل',
-              fontSize: 16.0,
-              fontWeight: FontWeight.normal,
-              color: AppColors.blackColor,
-            ),
-            value: GenderSearchFiltter.both,
-            groupValue: controller.selectedGender.value,
-            selected:
-                controller.selectedGender.value == GenderSearchFiltter.both,
-            onChanged: (value) {
-              if (value != null) {
-                debugPrint("Selected role: $value");
-                controller.selectedGender.value = value;
               }
             },
           ),

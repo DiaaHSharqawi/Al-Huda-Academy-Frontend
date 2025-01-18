@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
   final double padding;
   final Widget? loadingWidget;
   final bool isEnabled;
+  final TextAlign? buttonTextAlign;
 
   const CustomButton(
       {super.key,
@@ -29,7 +30,8 @@ class CustomButton extends StatelessWidget {
       required this.onPressed,
       this.padding = 4,
       this.loadingWidget,
-      this.isEnabled = true});
+      this.isEnabled = true,
+      this.buttonTextAlign = TextAlign.start});
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class CustomButton extends StatelessWidget {
         padding: EdgeInsets.all(padding),
         child: loadingWidget ??
             CustomGoogleTextWidget(
+              textAlign: buttonTextAlign,
               text: buttonText,
               color: buttonTextColor,
               fontFamily: fontFamily,

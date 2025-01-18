@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/participant/participant_searched_group_details_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/memorization_group_details_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/participant/send_request_to_join_group_response_model.dart';
 
 class ParticipantSearchedGroupDetailsController extends GetxController {
   @override
@@ -11,7 +12,18 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
 
     debugPrint("Get.args: ${Get.arguments}");
 
-    await fetchMemorizationGroupDetails();
+    groupId.value = Get.arguments;
+    groupId.refresh();
+
+    try {
+      isLoading(true);
+
+      await fetchMemorizationGroupDetails();
+    } catch (e) {
+      debugPrint('Error in onInit: $e');
+    } finally {
+      isLoading(false);
+    }
   }
 
   String convertTo12HourFormat(String timeString) {
@@ -31,9 +43,9 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
   var groupId = "".obs;
 
   var isLoading = false.obs;
+  var loader = false.obs;
 
   final ParticipantSearchedGroupDetailsService
-      // ignore: unused_field
       _participantSearchedGroupDetailsService;
 
   ParticipantSearchedGroupDetailsController(
@@ -41,11 +53,6 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
   );
 
   Future<void> fetchMemorizationGroupDetails() async {
-    isLoading.value = true;
-
-    groupId.value = Get.arguments;
-    groupId.refresh();
-
     debugPrint("groupId fetch memo group details: ${groupId.toString()}");
 
     debugPrint("groupId: ${groupId.toString()}");
@@ -54,7 +61,9 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
       MemorizationGroupDetailsResponseModel
           memorizationGroupDetailsResponseModel =
           await _participantSearchedGroupDetailsService
-              .fetchMemorizationGroupDetails(groupId.toString());
+              .fetchMemorizationGroupDetails(
+        groupId.toString(),
+      );
 
       debugPrint(
           "memorizationGroupDetailsResponseModel fetched : ${memorizationGroupDetailsResponseModel.memorizationGroup?.juzas.toString()}");
@@ -68,8 +77,35 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching memorization group details, controller: $e');
-    } finally {
-      isLoading.value = false;
     }
+  }
+
+  Future<SendRequestToJoinGroupResponseModel> sendRequestToJoinGroup() async {
+    try {
+      loader(true);
+
+      SendRequestToJoinGroupResponseModel sendRequestToJoinGroupResponseModel =
+          await _participantSearchedGroupDetailsService.sendRequestToJoinGroup(
+        groupId.toString(),
+      );
+
+      debugPrint(
+          "sendRequestToJoinGroupResponseModel: $sendRequestToJoinGroupResponseModel");
+
+      return sendRequestToJoinGroupResponseModel;
+    } catch (e) {
+      debugPrint('Error sending request to join group: $e');
+      return SendRequestToJoinGroupResponseModel(
+        statusCode: 500,
+        success: false,
+        message: "Failed to send request to join group",
+      );
+    } finally {
+      loader(false);
+    }
+  }
+
+  void navigateToSearchGroupScreen() {
+    Get.back();
   }
 }

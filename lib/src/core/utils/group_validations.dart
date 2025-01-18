@@ -16,26 +16,6 @@ class GroupValidations {
     ])(groupName);
   }
 
-  static String? validateGroupLevel(String? groupLevelId) {
-    debugPrint("groupLevelId: $groupLevelId");
-    return FormBuilderValidators.compose([
-      FormBuilderValidators.required(
-        errorText: "من فضلك اختر مستوى المجموعة",
-      ),
-      FormBuilderValidators.integer(
-        errorText: "من فضلك أدخل مستوى صحيح",
-      ),
-      FormBuilderValidators.min(
-        1,
-        errorText: "مستوى المجموعة يجب أن يكون بين 1 و 5",
-      ),
-      FormBuilderValidators.max(
-        5,
-        errorText: "مستوى المجموعة يجب أن يكون بين 1 و 5",
-      ),
-    ])(groupLevelId);
-  }
-
   static String? validateGroupGender(String? groupGender) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
@@ -72,6 +52,18 @@ class GroupValidations {
         errorText: "من فضلك أدخل محتوى التدريس  تدريس ",
       ),
     ])(teachingMethodId);
+  }
+
+  static String? validateGroupCompletionRateId(String? groupCompletionRateId) {
+    debugPrint("groupCompletionRateId: $groupCompletionRateId");
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "من فضلك اختر معدل إتمام المجموعة",
+      ),
+      FormBuilderValidators.integer(
+        errorText: "من فضلك أدخل معدل إتمام صحيح",
+      ),
+    ])(groupCompletionRateId);
   }
 
   static String? validateSupervisorId(String? supervisorId) {
@@ -165,9 +157,10 @@ class GroupValidations {
     ])(ayatForSurahs);
   }
 
-  static String? validateAyat(String? ayah) {
+  static String? validateAyat(String? ayah, int maxAyat) {
     debugPrint("ayah: $ayah");
     return FormBuilderValidators.compose([
+      // Ensure the field is not empty
       FormBuilderValidators.required(
         errorText: "من فضلك اختر آيات من القرآن",
       ),
@@ -177,11 +170,29 @@ class GroupValidations {
         }
         debugPrint("value : $value");
 
+        // Check the format of the input
         if (ayah is! String ||
             !RegExp(r'^(\d+-\d+,)*\d+-\d+$').hasMatch(ayah)) {
           return "من فضلك أدخل آيات صحيحة بالشكل الصحيح (مثال: 1-5,10-15)";
         }
-        return null;
+
+        // Validate ranges
+        final ranges = ayah.split(',');
+        for (var range in ranges) {
+          final parts = range.split('-');
+          final start = int.tryParse(parts[0]);
+          final end = int.tryParse(parts[1]);
+
+          if (start == null || end == null || start > end) {
+            return "النطاق غير صحيح: $range";
+          }
+
+          if (start < 1 || end > maxAyat) {
+            return "النطاق ($range) يتجاوز عدد الآيات ($maxAyat) المتاحة في السورة.";
+          }
+        }
+
+        return null; // Input is valid
       }
     ])(ayah);
   }
@@ -309,10 +320,7 @@ class GroupValidations {
       final groupGenderError = validateGroupGender(values['groupGender']);
       if (groupGenderError != null) errors['groupGender'] = groupGenderError;
     }
-    if (values['groupLevelId'] != null) {
-      final groupLevelError = validateGroupLevel(values['groupLevelId']);
-      if (groupLevelError != null) errors['groupLevelId'] = groupLevelError;
-    }
+
     if (values['selectedGroupObjectiveId'] != null) {
       final groupGoalError =
           validateGroupObjective(values['selectedGroupObjectiveId']);
@@ -351,6 +359,14 @@ class GroupValidations {
       final juzaIdsError = validateJuzaIds(values['juza_ids']);
       if (juzaIdsError != null) {
         errors['juza_ids'] = juzaIdsError;
+      }
+    }
+
+    if (values['group_completion_rate_id'] != null) {
+      final groupCompletionRateError =
+          validateGroupCompletionRateId(values['group_completion_rate_id']);
+      if (groupCompletionRateError != null) {
+        errors['group_completion_rate_id'] = groupCompletionRateError;
       }
     }
 

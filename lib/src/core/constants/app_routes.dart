@@ -47,6 +47,10 @@ class AppRoutes {
   static String createGroupSupervisorScreen = "/supervisor/create-group";
   static String supervisorCreateMemorizationGroupContentScreen =
       "/supervisor/create-group-content";
+  static String supervisorCurrentGroupsScreen = "/supervisor/current-groups";
+  static String supervisorGroupDashboardScreen = "/supervisor/group/dashboard";
+  static String supervisorGroupJoinRequest = "/supervisor/group/join-request";
+  static String supervisorGroupMembership = "/supervisor/group/membership";
 
   // Participant Screens
   static String participant = "/participant";
@@ -59,4 +63,13 @@ class AppRoutes {
   // Admin Screens
   static String admin = "/admin";
   static String adminHomeScreen = "/admin/home";
+  static String adminGroupDashboard = "/admin/group-dashboard";
+  static String adminRequestsForCreatingGroup =
+      "/admin/requests-for-creating-group";
+  static String adminRequestedGroupDetails = "/admin/requested-group-details";
+  static String adminSupervisorDashboard = "/admin/supervisor-dashboard";
+  static String adminSupervisorRequestsRegistration =
+      "/admin/supervisor-requests-registration";
+  static String adminSupervisorRequestRegistrationDetails =
+      "/admin/supervisor-request-registration/details";
 }

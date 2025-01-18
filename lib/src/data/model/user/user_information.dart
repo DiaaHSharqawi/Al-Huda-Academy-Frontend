@@ -1,13 +1,17 @@
+import 'package:moltqa_al_quran_frontend/src/data/model/account_statuses/account_statuses_response_model.dart';
+
 class UserInformation {
   String _id;
   String _memberId;
   String _email;
-  String _fullName;
+  String? _fullName;
   Role _role;
+  AccountStatus _accountStatus;
 
   UserInformation(
       {required String email,
-      required String fullName,
+      String? fullName,
+      required AccountStatus accountStatus,
       required Role role,
       required String id,
       required String memberId})
@@ -15,15 +19,21 @@ class UserInformation {
         _fullName = fullName,
         _role = role,
         _id = id,
-        _memberId = memberId;
+        _memberId = memberId,
+        _accountStatus = accountStatus;
+
+  AccountStatus get getAccountStatus => _accountStatus;
+
+  int get getId => int.parse(_id);
 
   Role get getRole => _role;
+
   set role(Role role) => _role = role;
 
   String get getEmail => _email;
   set email(String email) => _email = email;
 
-  String get getFullName => _fullName;
+  String? get getFullName => _fullName;
   set fullName(String fullName) => _fullName = fullName;
 
   String getMemberId() => _memberId;
@@ -36,6 +46,7 @@ class UserInformation {
       email: json['email'],
       fullName: json['fullName'],
       role: Role.fromJson(json['role']),
+      accountStatus: AccountStatus.fromJson(json['accountStatus']),
     );
   }
 

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class MemorizationGroupDetailsResponseModel {
   MemorizationGroupDetailsResponseModel({
     required this.success,
@@ -13,6 +15,7 @@ class MemorizationGroupDetailsResponseModel {
 
   factory MemorizationGroupDetailsResponseModel.fromJson(
       Map<String, dynamic> json, int statusCode) {
+    debugPrint("MemorizationGroupDetailsResponseModel.fromJson: $json");
     return MemorizationGroupDetailsResponseModel(
       statusCode: statusCode,
       success: json["success"],
@@ -46,17 +49,16 @@ class MemorizationGroupDetails {
     required this.groupStatusId,
     required this.groupGoalId,
     required this.genderId,
-    required this.participantsLevelId,
     required this.teachingMethodId,
     required this.createdAt,
     required this.supervisorId,
     required this.gender,
     required this.days,
     required this.groupStatus,
-    required this.participantLevel,
     required this.groupGoal,
     required this.languages,
     required this.teachingMethod,
+    required this.quranMemorizingAmount,
     required this.supervisor,
     required this.surahs,
     required this.juzas,
@@ -72,23 +74,25 @@ class MemorizationGroupDetails {
   final int? groupStatusId;
   final int? groupGoalId;
   final int? genderId;
-  final int? participantsLevelId;
   final int? teachingMethodId;
   final DateTime? createdAt;
   final int? supervisorId;
   final GenderGroupDetails? gender;
   final List<DayGroupDetails> days;
   final GroupStatusDetails? groupStatus;
-  final ParticipantLevelGroupDetails? participantLevel;
   final GroupGoalDetails? groupGoal;
+  final QuranMemorizingAmount? quranMemorizingAmount;
   final List<LanguageGroupDetails> languages;
   final TeachingMethodGroupDetails? teachingMethod;
   final SupervisorGroupDetails? supervisor;
-  final List<SurahGroup> surahs;
+  final List<SurahQuran> surahs;
   final List<JuzaGroup> juzas;
   final List<ExtractGroupDetails> extracts;
 
   factory MemorizationGroupDetails.fromJson(Map<String, dynamic> json) {
+    debugPrint("MemorizationGroupDetails.fromJson: ${json["surahs"]}");
+    debugPrint("------------------------------");
+
     return MemorizationGroupDetails(
       id: json["id"],
       groupName: json["group_name"],
@@ -99,7 +103,6 @@ class MemorizationGroupDetails {
       groupStatusId: json["group_status_id"],
       groupGoalId: json["group_goal_id"],
       genderId: json["gender_id"],
-      participantsLevelId: json["participants_level_id"],
       teachingMethodId: json["teaching_method_id"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       supervisorId: json["supervisor_id"],
@@ -113,9 +116,6 @@ class MemorizationGroupDetails {
       groupStatus: json["GroupStatus"] == null
           ? null
           : GroupStatusDetails.fromJson(json["GroupStatus"]),
-      participantLevel: json["ParticipantLevel"] == null
-          ? null
-          : ParticipantLevelGroupDetails.fromJson(json["ParticipantLevel"]),
       groupGoal: json["GroupGoal"] == null
           ? null
           : GroupGoalDetails.fromJson(json["GroupGoal"]),
@@ -129,16 +129,21 @@ class MemorizationGroupDetails {
       supervisor: json["Supervisor"] == null
           ? null
           : SupervisorGroupDetails.fromJson(json["Supervisor"]),
+      quranMemorizingAmount: json["QuranMemorizingAmount"] == null
+          ? null
+          : QuranMemorizingAmount.fromJson(json["QuranMemorizingAmount"]),
       surahs: json["surahs"] == null
           ? []
-          : List<SurahGroup>.from(json["surahs"]!.map((x) => x)),
+          : List<SurahQuran>.from(
+              json["surahs"]!.map((x) => SurahQuran.fromJson(x))),
       juzas: json["juzas"] == null
           ? []
           : List<JuzaGroup>.from(
               json["juzas"]!.map((x) => JuzaGroup.fromJson(x))),
       extracts: json["extracts"] == null
           ? []
-          : List<ExtractGroupDetails>.from(json["extracts"]!.map((x) => x)),
+          : List<ExtractGroupDetails>.from(
+              json["extracts"]!.map((x) => ExtractGroupDetails.fromJson(x))),
     );
   }
 
@@ -152,14 +157,12 @@ class MemorizationGroupDetails {
         "group_status_id": groupStatusId,
         "group_goal_id": groupGoalId,
         "gender_id": genderId,
-        "participants_level_id": participantsLevelId,
         "teaching_method_id": teachingMethodId,
         "createdAt": createdAt?.toIso8601String(),
         "supervisor_id": supervisorId,
         "Gender": gender?.toJson(),
         "Days": days.map((x) => x.toJson()).toList(),
         "GroupStatus": groupStatus?.toJson(),
-        "ParticipantLevel": participantLevel?.toJson(),
         "GroupGoal": groupGoal?.toJson(),
         "Languages": languages.map((x) => x.toJson()).toList(),
         "TeachingMethod": teachingMethod?.toJson(),
@@ -171,7 +174,38 @@ class MemorizationGroupDetails {
 
   @override
   String toString() {
-    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $participantsLevelId, $teachingMethodId, $createdAt, $supervisorId, $gender, $days, $groupStatus, $participantLevel, $groupGoal, $languages, $teachingMethod, $supervisor, $surahs, $juzas, $extracts, ";
+    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $teachingMethodId, $createdAt, $supervisorId, $gender, $days, $groupStatus, $groupGoal, $languages, $teachingMethod, $supervisor, $surahs, $juzas, $extracts, ";
+  }
+}
+
+class QuranMemorizingAmount {
+  QuranMemorizingAmount({
+    required this.id,
+    required this.amountArabic,
+    required this.amountEnglish,
+  });
+
+  final int? id;
+  final String? amountArabic;
+  final String? amountEnglish;
+
+  factory QuranMemorizingAmount.fromJson(Map<String, dynamic> json) {
+    return QuranMemorizingAmount(
+      id: json["id"],
+      amountArabic: json["amountArabic"],
+      amountEnglish: json["amountEnglish"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "amountArabic": amountArabic,
+        "amountEnglish": amountEnglish,
+      };
+
+  @override
+  String toString() {
+    return "$id, $amountArabic, $amountEnglish, ";
   }
 }
 
@@ -188,15 +222,20 @@ class ExtractGroupDetails {
   final int? surahId;
   final String? ayat;
   final int? groupId;
-  final SurahGroup? surah;
+  final SurahGroupExtract? surah;
 
   factory ExtractGroupDetails.fromJson(Map<String, dynamic> json) {
+    debugPrint("ExtractGroupDetails.fromJson: $json");
+    debugPrint("------------------------------");
+
     return ExtractGroupDetails(
       id: json["id"],
       surahId: json["surahId"],
       ayat: json["ayat"],
       groupId: json["groupId"],
-      surah: json["Surah"] == null ? null : SurahGroup.fromJson(json["Surah"]),
+      surah: json["Surah"] == null
+          ? null
+          : SurahGroupExtract.fromJson(json["Surah"]),
     );
   }
 
@@ -214,8 +253,53 @@ class ExtractGroupDetails {
   }
 }
 
-class SurahGroup {
-  SurahGroup({
+class SurahGroupExtract {
+  SurahGroupExtract({
+    required this.id,
+    required this.name,
+    required this.englishName,
+    required this.englishNameTranslation,
+    required this.numberOfAyahs,
+    required this.revelationType,
+  });
+
+  final int? id;
+  final String? name;
+  final String? englishName;
+  final String? englishNameTranslation;
+  final int? numberOfAyahs;
+  final String? revelationType;
+
+  factory SurahGroupExtract.fromJson(Map<String, dynamic> json) {
+    debugPrint("SurahGroup.fromJson: $json");
+    debugPrint("------------------------------");
+    return SurahGroupExtract(
+      id: json["id"],
+      name: json["name"],
+      englishName: json["englishName"],
+      englishNameTranslation: json["englishNameTranslation"],
+      numberOfAyahs: json["numberOfAyahs"],
+      revelationType: json["revelationType"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "englishName": englishName,
+        "englishNameTranslation": englishNameTranslation,
+        "numberOfAyahs": numberOfAyahs,
+        "revelationType": revelationType,
+      };
+
+  @override
+  String toString() {
+    return "$id, $name, $englishName, $englishNameTranslation, $numberOfAyahs, $revelationType, ";
+  }
+}
+
+class SurahQuran {
+  SurahQuran({
     required this.id,
     required this.surahId,
     required this.groupId,
@@ -227,8 +311,10 @@ class SurahGroup {
   final int? groupId;
   final SurahClass? surah;
 
-  factory SurahGroup.fromJson(Map<String, dynamic> json) {
-    return SurahGroup(
+  factory SurahQuran.fromJson(Map<String, dynamic> json) {
+    debugPrint("SurahQuran.fromJson: $json");
+    debugPrint("------------------------------");
+    return SurahQuran(
       id: json["id"],
       surahId: json["surahId"],
       groupId: json["groupId"],
@@ -267,6 +353,8 @@ class SurahClass {
   final String? revelationType;
 
   factory SurahClass.fromJson(Map<String, dynamic> json) {
+    debugPrint("SurahClass.fromJson: $json\n-");
+    debugPrint("------------------------------");
     return SurahClass(
       id: json["id"],
       name: json["name"],
@@ -601,45 +689,6 @@ class GroupLanguage {
   @override
   String toString() {
     return "$id, $groupId, $languageId, $createdAt, $updatedAt, ";
-  }
-}
-
-class ParticipantLevelGroupDetails {
-  ParticipantLevelGroupDetails({
-    required this.id,
-    required this.participantLevelEn,
-    required this.participantLevelAr,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  final int? id;
-  final String? participantLevelEn;
-  final String? participantLevelAr;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  factory ParticipantLevelGroupDetails.fromJson(Map<String, dynamic> json) {
-    return ParticipantLevelGroupDetails(
-      id: json["id"],
-      participantLevelEn: json["participant_level_en"],
-      participantLevelAr: json["participant_level_ar"],
-      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "participant_level_en": participantLevelEn,
-        "participant_level_ar": participantLevelAr,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
-      };
-
-  @override
-  String toString() {
-    return "$id, $participantLevelEn, $participantLevelAr, $createdAt, $updatedAt, ";
   }
 }
 

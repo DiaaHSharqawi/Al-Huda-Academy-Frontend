@@ -52,16 +52,17 @@ class GroupSearchModel {
     required this.groupStatusId,
     required this.groupGoalId,
     required this.genderId,
-    required this.participantsLevelId,
     required this.createdAt,
     required this.supervisorId,
     required this.teachingMethodId,
     required this.gender,
     required this.days,
     required this.groupStatus,
-    required this.participantLevel,
     required this.groupGoal,
     required this.languages,
+    required this.quranMemorizingAmount,
+    required this.groupCompletionRateId,
+    required this.recommendedFlag,
   });
 
   final int? id;
@@ -73,16 +74,17 @@ class GroupSearchModel {
   final int? groupStatusId;
   final int? groupGoalId;
   final int? genderId;
-  final int? participantsLevelId;
   final DateTime? createdAt;
   final int? supervisorId;
   final int? teachingMethodId;
   final GroupSearchResponseGender? gender;
   final List<GroupSearchResponseDay> days;
   final GroupSearchResponseStatus? groupStatus;
-  final GroupSearchResponseParticipantLevel? participantLevel;
   final GroupSearchResponseGoal? groupGoal;
   final List<GroupSearchResponseLanguage> languages;
+  final QuranMemorizingAmount? quranMemorizingAmount;
+  final int? groupCompletionRateId;
+  final int? recommendedFlag;
 
   factory GroupSearchModel.fromJson(Map<String, dynamic> json) {
     return GroupSearchModel(
@@ -95,10 +97,14 @@ class GroupSearchModel {
       groupStatusId: json["group_status_id"],
       groupGoalId: json["group_goal_id"],
       genderId: json["gender_id"],
-      participantsLevelId: json["participants_level_id"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
+      groupCompletionRateId: json["group_completion_rate_id"],
       supervisorId: json["supervisor_id"],
       teachingMethodId: json["teaching_method_id"],
+      recommendedFlag: json["recommended_flag"],
+      quranMemorizingAmount: json["QuranMemorizingAmount"] == null
+          ? null
+          : QuranMemorizingAmount.fromJson(json["QuranMemorizingAmount"]),
       gender: json["Gender"] == null
           ? null
           : GroupSearchResponseGender.fromJson(json["Gender"]),
@@ -109,10 +115,6 @@ class GroupSearchModel {
       groupStatus: json["GroupStatus"] == null
           ? null
           : GroupSearchResponseStatus.fromJson(json["GroupStatus"]),
-      participantLevel: json["ParticipantLevel"] == null
-          ? null
-          : GroupSearchResponseParticipantLevel.fromJson(
-              json["ParticipantLevel"]),
       groupGoal: json["GroupGoal"] == null
           ? null
           : GroupSearchResponseGoal.fromJson(json["GroupGoal"]),
@@ -133,21 +135,39 @@ class GroupSearchModel {
         "group_status_id": groupStatusId,
         "group_goal_id": groupGoalId,
         "gender_id": genderId,
-        "participants_level_id": participantsLevelId,
         "createdAt": createdAt?.toIso8601String(),
         "supervisor_id": supervisorId,
         "teaching_method_id": teachingMethodId,
         "Gender": gender?.toJson(),
         "Days": days.map((x) => x.toJson()).toList(),
         "GroupStatus": groupStatus?.toJson(),
-        "ParticipantLevel": participantLevel?.toJson(),
         "GroupGoal": groupGoal?.toJson(),
         "Languages": languages.map((x) => x.toJson()).toList(),
       };
 
   @override
   String toString() {
-    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $participantsLevelId, $createdAt, $supervisorId, $teachingMethodId, $gender, $days, $groupStatus, $participantLevel, $groupGoal, $languages, ";
+    return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $createdAt, $supervisorId, $teachingMethodId, $gender, $days, $groupStatus, $groupGoal, $languages, ";
+  }
+}
+
+class QuranMemorizingAmount {
+  QuranMemorizingAmount({
+    required this.id,
+    required this.amountArabic,
+    required this.amountEnglish,
+  });
+
+  final int? id;
+  final String? amountArabic;
+  final String? amountEnglish;
+
+  factory QuranMemorizingAmount.fromJson(Map<String, dynamic> json) {
+    return QuranMemorizingAmount(
+      id: json["id"],
+      amountArabic: json["amountArabic"],
+      amountEnglish: json["amountEnglish"],
+    );
   }
 }
 
@@ -218,23 +238,23 @@ class GroupSearchResponseGoal {
     required this.id,
     required this.groupGoalAr,
     required this.groupGoalEng,
-    required this.createdAt,
-    required this.updatedAt,
+    //  required this.createdAt,
+    //  required this.updatedAt,
   });
 
   final int? id;
   final String? groupGoalAr;
   final String? groupGoalEng;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  // final DateTime? createdAt;
+  //final DateTime? updatedAt;
 
   factory GroupSearchResponseGoal.fromJson(Map<String, dynamic> json) {
     return GroupSearchResponseGoal(
       id: json["id"],
       groupGoalAr: json["group_goal_ar"],
       groupGoalEng: json["group_goal_eng"],
-      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
+      // createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
+      // updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
     );
   }
 
@@ -242,13 +262,13 @@ class GroupSearchResponseGoal {
         "id": id,
         "group_goal_ar": groupGoalAr,
         "group_goal_eng": groupGoalEng,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
+        //"createdAt": createdAt?.toIso8601String(),
+        //  "updatedAt": updatedAt?.toIso8601String(),
       };
 
   @override
   String toString() {
-    return "$id, $groupGoalAr, $groupGoalEng, $createdAt, $updatedAt, ";
+    return "$id, $groupGoalAr, $groupGoalEng, ";
   }
 }
 
@@ -319,48 +339,6 @@ class GroupSearchResponseLanguage {
   @override
   String toString() {
     return "$id, $nameAr, $nameEn, $createdAt, $updatedAt, ";
-  }
-}
-
-class GroupSearchResponseParticipantLevel {
-  GroupSearchResponseParticipantLevel({
-    required this.id,
-    required this.participantLevelEn,
-    required this.participantLevelAr,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  final int? id;
-  final String? participantLevelEn;
-  final String? participantLevelAr;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  factory GroupSearchResponseParticipantLevel.fromJson(
-      Map<String, dynamic> json) {
-    return GroupSearchResponseParticipantLevel(
-      id: json["id"],
-      participantLevelEn: json["participant_level_en"],
-      participantLevelAr: json["participant_level_ar"],
-      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
-    );
-  }
-
-  get nameAr => null;
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "participant_level_en": participantLevelEn,
-        "participant_level_ar": participantLevelAr,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
-      };
-
-  @override
-  String toString() {
-    return "$id, $participantLevelEn, $participantLevelAr, $createdAt, $updatedAt, ";
   }
 }
 

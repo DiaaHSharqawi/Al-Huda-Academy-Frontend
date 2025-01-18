@@ -6,6 +6,7 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/language_constants.d
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/auth/login_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/auth/login_response/login_response.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class LoginController extends GetxController {
   final TextEditingController userIdentifierController =
@@ -84,6 +85,12 @@ class LoginController extends GetxController {
     debugPrint("the login role was : ==> $roleName");
     debugPrint(appService.user.toJson().toString());
 
+    try {
+      await OneSignal.login(appService.user.value!.getId.toString());
+    } catch (e) {
+      debugPrint("Error adding OneSignal tags: $e");
+    }
+
     if (roleName == 'supervisor') {
       Get.toNamed(AppRoutes.supervisorHomeScreen);
     } else if (roleName == 'participant') {
@@ -91,8 +98,6 @@ class LoginController extends GetxController {
     } else if (roleName == 'admin') {
       Get.toNamed(AppRoutes.adminHomeScreen);
     }
-
-    // Get.toNamed(AppRoutes.home);
   }
 
   void navigateToRegisterScreen() {

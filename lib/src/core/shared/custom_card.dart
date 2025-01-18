@@ -14,6 +14,7 @@ class CustomCard extends StatelessWidget {
   final Color cardInnerBoxShadowColor;
   final Widget? icon;
   final VoidCallback? onTap;
+  final Color cardColor;
 
   const CustomCard({
     super.key,
@@ -25,6 +26,7 @@ class CustomCard extends StatelessWidget {
     required this.cardTextSize,
     required this.cardInnerBoxShadowColor,
     required this.cardTextColor,
+    this.cardColor = Colors.white,
     this.avatarCard,
     this.icon,
     this.onTap,
@@ -34,6 +36,7 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
+      color: cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
@@ -49,6 +52,7 @@ class CustomCard extends StatelessWidget {
             fontSize: cardTextSize,
             fontWeight: FontWeight.bold,
             color: cardTextColor,
+            textAlign: TextAlign.center,
           ),
         ),
         icon: SizedBox(

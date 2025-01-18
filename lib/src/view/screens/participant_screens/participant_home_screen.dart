@@ -250,7 +250,7 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
           width: 8.0,
         ),
         CustomGoogleTextWidget(
-          text: appService.user.value!.getFullName,
+          text: appService.user.value!.getFullName ?? 'Unknown User',
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
           color: Colors.white,

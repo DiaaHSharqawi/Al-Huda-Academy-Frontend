@@ -7,11 +7,9 @@ import 'package:moltqa_al_quran_frontend/src/data/model/enums/gender_search_filt
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_content_filtter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/group_objective_search_filter.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/enums/supervisor_langugue_filtter.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/gender/gender_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/juzas/juza_response.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_goal_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/group_search_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/participant_level_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/memorization_group/teaching_methods_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/surahs/surahs.dart';
 
@@ -22,15 +20,11 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
   final List<Juza> juzas = [];
 
-  final List<Gender> genders = [];
-
   final List<GroupGoal> groupGoals = [];
 
   final List<Language> groupLanguages = [];
 
   final List<TeachingMethod> teachingMethods = [];
-
-  final List<ParticipantLevel> participantLevel = [];
 
   var memorizationGroups = RxList<GroupSearchModel>();
 
@@ -38,8 +32,10 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
   var isFilterApplied = false.obs;
 
-  var page = 1.obs;
+  var currentPage = 1.obs;
   var limit = 10.obs;
+
+  final List<int> dropDownItems = [1, 3, 5, 7, 10];
 
   var queryParams = <String, dynamic>{}.obs;
 
@@ -52,16 +48,14 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       isLoading.value = true;
 
       queryParams.value = {
-        'page': page.value,
+        'page': currentPage.value,
         'limit': limit.value,
       };
       await getSurahList();
       await getJuzaList();
-      await getGenderList();
       await getGroupGoalList();
       await getGroupLanguagesList();
       await getTeachingMethodsList();
-      await getParticipantLevelList();
 
       await fetchMemorizationGroup();
     } catch (e) {
@@ -75,7 +69,7 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       (_) {
         if (searchQuery.value.isEmpty) {
           memorizationGroups.clear();
-          page.value = 1;
+          currentPage.value = 1;
         }
 
         debugPrint("Debounced query triggered: ${searchQuery.value}");
@@ -101,91 +95,57 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
 
   var selectedSurahs = <Surah>[].obs;
 
-  var selectedParticipantLevels = Rx<RangeValues>(const RangeValues(0, 2));
-
   var selectedJuzzas = [].obs;
-
-  //var selectedPartOfQuranType = SelectedPartOfQuranFiltter.notSelected.obs;
-
-  var selectedStudentLevelRange = const RangeValues(0, 3).obs;
 
   final ParticipantSearchMemorizationGroupService
       _participantSearchMemorizationGroupService;
   ParticipantSearchMemorizationGroupController(
-      this._participantSearchMemorizationGroupService) {
-    scrollController.addListener(scrollListener);
-  }
-
-  var selectedStudentLevel = 0.obs;
+      this._participantSearchMemorizationGroupService);
 
   Future<void> fetchMemorizationGroup() async {
-    debugPrint("fetchMemorizationGroup");
-    debugPrint("queryParams");
-    debugPrint(queryParams.toString());
-
-    GroupSearchResponseModel groupSearchResponseModel =
-        await _participantSearchMemorizationGroupService
-            .fetchMemorizationGroup(queryParams);
-
-    if (groupSearchResponseModel.statusCode == 200 &&
-        groupSearchResponseModel.groupSearchModels.isNotEmpty) {
-      debugPrint("groupSearchResponseModel");
-      debugPrint(groupSearchResponseModel.groupSearchModels.first.toString());
-
-      memorizationGroups.addAll(groupSearchResponseModel.groupSearchModels);
-
-      debugPrint("memorizationGroups*****");
-      debugPrint(memorizationGroups.toString());
-
-      debugPrint(memorizationGroups.length.toString());
-
-      totalPages = groupSearchResponseModel.metaData!.totalPages!;
-
-      totalMemorizationGroups =
-          groupSearchResponseModel.metaData!.totalNumberOfMemorizationGroup!;
-    } else if (groupSearchResponseModel.statusCode == 404) {
+    try {
+      isLoading(true);
       memorizationGroups.clear();
-      page.value = 1;
+
+      debugPrint("fetchMemorizationGroup");
+      debugPrint("queryParams");
+      debugPrint(queryParams.toString());
+
+      GroupSearchResponseModel groupSearchResponseModel =
+          await _participantSearchMemorizationGroupService
+              .fetchMemorizationGroup(queryParams);
+
+      if (groupSearchResponseModel.statusCode == 200 &&
+          groupSearchResponseModel.groupSearchModels.isNotEmpty) {
+        debugPrint("groupSearchResponseModel");
+        debugPrint(groupSearchResponseModel.groupSearchModels.first.toString());
+
+        memorizationGroups.addAll(groupSearchResponseModel.groupSearchModels);
+
+        debugPrint("memorizationGroups*****");
+        debugPrint(memorizationGroups.toString());
+
+        debugPrint(memorizationGroups.length.toString());
+
+        totalPages.value = groupSearchResponseModel.metaData!.totalPages!;
+
+        totalMemorizationGroups =
+            groupSearchResponseModel.metaData!.totalNumberOfMemorizationGroup!;
+      } else if (groupSearchResponseModel.statusCode == 404) {
+        memorizationGroups.clear();
+        currentPage.value = 1;
+      }
+    } catch (e) {
+      debugPrint('Error fetching memorization groups: $e');
+    } finally {
+      isLoading(false);
     }
   }
 
   var isMoreDataLoading = false.obs;
 
-  late int totalPages;
+  var totalPages = 1.obs;
   late int totalMemorizationGroups;
-
-  Future<void> scrollListener() async {
-    debugPrint("scrollListener");
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent) {
-      await loadMoreData();
-    }
-  }
-
-  Future<void> loadMoreData() async {
-    debugPrint("load more .............................");
-    debugPrint("${isMoreDataLoading.value}");
-    debugPrint("cuurent page value : ${page.value}");
-    debugPrint("totalPages : $totalPages");
-    if (memorizationGroups.length < totalMemorizationGroups) {
-      isMoreDataLoading.value = true;
-      debugPrint("page.value <= totalPages : ${page.value <= totalPages}");
-      scrollController.jumpTo(scrollController.position.pixels + 1);
-
-      if (page.value <= totalPages) {
-        page.value += 1;
-        queryParams.update('page', (value) => page.value,
-            ifAbsent: () => page.value);
-
-        await fetchMemorizationGroup().then((_) {
-          debugPrint("page value  become a: ${page.value}");
-
-          double savedScrollPosition = scrollController.position.pixels;
-          scrollController.jumpTo(savedScrollPosition + 1);
-        });
-      }
-    }
-  }
 
   Future<void> getSurahList() async {
     var surahs =
@@ -203,16 +163,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     debugPrint(juzas.toString());
     if (juzas.isNotEmpty) {
       this.juzas.addAll(juzas);
-    }
-  }
-
-  Future<void> getGenderList() async {
-    var genders =
-        await _participantSearchMemorizationGroupService.getGenderList();
-    debugPrint("genders");
-    debugPrint(genders.toString());
-    if (genders.isNotEmpty) {
-      this.genders.addAll(genders);
     }
   }
 
@@ -246,19 +196,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     }
   }
 
-  Future<void> getParticipantLevelList() async {
-    var participantLevelResponse =
-        await _participantSearchMemorizationGroupService
-            .getParticipantLevelList();
-    debugPrint("participantLevelResponse");
-    debugPrint(participantLevelResponse.toString());
-    if (participantLevelResponse.isNotEmpty) {
-      debugPrint("added participantLevelResponse");
-      debugPrint(participantLevelResponse.toString());
-      participantLevel.addAll(participantLevelResponse);
-    }
-  }
-
   Future<void> getTeachingMethodsList() async {
     var teachingMethodsResponse =
         await _participantSearchMemorizationGroupService
@@ -280,23 +217,11 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     // queryParams.clear();
     // clearFilterQueryParams();
 
-    page.value = 1;
+    currentPage.value = 1;
     limit.value = 10;
 
     if (searchController.text.isNotEmpty) {
       queryParams['groupName'] = searchController.text;
-    }
-
-    if (selectedGender.value != GenderSearchFiltter.notSelected) {
-      debugPrint("selectedGender: ${selectedGender.value}");
-
-      final gender = genders.firstWhereOrNull(
-        (gender) => gender.nameEn == selectedGender.value.name,
-      );
-      debugPrint("selected  $gender");
-      if (gender != null) {
-        queryParams['gender_id'] = gender.id;
-      }
     }
 
     if (selectedGroupObjective.value != GroupObjectiveSearchFiltter.all) {
@@ -323,89 +248,35 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
       }
     }
 
-    if (selectedGroupContent.value != GroupContentFilter.allQuran &&
-        selectedGroupContent.value != GroupContentFilter.all) {
+    if (selectedGroupContent.value != GroupContentFilter.all) {
       debugPrint("selectedGroupContent: ${selectedGroupContent.value}");
-      if (selectedGroupContent.value == GroupContentFilter.surahsQuran &&
-          selectedSurahs.isNotEmpty) {
-        queryParams['surah_ids'] =
-            selectedSurahs.map((surah) => surah.id).toList();
-      }
 
-      if (selectedGroupContent.value == GroupContentFilter.juzasQuran &&
-          selectedJuzzas.isNotEmpty) {
-        queryParams['juza_ids'] =
-            selectedJuzzas.map((juza) => juza.id).toList();
-      }
-    }
-    if (selectedGroupContent.value == GroupContentFilter.extractsQuran) {
-      queryParams['extract_ids'] = [];
-    }
+      debugPrint("teaching method id ");
+      String teachingMethodId = teachingMethods
+          .firstWhere((element) =>
+              element.methodNameEnglish == selectedGroupContent.value.name)
+          .id
+          .toString();
+      debugPrint(teachingMethodId);
 
-    if (selectedParticipantLevels.value.start != 0 ||
-        selectedParticipantLevels.value.end != 2) {
-      final levelMap = {
-        1: "junior",
-        2: "average",
-        3: "advanced",
-        1.5: "junior-average",
-        2.5: "average-advanced",
-      };
-
-      final start = selectedParticipantLevels.value.start;
-      final end = selectedParticipantLevels.value.end;
-
-      debugPrint("start: $start, end: $end");
-
-      if (start == end) {
-        queryParams['participants_level_id'] = participantLevel
-            .firstWhere((level) => level.participantLevelEn == levelMap[start])
-            .id;
+      if (teachingMethodId == "3") {
+        queryParams['teaching_method_id'] = teachingMethodId.toString();
+        if (selectedJuzzas.isNotEmpty) {
+          queryParams['juza_ids'] = selectedJuzzas.map((j) => j.id).toList();
+        }
+      } else if (teachingMethodId == "4") {
+        queryParams['teaching_method_id'] = teachingMethodId.toString();
+        if (selectedSurahs.isNotEmpty) {
+          queryParams['surah_ids'] = selectedSurahs.map((s) => s.id).toList();
+        }
       } else {
-        debugPrint("levelMap[(start + end) ]: ${[(start + end) / 2]}");
-        debugPrint(
-            "levelMap[(start + end) / 2]: ${levelMap[(start + end) / 2]}");
-        ParticipantLevel? level = participantLevel.firstWhere(
-            (level) => level.participantLevelEn == levelMap[(start + end) / 2]);
-
-        debugPrint("level *****: $level");
-
-        queryParams['participants_level_id'] = level.id;
+        queryParams['teaching_method_id'] = teachingMethodId.toString();
+        queryParams['extract_ids'] = [];
       }
     }
 
     debugPrint(queryParams.toString());
 
-/*
-    if (selectedSupervisorLanguage != null &&
-        selectedSupervisorLanguage != SupervisorLangugueFilter.all) {
-      queryParams['supervisorLanguage'] = selectedSupervisorLanguage.name;
-    }
-
-    if (selectedGroupContent != null) {
-      queryParams['groupContent'] = selectedGroupContent.name;
-
-      if (selectedGroupContent == GroupContentFilter.partOfQuran) {
-        queryParams['partOfQuranType'] = selectedPartOfQuranType?.name;
-
-        if (selectedPartOfQuranType == SelectedPartOfQuranFiltter.surahs &&
-            selectedSurahs.isNotEmpty) {
-          queryParams['surahs'] = selectedSurahs.map((s) => s.id).toList();
-        }
-
-        if (selectedPartOfQuranType == SelectedPartOfQuranFiltter.juzs &&
-            selectedJuzzas.isNotEmpty) {
-          queryParams['juzzas'] = selectedJuzzas.map((j) => j.id).toList();
-        }
-      }
-    }
-
-    if (selectedStudentLevelRange.start != 0 ||
-        selectedStudentLevelRange.end != 2) {
-      queryParams['minLevel'] = selectedStudentLevelRange.start;
-      queryParams['maxLevel'] = selectedStudentLevelRange.end;
-    }
-*/
     memorizationGroups.clear();
     debugPrint(memorizationGroups.toString());
 
@@ -424,7 +295,6 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     //  selectedPartOfQuranType.value = SelectedPartOfQuranFiltter.surahs;
     selectedSurahs.clear();
     selectedJuzzas.clear();
-    selectedStudentLevelRange.value = const RangeValues(0, 2);
   }
 
   void navigateToGroupDetailsScreen(String groupId) {

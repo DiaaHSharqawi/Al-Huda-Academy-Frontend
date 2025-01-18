@@ -235,12 +235,14 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
   Future<void> _showDialog(
       BuildContext context, DialogType type, String message) async {
     await CustomAwesomeDialog.showAwesomeDialog(
-      context,
-      type,
-      type == DialogType.success
+      context: context,
+      dialogType: type,
+      title: type == DialogType.success
           ? AuthValidationsLanguageConstants.success.tr
           : AuthValidationsLanguageConstants.error.tr,
-      message,
+      description: message,
+      btnOkOnPress: () {},
+      btnCancelOnPress: null,
     );
   }
 }

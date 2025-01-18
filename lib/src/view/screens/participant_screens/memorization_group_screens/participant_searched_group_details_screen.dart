@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -5,8 +6,10 @@ import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_searched_group_details_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/participant/send_request_to_join_group_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class ParticipantSearchedGroupDetailsScreen
@@ -47,7 +50,7 @@ class ParticipantSearchedGroupDetailsScreen
                           const SizedBox(
                             height: 16.0,
                           ),
-                          _buildJoinGroupButton(),
+                          _buildJoinGroupButton(context),
                         ],
                       ),
                     ),
@@ -58,7 +61,7 @@ class ParticipantSearchedGroupDetailsScreen
     );
   }
 
-  Widget _buildJoinGroupButton() {
+  Widget _buildJoinGroupButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: CustomButton(
@@ -70,9 +73,66 @@ class ParticipantSearchedGroupDetailsScreen
         fontWeight: FontWeight.bold,
         onPressed: () {
           debugPrint("Join Group Button Pressed");
+          _showDialog(context);
         },
       ),
     );
+  }
+
+  Future _showDialog(BuildContext context) {
+    const dialogType = DialogType.info;
+    const title = 'طلب الإنضمام';
+    const description = 'هل تريد تقديم طلب للإنضمام إلى هذه المجموعة؟';
+
+    return CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: dialogType,
+        title: title,
+        description: description,
+        btnOkOnPress: () async {
+          debugPrint("btnOkOnPress");
+
+          await _handelJoinGroup(context);
+        },
+        btnCancelOnPress: () {});
+  }
+
+  Future<void> _handelJoinGroup(BuildContext context) async {
+    SendRequestToJoinGroupResponseModel sendRequestToJoinGroupResponseModel =
+        await controller.sendRequestToJoinGroup();
+
+    if (sendRequestToJoinGroupResponseModel.statusCode == 200) {
+      const dialogType = DialogType.success;
+      const title = 'تم تقديم الطلب';
+      const description = 'تم تقديم طلبك للإنضمام إلى المجموعة بنجاح.';
+
+      if (!context.mounted) return;
+
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: dialogType,
+        title: title,
+        description: description,
+        dismissOnBackKeyPress: false,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          controller.navigateToSearchGroupScreen();
+        },
+      );
+    } else {
+      if (!context.mounted) return;
+
+      const dialogType = DialogType.error;
+      const title = 'فشل تقديم الطلب';
+
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: dialogType,
+        title: title,
+        description: sendRequestToJoinGroupResponseModel.message!,
+        btnOkOnPress: () {},
+      );
+    }
   }
 
   Widget _buildGroupDetails() {
@@ -83,32 +143,34 @@ class ParticipantSearchedGroupDetailsScreen
         _buildTableHeader(),
         _buildGroupName(),
         _buildGroupGoal(),
-        _buildGroupLevel(),
         _buildGroupDescription(),
         _buildGroupTime(),
         _buildGroupCapacity(),
         _buildGroupDays(),
         _buildGroupGender(),
         _buildSuperVisorGroupDetails(),
+        _buildGroupCompletionRate(),
         _buildGroupContent(),
         const SizedBox(
           height: 12.0,
         ),
-        if (controller.memorizationGroupDetails.value!.teachingMethod!
-                    .methodNameEnglish ==
-                "Memorization of Parts of the Quran-Surah" &&
+        if ((controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                    1 ||
+                controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                    4) &&
             controller.memorizationGroupDetails.value!.surahs.isNotEmpty)
           _buildGroupSurahs()
-        else if (controller.memorizationGroupDetails.value!.teachingMethod!
-                    .methodNameEnglish ==
-                "Memorization of Parts of the Quran-Juz" &&
+        else if ((controller
+                        .memorizationGroupDetails.value!.teachingMethod!.id ==
+                    2 ||
+                controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                    3) &&
             controller.memorizationGroupDetails.value!.juzas.isNotEmpty)
           _buildGroupJuza(),
-        if (controller.memorizationGroupDetails.value!.teachingMethod!
-                .methodNameEnglish ==
-            "Extracts from the Quran")
-          if (controller.memorizationGroupDetails.value!.extracts.isNotEmpty)
-            _buildGroupExtracts(),
+        if (controller.memorizationGroupDetails.value!.teachingMethod!.id ==
+                5 &&
+            controller.memorizationGroupDetails.value!.extracts.isNotEmpty)
+          _buildGroupExtracts(),
       ],
     );
   }
@@ -172,7 +234,7 @@ class ParticipantSearchedGroupDetailsScreen
               children: [
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.id.toString(),
+                    text: content.juzaId.toString(),
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -235,7 +297,9 @@ class ParticipantSearchedGroupDetailsScreen
     return Column(
       children: [
         _buildGroupContentSurahsDetailsHeader(),
-        _buildGroupContentSurhasRows(),
+        Container(
+          child: _buildGroupContentSurhasRows(),
+        ),
       ],
     );
   }
@@ -243,39 +307,43 @@ class ParticipantSearchedGroupDetailsScreen
   Widget _buildGroupContentSurhasRows() {
     return Padding(
       padding: const EdgeInsets.all(18.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children:
-            controller.memorizationGroupDetails.value!.surahs.map((content) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: CustomGoogleTextWidget(
-                    text: content.id.toString(),
-                    textAlign: TextAlign.center,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.blackColor,
-                  ),
+      child: SizedBox(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: controller.memorizationGroupDetails.value!.surahs
+                .map((content) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: CustomGoogleTextWidget(
+                        text: content.surahId.toString(),
+                        textAlign: TextAlign.center,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomGoogleTextWidget(
+                        text: content.surah!.name!,
+                        textAlign: TextAlign.center,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: CustomGoogleTextWidget(
-                    text: content.surah!.name!,
-                    textAlign: TextAlign.center,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.blackColor,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -382,7 +450,7 @@ class ParticipantSearchedGroupDetailsScreen
               children: [
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.surahId.toString(),
+                    text: content.surah!.id.toString(),
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -391,7 +459,7 @@ class ParticipantSearchedGroupDetailsScreen
                 ),
                 Expanded(
                   child: CustomGoogleTextWidget(
-                    text: content.surah!.surah!.name!,
+                    text: content.surah!.name!,
                     textAlign: TextAlign.center,
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -648,19 +716,19 @@ class ParticipantSearchedGroupDetailsScreen
     );
   }
 
-  Widget _buildGroupLevel() {
+  Widget _buildGroupCompletionRate() {
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
           const Icon(
-            Icons.star,
+            Icons.description,
             color: AppColors.primaryColor,
           ),
           const SizedBox(width: 16.0),
           const Expanded(
             child: CustomGoogleTextWidget(
-              text: "المستوى",
+              text: "معدل انجاز\n الحلقة يومياً",
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,
@@ -668,8 +736,8 @@ class ParticipantSearchedGroupDetailsScreen
           ),
           Expanded(
             child: CustomGoogleTextWidget(
-              text: controller.memorizationGroupDetails.value!.participantLevel!
-                  .participantLevelAr!,
+              text: controller.memorizationGroupDetails.value!
+                  .quranMemorizingAmount!.amountArabic!,
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.blackColor,

@@ -72,64 +72,98 @@ class SelectProfileImageRegisterScreen extends GetView<RegisterController> {
   Widget _buildRegisterButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: CustomButton(
-        foregroundColor: Colors.white,
-        backgroundColor: AppColors.primaryColor,
-        buttonText: "تسجيل",
-        buttonTextColor: Colors.white,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        onPressed: () async {
-          if (!context.mounted) return;
-          if (controller.selectedProfileImage.value ==
-              ProfileImage.notSelected) {
-            CustomAwesomeDialog.showAwesomeDialog(
-              context,
-              DialogType.info,
-              'يرجى اختيار صورة شخصية',
-              "يرجى اختيار صورة شخصية للمتابعة",
-            );
-          } else {
-            if (!context.mounted) return;
-            debugPrint("Role selected: ${controller.selectedRole.value}");
-            debugPrint("Navigate to qualifications screen");
-            controller.isSubmitting.value = false;
-            // controller.navigateToCredentialScreen();
-            Object registerResult = {};
-            if (controller.selectedRole.value == Role.participant) {
-              registerResult = await controller.registerParticipant();
-            } else if (controller.selectedRole.value == Role.supervisor) {
-              registerResult = await controller.registerSupervisor();
-            }
+      child: Obx(
+        () => CustomButton(
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primaryColor,
+          buttonText: "تسجيل",
+          buttonTextColor: Colors.white,
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          onPressed: () async {
+            controller.isSubmitting(true);
 
             if (!context.mounted) return;
-            if (registerResult is Map && registerResult['success']) {
-              await CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.success,
-                'تم التسجيل بنجاح',
-                (registerResult)['message'],
+            if (controller.selectedProfileImage.value ==
+                ProfileImage.notSelected) {
+              CustomAwesomeDialog.showAwesomeDialog(
+                context: context,
+                dialogType: DialogType.info,
+                title: 'يرجى اختيار صورة شخصية',
+                description: "يرجى اختيار صورة شخصية للمتابعة",
+                btnOkOnPress: () {},
+                btnCancelOnPress: null,
               );
-              controller.navigateToLoginScreen();
             } else {
-              await CustomAwesomeDialog.showAwesomeDialog(
-                context,
-                DialogType.error,
-                'حدث خطأ',
-                (registerResult as Map)['message'],
-              );
+              if (!context.mounted) return;
+              controller.isSubmitting(false);
+
+              debugPrint("Role selected: ${controller.selectedRole.value}");
+              debugPrint("Navigate to qualifications screen");
+              controller.isSubmitting.value = false;
+              // controller.navigateToCredentialScreen();
+              Object registerResult = {};
+
+              if (controller.selectedRole.value == Role.participant) {
+                registerResult = await controller.registerParticipant();
+              } else if (controller.selectedRole.value == Role.supervisor) {
+                registerResult = await controller.registerSupervisor();
+              }
+
+              if (!context.mounted) return;
+              if (registerResult is Map && registerResult['success']) {
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.success,
+                  title: 'تم التسجيل بنجاح',
+                  description: (registerResult)['message'],
+                  btnOkOnPress: () {
+                    controller.navigateToLoginScreen();
+                  },
+                  btnCancelOnPress: null,
+                );
+              } else {
+                controller.isSubmitting(false);
+
+                await CustomAwesomeDialog.showAwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.error,
+                  title: 'حدث خطأ',
+                  description: (registerResult as Map)['message'],
+                  btnOkOnPress: () {},
+                  btnCancelOnPress: null,
+                );
+              }
             }
-          }
-        },
+          },
+          loadingWidget: controller.isLoading.value
+              ? const CircularProgressIndicator(
+                  color: Colors.white,
+                )
+              : null,
+        ),
       ),
     );
   }
 
   Widget _buildOrChooseFromText() {
-    return const CustomGoogleTextWidget(
-      text: 'أو اختر من الصور التالية :',
-      fontSize: 22.0,
-      fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        const CustomGoogleTextWidget(
+          text: 'أو اختر من الصور التالية :',
+          fontSize: 22.0,
+          fontWeight: FontWeight.bold,
+        ),
+        const SizedBox(height: 16.0),
+        if (controller.selectedProfileImage.value == ProfileImage.notSelected &&
+            controller.isSubmitting.value)
+          const CustomGoogleTextWidget(
+            text: 'الرجاء اختيار صورة شخصية',
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+      ],
     );
   }
 

@@ -230,12 +230,15 @@ class LoginScreen extends GetView<LoginController> {
       BuildContext context, LoginResponse? loginResponse) async {
     if (loginResponse?.statusCode == 200) {
       await CustomAwesomeDialog.showAwesomeDialog(
-        context,
-        DialogType.success,
-        AuthValidationsLanguageConstants.success.tr,
-        loginResponse?.message ?? 'Success Login !',
+        context: context,
+        dialogType: DialogType.success,
+        title: AuthValidationsLanguageConstants.success.tr,
+        description: loginResponse?.message ?? 'Success Login !',
+        btnOkOnPress: () {
+          controller.navigateToHomeScreen();
+        },
+        btnCancelOnPress: null,
       );
-      controller.navigateToHomeScreen();
     } else if (loginResponse?.statusCode == 422) {
       await _showErrorDialog(
           context, loginResponse?.message ?? 'Invalid inputs');
@@ -247,10 +250,12 @@ class LoginScreen extends GetView<LoginController> {
 
   Future<void> _showErrorDialog(BuildContext context, String message) async {
     await CustomAwesomeDialog.showAwesomeDialog(
-      context,
-      DialogType.error,
-      LoginScreenLanguageConstants.loginFailedMessage.tr,
-      message,
+      context: context,
+      dialogType: DialogType.error,
+      title: LoginScreenLanguageConstants.loginFailedMessage.tr,
+      description: message,
+      btnOkOnPress: () {},
+      btnCancelOnPress: null,
     );
   }
 

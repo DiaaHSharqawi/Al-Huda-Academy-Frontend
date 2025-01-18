@@ -66,6 +66,15 @@ class CustomTextFormField extends StatelessWidget {
           fontFamily,
           color: Colors.grey,
         ),
+        hintMaxLines: 2,
+        errorMaxLines: 2,
+        errorStyle: GoogleFonts.getFont(
+          fontFamily,
+          color: Colors.red,
+          textStyle: const TextStyle(
+            fontSize: 12.0,
+          ),
+        ),
         border: enableBorder == true
             ? OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
