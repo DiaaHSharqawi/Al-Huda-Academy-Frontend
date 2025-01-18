@@ -5,6 +5,7 @@ import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_current_groups_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_dashboard_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_join_request_binding.dart';
+import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_members_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_memorization_group_dashboard_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_create_group_screen.dart';
@@ -12,6 +13,7 @@ import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/gro
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_current_groups_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_dashboard_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_join_request_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_members_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_memorization_groups_dashboard_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/supervisor_home_screen.dart';
 
@@ -60,6 +62,12 @@ class SupervisorPages {
       page: () => const SupervisorGroupJoinRequestScreen(),
       transition: Transition.rightToLeftWithFade,
       binding: SupervisorGroupJoinRequestBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.supervisorGroupMembership,
+      page: () => const SupervisorGroupMembersScreen(),
+      transition: Transition.zoom,
+      binding: SupervisorGroupMembersBinding(),
     ),
   ];
 }

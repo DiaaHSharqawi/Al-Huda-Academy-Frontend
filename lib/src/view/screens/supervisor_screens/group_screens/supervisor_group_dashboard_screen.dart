@@ -249,6 +249,9 @@ class SupervisorGroupDashboardScreen
         color: AppColors.blackColor,
         size: 30.0,
       ),
+      onTap: () {
+        controller.navigateToGroupMembersScreen(controller.groupId.value);
+      },
     );
   }
 

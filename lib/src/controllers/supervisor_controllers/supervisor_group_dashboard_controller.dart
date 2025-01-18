@@ -80,4 +80,14 @@ class SupervisorGroupDashboardController extends GetxController {
     groupDashboard.value = null;
     await fetchSupervisorGroupDashboard();
   }
+
+  void navigateToGroupMembersScreen(String groupId) {
+    debugPrint("Navigate to Group Members Screen");
+    debugPrint("Group ID: $groupId");
+
+    Get.toNamed(
+      AppRoutes.supervisorGroupMembership,
+      arguments: groupId,
+    );
+  }
 }

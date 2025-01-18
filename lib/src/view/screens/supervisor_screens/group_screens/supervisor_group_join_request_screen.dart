@@ -107,7 +107,7 @@ class SupervisorGroupJoinRequestScreen
                       children: [
                         Container(
                           margin: const EdgeInsets.only(bottom: 16.0),
-                          child: CustomGroupJoinRequest(
+                          child: CustomBox(
                             height: 120.0,
                             text: controller.groupJoinRequestsList[index]
                                 .participant!.fullName!,

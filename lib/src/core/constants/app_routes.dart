@@ -50,6 +50,7 @@ class AppRoutes {
   static String supervisorCurrentGroupsScreen = "/supervisor/current-groups";
   static String supervisorGroupDashboardScreen = "/supervisor/group/dashboard";
   static String supervisorGroupJoinRequest = "/supervisor/group/join-request";
+  static String supervisorGroupMembership = "/supervisor/group/membership";
 
   // Participant Screens
   static String participant = "/participant";

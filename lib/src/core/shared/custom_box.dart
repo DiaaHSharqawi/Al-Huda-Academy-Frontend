@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 
-class CustomGroupJoinRequest extends StatelessWidget {
+class CustomBox extends StatelessWidget {
   final String text;
   final double? textSize;
   final Color? textColor;
@@ -12,7 +12,7 @@ class CustomGroupJoinRequest extends StatelessWidget {
   final double? height;
   final double? width;
 
-  const CustomGroupJoinRequest({
+  const CustomBox({
     super.key,
     required this.text,
     this.imagePath,
@@ -70,6 +70,7 @@ class CustomGroupJoinRequest extends StatelessWidget {
                                   } else {
                                     return Center(
                                       child: CircularProgressIndicator(
+                                        color: Colors.black,
                                         value: loadingProgress
                                                     .expectedTotalBytes !=
                                                 null
