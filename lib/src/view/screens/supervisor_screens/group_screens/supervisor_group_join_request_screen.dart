@@ -114,8 +114,10 @@ class SupervisorGroupJoinRequestScreen
                             textSize: 18.0,
                             textColor: AppColors.blackColor,
                             boxColor: AppColors.primaryColor.withOpacity(0.2),
-                            imagePath: controller.groupJoinRequestsList[index]
-                                .participant?.profileImage!,
+                            imageProvider: NetworkImage(
+                              controller.groupJoinRequestsList[index]
+                                  .participant!.profileImage!,
+                            ),
                             onTap: () {
                               controller.selectedParticipantId.value =
                                   controller.groupJoinRequestsList[index]

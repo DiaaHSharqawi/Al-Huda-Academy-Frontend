@@ -47,7 +47,7 @@ class SupervisorGroupMembersScreen
                           const SizedBox(height: 16.0),
                           _buildSearchField(context),
                           Container(
-                            margin: const EdgeInsets.only(top: 64.0),
+                            margin: const EdgeInsets.only(top: 28.0),
                             child: _buildGroupMembersList(context),
                           ),
                         ],
@@ -167,8 +167,10 @@ class SupervisorGroupMembersScreen
                             textSize: 18.0,
                             textColor: AppColors.blackColor,
                             boxColor: AppColors.primaryColor.withOpacity(0.2),
-                            imagePath: controller.groupMembersList[index]
-                                .participant?.profileImage!,
+                            imageProvider: NetworkImage(
+                              controller.groupMembersList[index].participant!
+                                  .profileImage!,
+                            ),
                             onTap: () {},
                           ),
                         ),

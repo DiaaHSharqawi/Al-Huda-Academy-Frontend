@@ -6,14 +6,17 @@ import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_dashboard_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_join_request_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_members_binding.dart';
+import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_weekly_plan_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_memorization_group_dashboard_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
+import 'package:moltqa_al_quran_frontend/src/core/middlewares/verify_token_jwt_middle_ware.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_create_group_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_create_memorization_group_content_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_current_groups_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_dashboard_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_join_request_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_members_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_weekly_plan_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_memorization_groups_dashboard_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/supervisor_home_screen.dart';
 
@@ -25,12 +28,14 @@ class SupervisorPages {
       transition: Transition.leftToRightWithFade,
       transitionDuration: const Duration(milliseconds: 500),
       binding: SupervisorBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.supervisorGroupDashboard,
       page: () => const SupervisorMemorizationGroupsDashboardScreen(),
       transition: Transition.fadeIn,
       binding: SupervisorMemorizationGroupDashboardBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.createGroupSupervisorScreen,
@@ -38,36 +43,49 @@ class SupervisorPages {
       transition: Transition.leftToRightWithFade,
       transitionDuration: const Duration(milliseconds: 500),
       binding: SupervisorCreateGroupScreenBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.supervisorCreateMemorizationGroupContentScreen,
       page: () => const SupervisorCreateMemorizationGroupContentScreen(),
       transition: Transition.fadeIn,
       binding: SupervisorCreateGroupScreenBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.supervisorCurrentGroupsScreen,
       page: () => const SupervisorCurrentGroupsScreen(),
       transition: Transition.size,
       binding: SupervisorCurrentGroupsBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.supervisorGroupDashboardScreen,
       page: () => const SupervisorGroupDashboardScreen(),
       transition: Transition.downToUp,
       binding: SupervisorGroupDashboardBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.supervisorGroupJoinRequest,
       page: () => const SupervisorGroupJoinRequestScreen(),
       transition: Transition.rightToLeftWithFade,
       binding: SupervisorGroupJoinRequestBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
     GetPage(
       name: AppRoutes.supervisorGroupMembership,
       page: () => const SupervisorGroupMembersScreen(),
-      transition: Transition.zoom,
+      transition: Transition.topLevel,
       binding: SupervisorGroupMembersBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
+    ),
+    GetPage(
+      name: AppRoutes.supervisorGroupWeeklyPlanScreen,
+      page: () => const SupervisorGroupWeeklyPlanScreen(),
+      transition: Transition.rightToLeftWithFade,
+      binding: SupervisorGroupWeeklyPlanBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
     ),
   ];
 }

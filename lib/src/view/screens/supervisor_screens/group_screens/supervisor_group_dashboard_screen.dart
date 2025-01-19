@@ -46,6 +46,10 @@ class SupervisorGroupDashboardScreen
                           ),
                           _buildGroupMembersCard(),
                           const SizedBox(
+                            height: 48.0,
+                          ),
+                          _buildGroupWeeklyPlanSection(),
+                          const SizedBox(
                             height: 64.0,
                           ),
                           _buildGroupJoinRequestSection(),
@@ -60,6 +64,85 @@ class SupervisorGroupDashboardScreen
         ),
         bottomNavigationBar: SupervisorCustomBottomNavigationBar(),
       ),
+    );
+  }
+
+  Widget _buildGroupWeeklyPlanSection() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildGroupWeeklyPlanHeader(),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildGroupWeeklyPlan(),
+      ],
+    );
+  }
+
+  Widget _buildGroupWeeklyPlanHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const CustomGoogleTextWidget(
+          text: "الخطط الاسبوعية",
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          color: AppColors.blackColor,
+        ),
+        const SizedBox(
+          width: 8.0,
+        ),
+        GestureDetector(
+          onTap: () {
+            controller
+                .navigateToGroupWeeklyPlanScreen(controller.groupId.value);
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomGoogleTextWidget(
+                text: "عرض الكل",
+                fontSize: 16.0,
+                color: AppColors.primaryColor,
+              ),
+              SizedBox(
+                width: 16.0,
+              ),
+              FaIcon(
+                FontAwesomeIcons.arrowLeft,
+                color: AppColors.primaryColor,
+                size: 25.0,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGroupWeeklyPlan() {
+    return CustomCard(
+      paddingListTile: 24.0,
+      marginListTile: 32.0,
+      gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
+      cardText: "الخطة الاسبوعية",
+      cardTextSize: 18.0,
+      cardInnerBoxShadowColor: Colors.lime,
+      cardTextColor: AppColors.blackColor,
+      avatarCard: const FaIcon(
+        FontAwesomeIcons.calendarPlus,
+        color: Colors.black87,
+        size: 30.0,
+      ),
+      icon: const Icon(
+        Icons.arrow_forward_ios,
+        color: AppColors.blackColor,
+        size: 30.0,
+      ),
+      onTap: () {},
     );
   }
 
@@ -129,64 +212,6 @@ class SupervisorGroupDashboardScreen
       ),
     );
   }
-
-/*
-  Widget _buildGroupJoinRequestList() {
-    return SizedBox(
-      height: 240.0,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Obx(() {
-              if (controller
-                  .groupDashboard.value!.groupJoinRequestsDashboard.isEmpty) {
-                return const Center(
-                  heightFactor: 4.0,
-                  child: CustomGoogleTextWidget(
-                    text: 'لا يوجد اي طلبات انضمام حالياً',
-                    fontSize: 18.0,
-                    color: AppColors.blackColor,
-                  ),
-                );
-              } else {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller
-                      .groupDashboard.value!.groupJoinRequestsDashboard.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      child: CustomGroupJoinRequest(
-                        height: 120.0,
-                        text: controller
-                            .groupDashboard
-                            .value!
-                            .groupJoinRequestsDashboard[index]
-                            .participant!
-                            .fullName!,
-                        textSize: 18.0,
-                        textColor: AppColors.blackColor,
-                        boxColor: AppColors.primaryColor.withOpacity(0.2),
-                        imagePath: controller
-                            .groupDashboard
-                            .value!
-                            .groupJoinRequestsDashboard[index]
-                            .participant!
-                            .profileImage!,
-                        onTap: () {},
-                      ),
-                    );
-                  },
-                );
-              }
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-*/
 
   Widget _buildGroupJoinRequestHeader() {
     return Row(
