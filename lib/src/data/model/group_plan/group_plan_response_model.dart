@@ -47,6 +47,7 @@ class GroupPlan {
     required this.id,
     required this.groupId,
     required this.weekNumber,
+    required this.startWeekDayDate,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -54,6 +55,7 @@ class GroupPlan {
   final int? id;
   final int? groupId;
   final int? weekNumber;
+  final DateTime? startWeekDayDate;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -62,6 +64,7 @@ class GroupPlan {
       id: json["id"],
       groupId: json["groupId"],
       weekNumber: json["weekNumber"],
+      startWeekDayDate: DateTime.tryParse(json["startWeekDayDate"] ?? ""),
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
     );

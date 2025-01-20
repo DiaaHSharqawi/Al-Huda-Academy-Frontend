@@ -13,8 +13,11 @@ class CustomBox extends StatelessWidget {
   final double? height;
   final double? width;
 
+  final List<Widget>? boxChildren;
+
   const CustomBox({
     super.key,
+    this.boxChildren,
     this.textAlign,
     required this.text,
     required this.boxColor,
@@ -47,40 +50,47 @@ class CustomBox extends StatelessWidget {
               color: boxColor,
               borderRadius: BorderRadius.circular(16.0),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (imageProvider != null)
-                  Center(
-                    child: CircleAvatar(
-                      radius: 40.0,
-                      backgroundColor: Colors.transparent,
-                      child: ClipOval(
-                        child: Image(
-                          image: imageProvider!,
-                          fit: BoxFit.cover,
-                          width: 80.0,
-                          height: 80.0,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (imageProvider != null)
+                      Center(
+                        child: CircleAvatar(
+                          radius: 40.0,
+                          backgroundColor: Colors.transparent,
+                          child: ClipOval(
+                            child: Image(
+                              image: imageProvider!,
+                              fit: BoxFit.cover,
+                              width: 80.0,
+                              height: 80.0,
+                            ),
+                          ),
                         ),
                       ),
+                    const SizedBox(width: 24.0),
+                    Flexible(
+                      child: CustomGoogleTextWidget(
+                        text: text,
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
+                        fontSize: textSize!,
+                        textAlign: textAlign,
+                      ),
                     ),
-                  ),
-                const SizedBox(width: 24.0),
-                Flexible(
-                  child: CustomGoogleTextWidget(
-                    text: text,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                    fontSize: textSize!,
-                    textAlign: textAlign,
-                  ),
+                    const SizedBox(width: 48.0),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 48.0),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.black,
-                ),
+                if (boxChildren != null) ...boxChildren!,
               ],
             ),
           ),
