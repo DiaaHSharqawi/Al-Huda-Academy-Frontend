@@ -86,7 +86,7 @@ class SelectProfileImageRegisterScreen extends GetView<RegisterController> {
             if (!context.mounted) return;
             if (controller.selectedProfileImage.value ==
                 ProfileImage.notSelected) {
-              CustomAwesomeDialog.showAwesomeDialog(
+              await CustomAwesomeDialog.showAwesomeDialog(
                 context: context,
                 dialogType: DialogType.info,
                 title: 'يرجى اختيار صورة شخصية',

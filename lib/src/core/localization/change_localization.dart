@@ -17,7 +17,7 @@ class LocalizationController extends GetxController {
 
     String? savedLanguage = appService.languageStorage.read("language");
     if (savedLanguage == null) {
-      savedLanguage = "en";
+      savedLanguage = "ar";
       appService.languageStorage.write("language", savedLanguage);
     }
     initialLanguage = Locale(savedLanguage);

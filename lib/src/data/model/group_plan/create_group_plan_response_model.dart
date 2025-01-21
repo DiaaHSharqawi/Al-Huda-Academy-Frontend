@@ -1,5 +1,5 @@
-class CreateGroupWeeklyPlanResponseModel {
-  CreateGroupWeeklyPlanResponseModel({
+class CreateGroupPlanResponseModel {
+  CreateGroupPlanResponseModel({
     required this.statusCode,
     required this.success,
     required this.message,
@@ -9,9 +9,9 @@ class CreateGroupWeeklyPlanResponseModel {
   final String? message;
   final int? statusCode;
 
-  factory CreateGroupWeeklyPlanResponseModel.fromJson(
+  factory CreateGroupPlanResponseModel.fromJson(
       Map<String, dynamic> json, int statusCode) {
-    return CreateGroupWeeklyPlanResponseModel(
+    return CreateGroupPlanResponseModel(
       statusCode: statusCode,
       success: json["success"],
       message: json["message"],

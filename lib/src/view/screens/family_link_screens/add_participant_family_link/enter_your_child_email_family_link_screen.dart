@@ -167,7 +167,7 @@ class EnterYourChildEmailFamilyLinkScreen
                   btnCancelOnPress: null,
                 );
               } else {
-                CustomAwesomeDialog.showAwesomeDialog(
+                await CustomAwesomeDialog.showAwesomeDialog(
                   context: context,
                   dialogType: DialogType.error,
                   title: 'حدث خطأ',

@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/services/base_getx_service.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/create_group_weekly_plan_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/create_group_plan_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/group_plan_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:moltqa_al_quran_frontend/src/data/model/supervisor_group_days/supervisor_group_days_response_model.dart';
 
-class SupervisorGroupWeeklyPlanService extends BaseGetxService {
+class SupervisorGroupPlanService extends BaseGetxService {
   Future<GroupPlanResponseModel> fetchGroupPlans(
     String groupId,
     Map<String, dynamic> filter,
@@ -62,18 +62,17 @@ class SupervisorGroupWeeklyPlanService extends BaseGetxService {
     }
   }
 
-  Future<CreateGroupWeeklyPlanResponseModel> createGroupWeeklyPlan(
+  Future<CreateGroupPlanResponseModel> createGroupPlan(
     String groupId,
-    String nextWeekNumber,
-    DateTime startWeekDayDate,
+    DateTime dayDate,
   ) async {
     debugPrint("groupId: $groupId");
-    debugPrint("nextWeekNumber: $nextWeekNumber");
+    debugPrint("dayDate: $dayDate");
 
-    String createGroupWeeklyPlanRoute =
+    String createGroupPlanRoute =
         "${super.getAlHudaBaseURL}/supervisor/groups/$groupId/group-plan/create";
 
-    final url = Uri.parse(createGroupWeeklyPlanRoute);
+    final url = Uri.parse(createGroupPlanRoute);
     debugPrint("$url");
 
     String? lang = super.getAppService.languageStorage.read('language');
@@ -91,8 +90,7 @@ class SupervisorGroupWeeklyPlanService extends BaseGetxService {
           'Authorization': (await super.getToken()).toString(),
         },
         body: {
-          "weekNumber": nextWeekNumber,
-          "startWeekDayDate": startWeekDayDate.toIso8601String(),
+          "dayDate": dayDate.toIso8601String(),
         },
       ).timeout(const Duration(seconds: 10));
       debugPrint('Response status: ${response.statusCode}');
@@ -100,18 +98,16 @@ class SupervisorGroupWeeklyPlanService extends BaseGetxService {
 
       final Map<String, dynamic> data = json.decode(response.body);
 
-      CreateGroupWeeklyPlanResponseModel createGroupWeeklyPlanResponseModel =
-          CreateGroupWeeklyPlanResponseModel.fromJson(
-              data, response.statusCode);
+      CreateGroupPlanResponseModel createGroupPlanResponseModel =
+          CreateGroupPlanResponseModel.fromJson(data, response.statusCode);
 
       debugPrint("Data: $data");
-      debugPrint(
-          "createGroupWeeklyPlanResponseModel: $createGroupWeeklyPlanResponseModel");
+      debugPrint("createGroupPlanResponseModel: $createGroupPlanResponseModel");
 
-      return createGroupWeeklyPlanResponseModel;
+      return createGroupPlanResponseModel;
     } catch (e) {
       debugPrint("Error: $e");
-      return CreateGroupWeeklyPlanResponseModel(
+      return CreateGroupPlanResponseModel(
         success: false,
         statusCode: 500,
         message: "Error: $e",

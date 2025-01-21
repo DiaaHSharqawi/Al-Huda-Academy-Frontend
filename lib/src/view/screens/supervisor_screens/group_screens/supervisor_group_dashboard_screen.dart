@@ -48,7 +48,7 @@ class SupervisorGroupDashboardScreen
                           const SizedBox(
                             height: 48.0,
                           ),
-                          _buildGroupWeeklyPlanSection(),
+                          _buildGroupPlanSection(),
                           const SizedBox(
                             height: 64.0,
                           ),
@@ -67,21 +67,21 @@ class SupervisorGroupDashboardScreen
     );
   }
 
-  Widget _buildGroupWeeklyPlanSection() {
+  Widget _buildGroupPlanSection() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildGroupWeeklyPlanHeader(),
+        _buildGroupPlanHeader(),
         const SizedBox(
           height: 16.0,
         ),
-        _buildGroupWeeklyPlan(),
+        _buildGroupPlan(),
       ],
     );
   }
 
-  Widget _buildGroupWeeklyPlanHeader() {
+  Widget _buildGroupPlanHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,8 +97,7 @@ class SupervisorGroupDashboardScreen
         ),
         GestureDetector(
           onTap: () {
-            controller
-                .navigateToGroupWeeklyPlanScreen(controller.groupId.value);
+            controller.navigateToGroupPlanScreen(controller.groupId.value);
           },
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -123,7 +122,7 @@ class SupervisorGroupDashboardScreen
     );
   }
 
-  Widget _buildGroupWeeklyPlan() {
+  Widget _buildGroupPlan() {
     return CustomCard(
       paddingListTile: 24.0,
       marginListTile: 32.0,

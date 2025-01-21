@@ -181,7 +181,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
               } catch (error) {
                 debugPrint(error.toString());
                 if (!context.mounted) return;
-                await _showDialog(context, DialogType.error, error.toString());
+                _showDialog(context, DialogType.error, error.toString());
               }
 
               controller.isSubmitting.value = false;
@@ -206,7 +206,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
     switch (resetPasswordResponse!.statusCode) {
       case (200):
         {
-          await _showDialog(
+          _showDialog(
             context,
             DialogType.success,
             resetPasswordResponse.message!,
@@ -215,7 +215,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
           break;
         }
       case 422:
-        await _showDialog(
+        _showDialog(
           context,
           DialogType.error,
           SendPasswordResetCodeScreenLanguageConstants
@@ -223,7 +223,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
         );
         break;
       default:
-        await _showDialog(
+        _showDialog(
           context,
           DialogType.error,
           resetPasswordResponse.message!,
@@ -232,9 +232,9 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
     }
   }
 
-  Future<void> _showDialog(
+  void _showDialog(
       BuildContext context, DialogType type, String message) async {
-    await CustomAwesomeDialog.showAwesomeDialog(
+    return CustomAwesomeDialog.showAwesomeDialog(
       context: context,
       dialogType: type,
       title: type == DialogType.success

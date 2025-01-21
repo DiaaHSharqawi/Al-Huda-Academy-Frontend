@@ -396,8 +396,9 @@ class SupervisorGroupJoinRequestScreen
     await controller.fetchGroupJoinRequests();
   }
 
-  Future<void> _buildAcceptRequestConfirmationDialog(BuildContext context) {
-    return CustomAwesomeDialog.showAwesomeDialog(
+  Future<void> _buildAcceptRequestConfirmationDialog(
+      BuildContext context) async {
+    await CustomAwesomeDialog.showAwesomeDialog(
       context: context,
       dialogType: DialogType.info,
       title: "تأكيد قبول الطلب",
@@ -419,7 +420,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Group join request accepted successfully");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.success,
         title: "تم قبول الطلب",
@@ -437,7 +438,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Failed to accept group join request");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.error,
         title: "فشل في قبول الطلب",
@@ -457,7 +458,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Group join request rejected successfully");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.success,
         title: "تم رفض الطلب",
@@ -475,7 +476,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Failed to accept group join request");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.error,
         title: "فشل في قبول الطلب",

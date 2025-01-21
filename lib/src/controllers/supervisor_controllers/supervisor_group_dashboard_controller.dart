@@ -91,12 +91,12 @@ class SupervisorGroupDashboardController extends GetxController {
     );
   }
 
-  void navigateToGroupWeeklyPlanScreen(String groupId) {
-    debugPrint("Navigate to Group Weekly Plan Screen");
+  void navigateToGroupPlanScreen(String groupId) {
+    debugPrint("Navigate to Group  Plan Screen");
     debugPrint("Group ID: $groupId");
 
     Get.toNamed(
-      AppRoutes.supervisorGroupWeeklyPlanScreen,
+      AppRoutes.supervisorGroupPlanScreen,
       arguments: groupId,
     );
   }

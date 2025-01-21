@@ -11,7 +11,7 @@ class GroupPlanResponseModel {
   final String? message;
   final List<GroupPlan> groupPlan;
   final GroupPlanMetaData? groupPlanMetaData;
-  final int? statusCode;
+  final int statusCode;
 
   factory GroupPlanResponseModel.fromJson(
       Map<String, dynamic> json, int statusCode) {
@@ -46,16 +46,16 @@ class GroupPlan {
   GroupPlan({
     required this.id,
     required this.groupId,
-    required this.weekNumber,
-    required this.startWeekDayDate,
+    required this.dayDate,
+    required this.groupPlanStatusId,
     required this.createdAt,
     required this.updatedAt,
   });
 
   final int? id;
   final int? groupId;
-  final int? weekNumber;
-  final DateTime? startWeekDayDate;
+  final DateTime? dayDate;
+  final int? groupPlanStatusId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -63,8 +63,8 @@ class GroupPlan {
     return GroupPlan(
       id: json["id"],
       groupId: json["groupId"],
-      weekNumber: json["weekNumber"],
-      startWeekDayDate: DateTime.tryParse(json["startWeekDayDate"] ?? ""),
+      dayDate: DateTime.tryParse(json["dayDate"] ?? ""),
+      groupPlanStatusId: json["group_plan_status_id"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
     );
@@ -73,14 +73,17 @@ class GroupPlan {
   Map<String, dynamic> toJson() => {
         "id": id,
         "groupId": groupId,
-        "weekNumber": weekNumber,
+        "dayDate": dayDate != null
+            ? "${dayDate?.year.toString().padLeft(4, '0')}-${dayDate?.month.toString().padLeft(2, '0')}-${dayDate?.day.toString().padLeft(2, '0')}"
+            : null,
+        "group_plan_status_id": groupPlanStatusId,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
       };
 
   @override
   String toString() {
-    return "$id, $groupId, $weekNumber, $createdAt, $updatedAt, ";
+    return "$id, $groupId, $dayDate, $groupPlanStatusId, $createdAt, $updatedAt, ";
   }
 }
 
