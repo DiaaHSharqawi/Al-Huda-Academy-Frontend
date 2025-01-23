@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
-import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_plan_service.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/create_group_plan_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_plans_service.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/group_plan_response_model.dart';
-import 'package:moltqa_al_quran_frontend/src/data/model/supervisor_group_days/supervisor_group_days_response_model.dart';
 
-class SupervisorGroupPlanController extends GetxController {
-  final SupervisorGroupPlanService _supervisorAddGroupPlanService;
+class SupervisorGroupPlansController extends GetxController {
+  final SupervisorGroupPlansService _supervisorAddGroupPlansService;
 
-  SupervisorGroupPlanController(
-    this._supervisorAddGroupPlanService,
+  SupervisorGroupPlansController(
+    this._supervisorAddGroupPlansService,
   );
 
   var isLoading = false.obs;
@@ -24,13 +22,9 @@ class SupervisorGroupPlanController extends GetxController {
 
   final List<int> dropDownItems = [1, 3, 5, 7, 10];
 
-  var supervisorGroupDaysList = <SupervisorGroupDay>[].obs;
-
   var queryParams = <String, dynamic>{}.obs;
 
   var groupId = "".obs;
-
-  var selectedDate = DateTime.now().obs;
 
   @override
   void onInit() async {
@@ -46,10 +40,6 @@ class SupervisorGroupPlanController extends GetxController {
       isLoading(true);
       await fetchGroupPlans();
       isLoading(false);
-
-      isLoading(true);
-      await getDaysList();
-      isLoading(false);
     } catch (e) {
       debugPrint("Error SupervisorGroupPlanController onInit : $e");
     } finally {
@@ -61,7 +51,7 @@ class SupervisorGroupPlanController extends GetxController {
     isLoading(true);
     try {
       GroupPlanResponseModel groupPlanResponseModel =
-          await _supervisorAddGroupPlanService.fetchGroupPlans(
+          await _supervisorAddGroupPlansService.fetchGroupPlans(
         groupId.value,
         queryParams,
       );
@@ -96,48 +86,18 @@ class SupervisorGroupPlanController extends GetxController {
     return specificDayThisWeek.add(Duration(days: 7 * nextWeekNumber));
   }
 
-  Future<CreateGroupPlanResponseModel> createGroupPlan() async {
-    isLoading(true);
-    try {
-      String nextWeekNumber =
-          groupPlanList.isNotEmpty ? (groupPlanList.length).toString() : "0";
-
-      debugPrint("Next Week Number: $nextWeekNumber");
-
-      CreateGroupPlanResponseModel createGroupPlanResponseModel =
-          await _supervisorAddGroupPlanService.createGroupPlan(
-        groupId.value,
-        selectedDate.value,
-      );
-
-      return createGroupPlanResponseModel;
-    } catch (error) {
-      debugPrint("Error createGroupPlan: $error");
-      return CreateGroupPlanResponseModel(
-        success: false,
-        statusCode: 500,
-        message: "Error: $error",
-      );
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  Future<void> getDaysList() async {
-    var groupDaysResponse =
-        await _supervisorAddGroupPlanService.getGroupDaysList(
-      groupId.value,
-    );
-    debugPrint("controller");
-    debugPrint(groupDaysResponse.firstOrNull.toString());
-    if (groupDaysResponse.isNotEmpty) {
-      supervisorGroupDaysList.addAll(groupDaysResponse);
-    }
-  }
-
   void navigateToGroupPlanDetailsScreen() {
     Get.toNamed(
       AppRoutes.supervisorGroupPlanDetails,
+      arguments: {
+        "groupId": groupId.value,
+      },
+    );
+  }
+
+  void navigateToCreateGroupPlanScreen() {
+    var result = Get.toNamed(
+      AppRoutes.createGroupPlanScreen,
       arguments: {
         "groupId": groupId.value,
       },

@@ -45,6 +45,7 @@ class GroupPlanResponseModel {
 class GroupPlan {
   GroupPlan({
     required this.id,
+    required this.groupPlanStatus,
     required this.groupId,
     required this.dayDate,
     required this.groupPlanStatusId,
@@ -58,10 +59,14 @@ class GroupPlan {
   final int? groupPlanStatusId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final GroupPlanStatus? groupPlanStatus;
 
   factory GroupPlan.fromJson(Map<String, dynamic> json) {
     return GroupPlan(
       id: json["id"],
+      groupPlanStatus: json["groupPlanStatus"] == null
+          ? null
+          : GroupPlanStatus.fromJson(json["groupPlanStatus"]),
       groupId: json["groupId"],
       dayDate: DateTime.tryParse(json["dayDate"] ?? ""),
       groupPlanStatusId: json["group_plan_status_id"],
@@ -84,6 +89,37 @@ class GroupPlan {
   @override
   String toString() {
     return "$id, $groupId, $dayDate, $groupPlanStatusId, $createdAt, $updatedAt, ";
+  }
+}
+
+class GroupPlanStatus {
+  GroupPlanStatus({
+    required this.id,
+    required this.nameAr,
+    required this.nameEn,
+  });
+
+  final int? id;
+  final String? nameAr;
+  final String? nameEn;
+
+  factory GroupPlanStatus.fromJson(Map<String, dynamic> json) {
+    return GroupPlanStatus(
+      id: json["id"],
+      nameAr: json["name_ar"],
+      nameEn: json["name_en"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name_ar": nameAr,
+        "name_en": nameEn,
+      };
+
+  @override
+  String toString() {
+    return "$id, $nameAr, $nameEn, ";
   }
 }
 
