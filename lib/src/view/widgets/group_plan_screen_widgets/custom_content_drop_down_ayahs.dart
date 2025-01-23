@@ -12,6 +12,7 @@ class CustomContentDropDownAyahs extends StatelessWidget {
     required this.groupContentList,
     required this.selectedAyahId,
     required this.onChanged,
+    this.errorText,
   });
 
   final String hintText;
@@ -19,6 +20,7 @@ class CustomContentDropDownAyahs extends StatelessWidget {
   final List<GroupContent> groupContentList;
   final int selectedAyahId;
   final void Function(int?) onChanged;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class CustomContentDropDownAyahs extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: DropdownButtonFormField<int>(
         decoration: InputDecoration(
+          errorText: errorText,
           labelText: hintText,
           contentPadding: const EdgeInsets.all(15),
           border: OutlineInputBorder(

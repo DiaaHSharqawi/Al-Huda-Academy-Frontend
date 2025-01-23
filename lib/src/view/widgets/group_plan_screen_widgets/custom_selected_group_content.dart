@@ -50,8 +50,7 @@ class CustomSelectedGroupContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomGoogleTextWidget(
-                        text:
-                            '${content['startSurahName'] ?? ''}${content['startSurahName'] != content['endSurahName'] ? ' - ${content['endSurahName'] ?? ''}' : ''}',
+                        text: '${content['surahName']}',
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                         color: AppColors.blackColor,

@@ -10,9 +10,15 @@ class SupervisorCreateGroupPlanService extends BaseGetxService {
   Future<CreateGroupPlanResponseModel> createGroupPlan(
     String groupId,
     DateTime dayDate,
+    List contentToMemorize,
+    List contentToReview,
+    String note,
   ) async {
     debugPrint("groupId: $groupId");
     debugPrint("dayDate: $dayDate");
+
+    // debugPrint("contentToMemorize: ${contentToMemorize.toList()}");
+    //  debugPrint("contentToReview: ${contentToReview.toList()}");
 
     String createGroupPlanRoute =
         "${super.getAlHudaBaseURL}/supervisor/groups/$groupId/group-plan/create";
@@ -28,16 +34,24 @@ class SupervisorCreateGroupPlanService extends BaseGetxService {
 
       debugPrint("Token: ${await super.getToken()}");
 
-      final response = await http.post(
-        url,
-        headers: <String, String>{
-          'Accept-Language': lang ?? 'en',
-          'Authorization': (await super.getToken()).toString(),
-        },
-        body: {
-          "dayDate": dayDate.toIso8601String(),
-        },
-      ).timeout(const Duration(seconds: 10));
+      //   debugPrint("dayDate: $dayDate");
+
+      final response = await http
+          .post(
+            url,
+            headers: <String, String>{
+              'Accept-Language': lang ?? 'en',
+              'Authorization': (await super.getToken()).toString(),
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "dayDate": dayDate.toIso8601String().split("T")[0],
+              "contentToMemorize": contentToMemorize,
+              "contentToReview": contentToReview,
+              "note": note,
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
       debugPrint('Response status: ${response.statusCode}');
       debugPrint('Response body: ${response.body}');
 

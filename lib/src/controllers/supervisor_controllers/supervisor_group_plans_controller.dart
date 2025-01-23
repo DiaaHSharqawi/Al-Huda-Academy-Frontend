@@ -95,12 +95,16 @@ class SupervisorGroupPlansController extends GetxController {
     );
   }
 
-  void navigateToCreateGroupPlanScreen() {
-    var result = Get.toNamed(
+  Future<void> navigateToCreateGroupPlanScreen() async {
+    var result = await Get.toNamed(
       AppRoutes.createGroupPlanScreen,
       arguments: {
         "groupId": groupId.value,
       },
     );
+
+    if (result != null) {
+      await fetchGroupPlans();
+    }
   }
 }

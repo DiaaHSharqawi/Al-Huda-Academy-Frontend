@@ -12,8 +12,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart
 import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/create_group_plan_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_add_group_plan_card.dart';
-import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_content_drop_down.dart';
-import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_content_drop_down_ayahs.dart';
+import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_group_plan_content_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_group_content_check_header.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_selected_group_content.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
@@ -49,7 +48,7 @@ class SupervisorCreateGroupPlanScreen
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildCreateGroupPlanSection(),
+                          _buildCreateGroupPlanSection(context),
                         ],
                       ),
                     );
@@ -64,7 +63,7 @@ class SupervisorCreateGroupPlanScreen
     );
   }
 
-  Widget _buildCreateGroupPlanSection() {
+  Widget _buildCreateGroupPlanSection(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +85,7 @@ class SupervisorCreateGroupPlanScreen
         const SizedBox(
           height: 32.0,
         ),
-        _buildCreateGroupPlanButton(),
+        _buildCreateGroupPlanButton(context),
       ],
     );
   }
@@ -121,7 +120,7 @@ class SupervisorCreateGroupPlanScreen
     );
   }
 
-  Widget _buildCreateGroupPlanButton() {
+  Widget _buildCreateGroupPlanButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: Obx(
@@ -133,7 +132,14 @@ class SupervisorCreateGroupPlanScreen
             buttonTextColor: Colors.white,
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            onPressed: () async {},
+            onPressed: () async {
+              debugPrint("Create Group Plan Button Pressed");
+
+              debugPrint(
+                  "Selected Review Content: ${controller.selectedReviewContnet}");
+
+              _handelCreateGroupPlan(context);
+            },
             loadingWidget: controller.isLoading.value
                 ? const CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -144,6 +150,44 @@ class SupervisorCreateGroupPlanScreen
         },
       ),
     );
+  }
+
+  Future<void> _handelCreateGroupPlan(BuildContext context) async {
+    try {
+      CreateGroupPlanResponseModel createGroupPlanResponseModel =
+          await controller.createGroupPlan();
+      debugPrint("Create Group Plan Response : $createGroupPlanResponseModel");
+
+      if (createGroupPlanResponseModel.statusCode == 200) {
+        if (!context.mounted) return;
+
+        await CustomAwesomeDialog.showAwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          title: "تم اضافة الخطة الأسبوعية بنجاح",
+          description:
+              "تم اضافة الخطة الأسبوعية بنجاح بامكانك الان الانتقال اليها واضافة باقي التفاصيل",
+          btnOkOnPress: () {},
+        );
+
+        controller.navigateToGroupPlanScreen();
+      } else {
+        debugPrint(
+            "Error Create Group Plan: ${createGroupPlanResponseModel.message}");
+
+        if (!context.mounted) return;
+
+        await CustomAwesomeDialog.showAwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          title: "خطأ",
+          description: createGroupPlanResponseModel.message!,
+          btnOkOnPress: () {},
+        );
+      }
+    } catch (e) {
+      debugPrint("Error _handelCreateGroupPlan : $e");
+    }
   }
 // ----- Start of memorize Section -----
 
@@ -174,6 +218,22 @@ class SupervisorCreateGroupPlanScreen
                   height: 8.0,
                 );
         }),
+        //------
+        Obx(() {
+          return (controller.selectedMemorizeContnet.isEmpty &&
+                      controller.selectedReviewContnet.isEmpty) &&
+                  controller.isSubmitting.value
+              ? const SizedBox(
+                  width: double.infinity,
+                  child: CustomGoogleTextWidget(
+                    text: "من فضلك اختر موضع الحفظ",
+                    fontSize: 16.0,
+                    color: Colors.red,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : const SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -198,140 +258,16 @@ class SupervisorCreateGroupPlanScreen
   }
 
   void _showAddMemorizeDialog() {
-    controller.selectedMemorizeFromSurah.value = 1;
-    controller.selectedMemorizeToSurah.value = 1;
-
-    controller.selectedMemorizeFromAyah.value = 1;
-    controller.selectedMemorizeToAyah.value = 1;
+    controller.resetSelectedMemorizedContent();
 
     Get.dialog(
-      AlertDialog(
-        title: const CustomGoogleTextWidget(
-          text: "اضافة حفظ",
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.blackColor,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "من سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedMemorizeFromSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedMemorizeFromAyah.value = 1;
-
-                    controller.selectedMemorizeFromSurah.value = int.parse(
-                      value!.id.toString(),
-                    );
-
-                    debugPrint(
-                        "Selected selectedMemorizeFromSurah: ${controller.selectedMemorizeFromSurah}");
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "إلى سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedMemorizeToSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedMemorizeToAyah.value = 1;
-
-                    controller.selectedMemorizeToSurah.value = value!.id!;
-                  },
-                ),
-              ),
-
-              //--------------------------------
-              const SizedBox(height: 16.0),
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "من آية",
-                  selectedSurah: controller.selectedMemorizeFromSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedMemorizeFromAyah.value,
-                  onChanged: (value) {
-                    controller.selectedMemorizeFromAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedMemorizeFromAyah: ${controller.selectedMemorizeFromAyah}");
-                  },
-                ),
-              ),
-              //-----------------------------------
-              const SizedBox(height: 16.0),
-              //     _buildDropdownMemorizeToAyah(),
-
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "إلى آية",
-                  selectedSurah: controller.selectedMemorizeToSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedMemorizeToAyah.value,
-                  onChanged: (value) {
-                    controller.selectedMemorizeToAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedMemorizeToAyah: ${controller.selectedMemorizeToAyah}");
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'إلغاء',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Handle the addition of review
-              Get.back();
-
-              controller.selectedMemorizeContnet.add(RxMap<dynamic, dynamic>({
-                'startSurah': controller.selectedMemorizeFromSurah.value,
-                'endSurah': controller.selectedMemorizeToSurah.value,
-                'startAyah': controller.selectedMemorizeFromAyah.value,
-                'endAyah': controller.selectedMemorizeToAyah.value,
-                'startSurahName': controller.groupContentList
-                    .firstWhereOrNull((element) =>
-                        element.id ==
-                        controller.selectedMemorizeFromSurah.value)
-                    ?.name,
-                'endSurahName': controller.groupContentList
-                    .firstWhereOrNull((element) =>
-                        element.id == controller.selectedMemorizeToSurah.value)
-                    ?.name,
-              }));
-
-              controller.selectedMemorizeContnet.refresh();
-
-              debugPrint(
-                  "Selected Content: ${controller.selectedMemorizeContnet}");
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'تأكيد',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+      CustomGroupPlanContentDialog(
+        title: "إضافة حفظ",
+        selectedSurahId: controller.selectedMemorizeSurah,
+        selectedStartAyahId: controller.selectedMemorizeFromAyah,
+        selectedEndAyahId: controller.selectedMemorizeToAyah,
+        groupContentList: controller.groupContentList,
+        selectedReviewContnet: controller.selectedMemorizeContnet,
       ),
     );
   }
@@ -339,141 +275,26 @@ class SupervisorCreateGroupPlanScreen
   void _showEditMemorizeDialog(RxMap<dynamic, dynamic> content) {
     debugPrint("Content: $content");
 
-    controller.selectedMemorizeFromSurah.value = content['startSurah'];
-    controller.selectedMemorizeToSurah.value = content['endSurah'];
-    controller.selectedMemorizeFromAyah.value = content['startAyah'];
+    debugPrint("Edit Memorize Dialog");
+
+    debugPrint("content['surahId']: ${content['surahId']}");
+    debugPrint("content['startAyah']: ${content['startAyah']}");
+    debugPrint("content['endAyah']: ${content['endAyah']}");
+
     controller.selectedMemorizeToAyah.value = content['endAyah'];
+    controller.selectedMemorizeFromAyah.value = content['startAyah'];
+    controller.selectedMemorizeSurah.value = content['surahId'];
 
     Get.dialog(
-      AlertDialog(
-        title: const CustomGoogleTextWidget(
-          text: 'تعديل حفظ',
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.blackColor,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "من سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedMemorizeFromSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedMemorizeFromAyah.value = 1;
-
-                    controller.selectedMemorizeFromSurah.value = int.parse(
-                      value!.id.toString(),
-                    );
-
-                    debugPrint(
-                        "Selected selectedMemorizeFromSurah: ${controller.selectedMemorizeFromSurah}");
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "إلى سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedMemorizeToSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedMemorizeToAyah.value = 1;
-
-                    controller.selectedMemorizeToSurah.value = value!.id!;
-                  },
-                ),
-              ),
-
-              //--------------------------------
-              const SizedBox(height: 16.0),
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "من آية",
-                  selectedSurah: controller.selectedMemorizeFromSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedMemorizeFromAyah.value,
-                  onChanged: (value) {
-                    controller.selectedMemorizeFromAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedMemorizeFromAyah: ${controller.selectedMemorizeFromAyah}");
-                  },
-                ),
-              ),
-              //-----------------------------------
-              const SizedBox(height: 16.0),
-              //     _buildDropdownMemorizeToAyah(),
-
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "إلى آية",
-                  selectedSurah: controller.selectedMemorizeToSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedMemorizeToAyah.value,
-                  onChanged: (value) {
-                    controller.selectedMemorizeToAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedMemorizeToAyah: ${controller.selectedMemorizeToAyah}");
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'إلغاء',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Handle the edit of review
-              Get.back();
-
-              content['startSurah'] =
-                  controller.selectedMemorizeFromSurah.value;
-
-              content['endSurah'] = controller.selectedMemorizeToSurah.value;
-
-              content['startAyah'] = controller.selectedMemorizeFromAyah.value;
-
-              content['endAyah'] = controller.selectedMemorizeToAyah.value;
-
-              content['startSurahName'] = controller.groupContentList
-                  .firstWhereOrNull((element) =>
-                      element.id == controller.selectedMemorizeFromSurah.value)
-                  ?.name;
-              content['endSurahName'] = controller.groupContentList
-                  .firstWhereOrNull((element) =>
-                      element.id == controller.selectedMemorizeToSurah.value)
-                  ?.name;
-
-              controller.selectedMemorizeContnet.refresh();
-
-              debugPrint(
-                  "Edited Content: ${controller.selectedMemorizeContnet}");
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'تأكيد',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+      CustomGroupPlanContentDialog(
+        title: "تعديل حفظ",
+        selectedSurahId: controller.selectedMemorizeSurah,
+        selectedStartAyahId: controller.selectedMemorizeFromAyah,
+        selectedEndAyahId: controller.selectedMemorizeToAyah,
+        groupContentList: controller.groupContentList,
+        selectedReviewContnet: controller.selectedMemorizeContnet,
+        isEdit: true,
+        editContent: content,
       ),
     );
   }
@@ -509,6 +330,21 @@ class SupervisorCreateGroupPlanScreen
                   height: 8.0,
                 );
         }),
+        Obx(() {
+          return (controller.selectedMemorizeContnet.isEmpty &&
+                      controller.selectedReviewContnet.isEmpty) &&
+                  controller.isSubmitting.value
+              ? const SizedBox(
+                  width: double.infinity,
+                  child: CustomGoogleTextWidget(
+                    text: "من فضلك اختر موضع المراجعة",
+                    fontSize: 16.0,
+                    color: Colors.red,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : const SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -526,143 +362,26 @@ class SupervisorCreateGroupPlanScreen
           selectedContent: controller.selectedReviewContnet,
           showEditMemorizeDialog: _showEditReviewDialog,
         ),
+        const SizedBox(
+          height: 16.0,
+        ),
       ],
     );
   }
 
   void _showAddReviewDialog() {
-    controller.selectedReviewFromSurah.value = 1;
-    controller.selectedReviewToSurah.value = 1;
+    debugPrint("Show Add Review Dialog");
 
-    controller.selectedReviewFromAyah.value = 1;
-    controller.selectedReviewToAyah.value = 1;
+    controller.resetSelectedReviewContent();
 
     Get.dialog(
-      AlertDialog(
-        title: const CustomGoogleTextWidget(
-          text: 'إضافة مراجعة',
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.blackColor,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "من سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedReviewFromSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedReviewFromAyah.value = 1;
-
-                    controller.selectedReviewFromSurah.value = int.parse(
-                      value!.id.toString(),
-                    );
-
-                    debugPrint(
-                        "Selected selectedReviewFromSurah: ${controller.selectedReviewFromSurah}");
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              //  _buildDropdownToSurah(),
-
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "إلى سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedReviewToSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedReviewToAyah.value = 1;
-
-                    controller.selectedReviewToSurah.value = value!.id!;
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              //  _buildDropdownFromAyah(),
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "من آية",
-                  selectedSurah: controller.selectedReviewFromSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedReviewFromAyah.value,
-                  onChanged: (value) {
-                    controller.selectedReviewFromAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedReviewFromAyah: ${controller.selectedReviewFromAyah}");
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "إلى آية",
-                  selectedSurah: controller.selectedReviewToSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedReviewToAyah.value,
-                  onChanged: (value) {
-                    controller.selectedReviewToAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedReviewToAyah: ${controller.selectedReviewToAyah}");
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'إلغاء',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Handle the addition of review
-              Get.back();
-
-              controller.selectedReviewContnet.add(RxMap<dynamic, dynamic>({
-                'startSurah': controller.selectedReviewFromSurah.value,
-                'endSurah': controller.selectedReviewToSurah.value,
-                'startAyah': controller.selectedReviewFromAyah.value,
-                'endAyah': controller.selectedReviewToAyah.value,
-                'startSurahName': controller.groupContentList
-                    .firstWhereOrNull((element) =>
-                        element.id == controller.selectedReviewFromSurah.value)
-                    ?.name,
-                'endSurahName': controller.groupContentList
-                    .firstWhereOrNull((element) =>
-                        element.id == controller.selectedReviewToSurah.value)
-                    ?.name,
-              }));
-
-              controller.selectedReviewContnet.refresh();
-
-              debugPrint(
-                  "Selected Content: ${controller.selectedReviewContnet}");
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'تأكيد',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+      CustomGroupPlanContentDialog(
+        title: "إضافة مراجعة",
+        selectedSurahId: controller.selectedReviewSurah,
+        selectedStartAyahId: controller.selectedReviewFromAyah,
+        selectedEndAyahId: controller.selectedReviewToAyah,
+        groupContentList: controller.groupContentList,
+        selectedReviewContnet: controller.selectedReviewContnet,
       ),
     );
   }
@@ -670,134 +389,26 @@ class SupervisorCreateGroupPlanScreen
   void _showEditReviewDialog(RxMap<dynamic, dynamic> content) {
     debugPrint("Content: $content");
 
-    controller.selectedReviewFromSurah.value = content['startSurah'];
-    controller.selectedReviewToSurah.value = content['endSurah'];
-    controller.selectedReviewFromAyah.value = content['startAyah'];
+    debugPrint("Edit Review Dialog");
+
+    debugPrint("content['surahId']: ${content['surahId']}");
+    debugPrint("content['startAyah']: ${content['startAyah']}");
+    debugPrint("content['endAyah']: ${content['endAyah']}");
+
     controller.selectedReviewToAyah.value = content['endAyah'];
+    controller.selectedReviewFromAyah.value = content['startAyah'];
+    controller.selectedReviewSurah.value = content['surahId'];
 
     Get.dialog(
-      AlertDialog(
-        title: const CustomGoogleTextWidget(
-          text: 'تعديل مراجعة',
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: AppColors.blackColor,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "من سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedReviewFromSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedReviewFromAyah.value = 1;
-
-                    controller.selectedReviewFromSurah.value = int.parse(
-                      value!.id.toString(),
-                    );
-
-                    debugPrint(
-                        "Selected selectedReviewFromSurah: ${controller.selectedReviewFromSurah}");
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              //  _buildDropdownToSurah(),
-
-              Obx(
-                () => CustomContentDropDown(
-                  hintText: "إلى سورة",
-                  groupContentList: controller.groupContentList,
-                  selectedContentId: controller.selectedReviewToSurah.value,
-                  onChanged: (value) {
-                    debugPrint("New Value : $value");
-
-                    controller.selectedReviewToAyah.value = 1;
-
-                    controller.selectedReviewToSurah.value = value!.id!;
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              //  _buildDropdownFromAyah(),
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "من آية",
-                  selectedSurah: controller.selectedReviewFromSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedReviewFromAyah.value,
-                  onChanged: (value) {
-                    controller.selectedReviewFromAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedReviewFromAyah: ${controller.selectedReviewFromAyah}");
-                  },
-                ),
-              ),
-              const SizedBox(height: 16.0),
-
-              Obx(
-                () => CustomContentDropDownAyahs(
-                  hintText: "إلى آية",
-                  selectedSurah: controller.selectedReviewToSurah.value,
-                  groupContentList: controller.groupContentList,
-                  selectedAyahId: controller.selectedReviewToAyah.value,
-                  onChanged: (value) {
-                    controller.selectedReviewToAyah.value = (value!);
-                    debugPrint(
-                        "Selected selectedReviewToAyah: ${controller.selectedReviewToAyah}");
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'إلغاء',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // Handle the edit of review
-              Get.back();
-
-              content['startSurah'] = controller.selectedReviewFromSurah.value;
-              content['endSurah'] = controller.selectedReviewToSurah.value;
-              content['startAyah'] = controller.selectedReviewFromAyah.value;
-              content['endAyah'] = controller.selectedReviewToAyah.value;
-              content['startSurahName'] = controller.groupContentList
-                  .firstWhereOrNull((element) =>
-                      element.id == controller.selectedReviewFromSurah.value)
-                  ?.name;
-              content['endSurahName'] = controller.groupContentList
-                  .firstWhereOrNull((element) =>
-                      element.id == controller.selectedReviewToSurah.value)
-                  ?.name;
-
-              controller.selectedReviewContnet.refresh();
-
-              debugPrint("Edited Content: ${controller.selectedReviewContnet}");
-            },
-            child: const CustomGoogleTextWidget(
-              text: 'تأكيد',
-              fontSize: 16.0,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+      CustomGroupPlanContentDialog(
+        selectedEndAyahId: controller.selectedReviewToAyah,
+        selectedStartAyahId: controller.selectedReviewFromAyah,
+        selectedSurahId: controller.selectedReviewSurah,
+        title: "تعديل مراجعة",
+        groupContentList: controller.groupContentList,
+        selectedReviewContnet: controller.selectedReviewContnet,
+        isEdit: true,
+        editContent: content,
       ),
     );
   }
@@ -861,6 +472,20 @@ class SupervisorCreateGroupPlanScreen
               ],
             ),
           ),
+          Obx(() {
+            return controller.selectedDate.value == null &&
+                    controller.isSubmitting.value
+                ? const SizedBox(
+                    width: double.infinity,
+                    child: CustomGoogleTextWidget(
+                      text: "من فضلك اختر اليوم",
+                      fontSize: 16.0,
+                      color: Colors.red,
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : const SizedBox.shrink();
+          }),
         ],
       ),
     );
@@ -882,74 +507,86 @@ class SupervisorCreateGroupPlanScreen
             height: 450.0,
             child: SingleChildScrollView(
               child: Obx(
-                () => TableCalendar(
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  selectedDayPredicate: (day) =>
-                      isSameDay(controller.selectedDate.value, day),
-                  onDaySelected: (selectedDay, focusedDay) {
-                    debugPrint("Selected Day: $selectedDay");
-                    controller.selectedDate(selectedDay);
-                    controller.selectedDate.refresh();
-                  },
-                  focusedDay: controller.selectedDate.value ?? DateTime.now(),
-                  calendarBuilders: CalendarBuilders(
-                    selectedBuilder: (context, date, events) => Container(
-                      margin: const EdgeInsets.all(4.0),
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: CustomGoogleTextWidget(
-                        text: date.day.toString(),
-                        fontSize: 16.0,
-                        color: AppColors.white,
-                      ),
-                    ),
-                    todayBuilder: (context, date, events) => Container(
-                      margin: const EdgeInsets.all(4.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.5),
-                        shape: BoxShape.circle,
-                      ),
-                      child: CustomGoogleTextWidget(
-                        text: date.day.toString(),
-                        fontSize: 16.0,
-                        color: AppColors.white,
-                      ),
-                    ),
-                    // Highlight custom days based on indices
-                    defaultBuilder: (context, date, events) {
-                      // Get the day of the week (1 = Sunday, 2 = Monday, ..., 7 = Saturday)
-                      int dayOfWeek = (date.weekday % 7) +
-                          1; // Adjust to match your index (1-7)
-                      Iterable<int?> listOfWeekDays =
-                          controller.supervisorGroupDaysList.map(
-                        (e) => e.dayId,
-                      );
-                      bool isHighlighted = listOfWeekDays.contains(dayOfWeek);
+                () {
+                  return Column(
+                    children: [
+                      TableCalendar(
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2030, 3, 14),
+                        selectedDayPredicate: (day) =>
+                            isSameDay(controller.selectedDate.value, day),
+                        onDaySelected: (selectedDay, focusedDay) {
+                          debugPrint("Selected Day: $selectedDay");
+                          controller.selectedDate(selectedDay);
+                          controller.selectedDate.refresh();
+                        },
+                        focusedDay:
+                            controller.selectedDate.value ?? DateTime.now(),
+                        calendarBuilders: CalendarBuilders(
+                          selectedBuilder: (context, date, events) => Container(
+                            margin: const EdgeInsets.all(4.0),
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: CustomGoogleTextWidget(
+                              text: date.day.toString(),
+                              fontSize: 16.0,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          todayBuilder: (context, date, events) => Container(
+                            margin: const EdgeInsets.all(4.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor.withOpacity(0.5),
+                              shape: BoxShape.circle,
+                            ),
+                            child: CustomGoogleTextWidget(
+                              text: date.day.toString(),
+                              fontSize: 16.0,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          // Highlight custom days based on indices
+                          defaultBuilder: (context, date, events) {
+                            // Get the day of the week (1 = Sunday, 2 = Monday, ..., 7 = Saturday)
+                            int dayOfWeek = (date.weekday % 7) +
+                                1; // Adjust to match your index (1-7)
+                            Iterable<int?> listOfWeekDays =
+                                controller.supervisorGroupDaysList.map(
+                              (e) => e.dayId,
+                            );
+                            bool isHighlighted =
+                                listOfWeekDays.contains(dayOfWeek);
 
-                      return Container(
-                        margin: const EdgeInsets.all(4.0),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color:
-                              isHighlighted ? Colors.blue : Colors.transparent,
-                          shape: BoxShape.circle,
+                            return Container(
+                              margin: const EdgeInsets.all(4.0),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: isHighlighted
+                                    ? Colors.blue
+                                    : Colors.transparent,
+                                shape: BoxShape.circle,
+                              ),
+                              child: CustomGoogleTextWidget(
+                                text: date.day.toString(),
+                                fontSize: 16.0,
+                                color: isHighlighted
+                                    ? AppColors.white
+                                    : AppColors.blackColor,
+                              ),
+                            );
+                          },
                         ),
-                        child: CustomGoogleTextWidget(
-                          text: date.day.toString(),
-                          fontSize: 16.0,
-                          color: isHighlighted
-                              ? AppColors.white
-                              : AppColors.blackColor,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -967,8 +604,7 @@ class SupervisorCreateGroupPlanScreen
             ),
             TextButton(
               onPressed: () async {
-                //  Navigator.of(context).pop();
-                await _handelCreateGroupPlan(context);
+                Navigator.of(context).pop();
               },
               child: const CustomGoogleTextWidget(
                 text: 'تأكيد',
@@ -981,46 +617,6 @@ class SupervisorCreateGroupPlanScreen
         );
       },
     );
-  }
-
-  Future<void> _handelCreateGroupPlan(BuildContext context) async {
-    try {
-      CreateGroupPlanResponseModel createGroupPlanResponseModel =
-          await controller.createGroupPlan();
-      debugPrint("Create Group Plan Response : $createGroupPlanResponseModel");
-
-      if (createGroupPlanResponseModel.statusCode == 200) {
-        if (!context.mounted) return;
-
-        await CustomAwesomeDialog.showAwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          title: "تم اضافة الخطة الأسبوعية بنجاح",
-          description:
-              "تم اضافة الخطة الأسبوعية بنجاح بامكانك الان الانتقال اليها واضافة باقي التفاصيل",
-          btnOkOnPress: () {
-            //  controller.navigateToGroupPlanDetailsScreen();
-          },
-        );
-
-        // await controller.fetchGroupPlans();
-      } else {
-        debugPrint(
-            "Error Create Group Plan: ${createGroupPlanResponseModel.message}");
-
-        if (!context.mounted) return;
-
-        await CustomAwesomeDialog.showAwesomeDialog(
-          context: context,
-          dialogType: DialogType.error,
-          title: "خطأ",
-          description: createGroupPlanResponseModel.message!,
-          btnOkOnPress: () {},
-        );
-      }
-    } catch (e) {
-      debugPrint("Error _handelCreateGroupPlan : $e");
-    }
   }
 
   PreferredSize _buildAppBar() {

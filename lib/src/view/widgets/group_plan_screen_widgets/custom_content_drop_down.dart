@@ -11,12 +11,14 @@ class CustomContentDropDown extends StatelessWidget {
     required this.onChanged,
     required this.selectedContentId,
     required this.hintText,
+    this.errorText,
   });
 
   final List<GroupContent> groupContentList;
   final void Function(GroupContent?) onChanged;
   final int selectedContentId;
   final String hintText;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class CustomContentDropDown extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: DropdownButtonFormField<GroupContent>(
         decoration: InputDecoration(
+          errorText: errorText,
           labelText: hintText,
           contentPadding: const EdgeInsets.all(15),
           border: OutlineInputBorder(
