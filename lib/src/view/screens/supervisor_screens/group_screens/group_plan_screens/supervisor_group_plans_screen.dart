@@ -51,7 +51,6 @@ class SupervisorGroupPlansScreen
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            //_showDatePickerDialog(context);
             controller.navigateToCreateGroupPlanScreen();
           },
           backgroundColor: AppColors.primaryColor,
@@ -120,7 +119,9 @@ class SupervisorGroupPlansScreen
                             onTap: () {
                               debugPrint(
                                   "Group Plan Id: ${controller.groupPlanList[index].id}");
-                              controller.navigateToGroupPlanDetailsScreen();
+                              controller.navigateToGroupPlanDetailsScreen(
+                                  controller.groupPlanList[index].id
+                                      .toString());
                             },
                             boxChildren: const [
                               SizedBox(

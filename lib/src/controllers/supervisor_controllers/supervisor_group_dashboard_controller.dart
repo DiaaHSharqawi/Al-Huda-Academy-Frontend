@@ -91,13 +91,24 @@ class SupervisorGroupDashboardController extends GetxController {
     );
   }
 
-  void navigateToGroupPlanScreen(String groupId) {
+  Future<void> navigateToGroupPlanScreen(String groupId) async {
     debugPrint("Navigate to Group  Plan Screen");
     debugPrint("Group ID: $groupId");
 
-    Get.toNamed(
+    var result = await Get.toNamed(
       AppRoutes.supervisorGroupPlanScreen,
-      arguments: groupId,
+      arguments: {
+        "groupId": groupId,
+      },
     );
+
+    debugPrint("result *--->: $result");
+
+    debugPrint("shouldRefreshData ");
+
+    if (result != null) {
+      groupDashboard.value = null;
+      await fetchSupervisorGroupDashboard();
+    }
   }
 }

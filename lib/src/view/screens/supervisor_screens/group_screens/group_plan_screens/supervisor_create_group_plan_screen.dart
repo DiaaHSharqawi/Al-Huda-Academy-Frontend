@@ -11,7 +11,7 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/create_group_plan_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
-import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_add_group_plan_card.dart';
+import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_add_group_content_plan_card.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_group_plan_content_dialog.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_group_content_check_header.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_plan_screen_widgets/custom_selected_group_content.dart';
@@ -241,7 +241,7 @@ class SupervisorCreateGroupPlanScreen
   Widget _buildMemorizeSection() {
     return Column(
       children: [
-        CustomAddGroupPlanCard(
+        CustomAddGroupContentPlanCard(
           title: "إضافة حفظ",
           onAddGroupPlanTap: () {
             _showAddMemorizeDialog();
@@ -352,7 +352,7 @@ class SupervisorCreateGroupPlanScreen
   Widget _buildReviewSection() {
     return Column(
       children: [
-        CustomAddGroupPlanCard(
+        CustomAddGroupContentPlanCard(
           title: "إضافة مراجعة",
           onAddGroupPlanTap: () {
             _showAddReviewDialog();

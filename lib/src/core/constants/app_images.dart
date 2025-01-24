@@ -10,4 +10,10 @@ class AppImages {
   static const userAvatarImage = "$rootImages/userAvatar.png";
 
   static const loadingImage = "$rootImages/loaderLottie.json";
+
+  static const patternImage = "$rootImages/pattern.png";
+
+  static const speech = "$rootImages/speech.png";
+
+  static const iman = "$rootImages/iman.png";
 }

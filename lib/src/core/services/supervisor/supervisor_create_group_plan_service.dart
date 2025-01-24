@@ -17,9 +17,6 @@ class SupervisorCreateGroupPlanService extends BaseGetxService {
     debugPrint("groupId: $groupId");
     debugPrint("dayDate: $dayDate");
 
-    // debugPrint("contentToMemorize: ${contentToMemorize.toList()}");
-    //  debugPrint("contentToReview: ${contentToReview.toList()}");
-
     String createGroupPlanRoute =
         "${super.getAlHudaBaseURL}/supervisor/groups/$groupId/group-plan/create";
 

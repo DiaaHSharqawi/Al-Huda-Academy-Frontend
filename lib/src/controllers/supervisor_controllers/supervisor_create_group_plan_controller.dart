@@ -145,7 +145,7 @@ class SupervisorCreateGroupPlanController extends GetxController {
         selectedDate.value!,
         selectedMemorizeContnetList,
         selectedReviewContnetList,
-        "asdsad",
+        noteController.text,
       );
 
       return createGroupPlanResponseModel;
@@ -165,8 +165,7 @@ class SupervisorCreateGroupPlanController extends GetxController {
   Future<void> getDaysList() async {
     var groupDaysResponse =
         await _supervisorCreateGroupPlanService.getGroupDaysList(
-      //groupId.value,
-      "1",
+      groupId.value,
     );
     debugPrint("get days list");
     debugPrint(groupDaysResponse.firstOrNull.toString());

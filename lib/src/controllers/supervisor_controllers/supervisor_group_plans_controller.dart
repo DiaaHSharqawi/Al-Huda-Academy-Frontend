@@ -29,17 +29,20 @@ class SupervisorGroupPlansController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
+    debugPrint("SupervisorGroupPlansController onInit");
+
     try {
-      groupId(Get.arguments);
+      debugPrint("Arguments: ${Get.arguments}");
+
+      groupId(Get.arguments["groupId"]);
 
       queryParams.addAll({
         "page": currentPage.value,
         "limit": limit.value,
       });
 
-      isLoading(true);
       await fetchGroupPlans();
-      isLoading(false);
     } catch (e) {
       debugPrint("Error SupervisorGroupPlanController onInit : $e");
     } finally {
@@ -55,6 +58,8 @@ class SupervisorGroupPlansController extends GetxController {
         groupId.value,
         queryParams,
       );
+
+      debugPrint("Group plans: ${groupPlanResponseModel.toJson()}");
 
       if (groupPlanResponseModel.statusCode == 200) {
         groupPlanList.value = groupPlanResponseModel.groupPlan;
@@ -86,13 +91,20 @@ class SupervisorGroupPlansController extends GetxController {
     return specificDayThisWeek.add(Duration(days: 7 * nextWeekNumber));
   }
 
-  void navigateToGroupPlanDetailsScreen() {
-    Get.toNamed(
+  Future<void> navigateToGroupPlanDetailsScreen(String planId) async {
+    var result = await Get.toNamed(
       AppRoutes.supervisorGroupPlanDetails,
       arguments: {
         "groupId": groupId.value,
+        "planId": planId,
       },
     );
+
+    debugPrint("Result: $result");
+
+    if (result != null) {
+      await fetchGroupPlans();
+    }
   }
 
   Future<void> navigateToCreateGroupPlanScreen() async {
@@ -103,8 +115,9 @@ class SupervisorGroupPlansController extends GetxController {
       },
     );
 
-    if (result != null) {
-      await fetchGroupPlans();
-    }
+    debugPrint("Result back to group plans: $result");
+
+    // refresh the group plans list
+    await fetchGroupPlans();
   }
 }

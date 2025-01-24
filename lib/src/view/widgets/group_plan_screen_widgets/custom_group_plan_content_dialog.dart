@@ -44,6 +44,8 @@ class CustomGroupPlanContentDialog extends StatelessWidget {
       debugPrint("editContent: ${editContent?['startAyah']}");
       debugPrint("editContent: ${editContent?['endAyah']}");
 
+      debugPrint("editContent: ${editContent?.runtimeType}");
+
       //selectedSurahId.value = editContent!['surahId'];
       /// selectedStartAyahId.value = editContent!['startAyah'];
       //selectedEndAyahId.value = editContent!['endAyah'];
@@ -138,11 +140,18 @@ class CustomGroupPlanContentDialog extends StatelessWidget {
             }
 
             if (editContent != null) {
-              editContent?['surahId'] = selectedSurahId.value;
-              editContent?['startAyah'] = selectedStartAyahId.value;
-              editContent?['endAyah'] = selectedEndAyahId.value;
+              editContent?.update('surahId', (_) => selectedSurahId.value);
 
-              editContent?.refresh();
+              editContent?.update(
+                  'startAyah', (_) => selectedStartAyahId.value);
+
+              editContent?.update('endAyah', (_) => selectedEndAyahId.value);
+
+              debugPrint("editContent: ${editContent?['surahId']}");
+              debugPrint("editContent: ${editContent?['startAyah']}");
+              debugPrint("editContent: ${editContent?['endAyah']}");
+
+              debugPrint("editContent: ${editContent?.runtimeType}");
 
               selectedReviewContnet.refresh();
 
