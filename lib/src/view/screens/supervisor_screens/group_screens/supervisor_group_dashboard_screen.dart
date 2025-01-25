@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:intl/intl.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_group_dashboard_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
@@ -88,7 +89,7 @@ class SupervisorGroupDashboardScreen
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const CustomGoogleTextWidget(
-          text: "الخطط الاسبوعية",
+          text: "خطط الحلقة",
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
           color: AppColors.blackColor,
@@ -124,25 +125,38 @@ class SupervisorGroupDashboardScreen
   }
 
   Widget _buildGroupPlan() {
-    return CustomCard(
-      paddingListTile: 24.0,
-      marginListTile: 32.0,
-      gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
-      cardText: "الخطة الاسبوعية",
-      cardTextSize: 18.0,
-      cardInnerBoxShadowColor: Colors.lime,
-      cardTextColor: AppColors.blackColor,
-      avatarCard: const FaIcon(
-        FontAwesomeIcons.calendarPlus,
-        color: Colors.black87,
-        size: 30.0,
-      ),
-      icon: const Icon(
-        Icons.arrow_forward_ios,
-        color: AppColors.blackColor,
-        size: 30.0,
-      ),
-      onTap: () {},
+    return Column(
+      children: [
+        CustomCard(
+          paddingListTile: 24.0,
+          marginListTile: 32.0,
+          gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
+          cardText: controller.groupDashboard.value!.groupPlans?.dayDate != null
+              ? "خطة اليوم : ${DateFormat.yMMMMEEEEd('ar').format(controller.groupDashboard.value!.groupPlans!.dayDate!)}"
+              : "لم يتم اضافة خطة لليوم بعد",
+          cardTextSize: 18.0,
+          cardInnerBoxShadowColor: Colors.lime,
+          cardTextColor: AppColors.blackColor,
+          avatarCard: const FaIcon(
+            FontAwesomeIcons.calendarPlus,
+            color: Colors.black87,
+            size: 30.0,
+          ),
+          icon: const Icon(
+            Icons.arrow_forward_ios,
+            color: AppColors.blackColor,
+            size: 30.0,
+          ),
+          onTap: () {
+            if (controller.groupDashboard.value!.groupPlans != null) {
+              controller.navigateToGroupPlanDetails(controller.groupId.value,
+                  controller.groupDashboard.value!.groupPlans!.id!);
+            } else {
+              controller.navigateToCreateGroupPlanScreen();
+            }
+          },
+        ),
+      ],
     );
   }
 

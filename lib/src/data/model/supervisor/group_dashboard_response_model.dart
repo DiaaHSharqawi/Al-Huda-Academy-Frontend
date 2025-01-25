@@ -37,15 +37,20 @@ class GroupDashboardResponseModel {
 
 class GroupDashboard {
   GroupDashboard({
+    required this.groupPlans,
     required this.groupDetailsDashboard,
     required this.groupJoinRequestsDashboard,
   });
 
   final GroupDetailsDashboard? groupDetailsDashboard;
   final List<GroupJoinRequestsDashboard> groupJoinRequestsDashboard;
+  final GroupPlansDashboard? groupPlans;
 
   factory GroupDashboard.fromJson(Map<String, dynamic> json) {
     return GroupDashboard(
+      groupPlans: json["groupPlans"] == null
+          ? null
+          : GroupPlansDashboard.fromJson(json["groupPlans"]),
       groupDetailsDashboard: json["groupDetailsDashboard"] == null
           ? null
           : GroupDetailsDashboard.fromJson(json["groupDetailsDashboard"]),
@@ -53,7 +58,8 @@ class GroupDashboard {
           ? []
           : List<GroupJoinRequestsDashboard>.from(
               json["groupJoinRequestsDashboard"]!
-                  .map((x) => GroupJoinRequestsDashboard.fromJson(x))),
+                  .map((x) => GroupJoinRequestsDashboard.fromJson(x)),
+            ),
     );
   }
 
@@ -133,6 +139,92 @@ class GroupDetailsDashboard {
   @override
   String toString() {
     return "$id, $groupName, $groupDescription, $capacity, $startTime, $endTime, $groupStatusId, $groupGoalId, $genderId, $teachingMethodId, $createdAt, $supervisorId, ";
+  }
+}
+
+class GroupPlansDashboard {
+  GroupPlansDashboard({
+    required this.id,
+    required this.groupId,
+    required this.dayDate,
+    required this.groupPlanStatusId,
+    required this.note,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.groupPlanStatus,
+  });
+
+  final int? id;
+  final int? groupId;
+  final DateTime? dayDate;
+  final int? groupPlanStatusId;
+  final String? note;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final GroupPlanStatusDashboard? groupPlanStatus;
+
+  factory GroupPlansDashboard.fromJson(Map<String, dynamic> json) {
+    return GroupPlansDashboard(
+      id: json["id"],
+      groupId: json["groupId"],
+      dayDate: DateTime.tryParse(json["dayDate"] ?? ""),
+      groupPlanStatusId: json["group_plan_status_id"],
+      note: json["note"],
+      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
+      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
+      groupPlanStatus: json["GroupPlanStatus"] == null
+          ? null
+          : GroupPlanStatusDashboard.fromJson(json["GroupPlanStatus"]),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "groupId": groupId,
+        "dayDate": dayDate != null
+            ? "${dayDate?.year.toString().padLeft(4, '0')}-${dayDate?.month.toString().padLeft(2, '0')}-${dayDate?.day.toString().padLeft(2, '0')}"
+            : null,
+        "group_plan_status_id": groupPlanStatusId,
+        "note": note,
+        "createdAt": createdAt?.toIso8601String(),
+        "updatedAt": updatedAt?.toIso8601String(),
+        "GroupPlanStatus": groupPlanStatus?.toJson(),
+      };
+
+  @override
+  String toString() {
+    return "$id, $groupId, $dayDate, $groupPlanStatusId, $note, $createdAt, $updatedAt, $groupPlanStatus, ";
+  }
+}
+
+class GroupPlanStatusDashboard {
+  GroupPlanStatusDashboard({
+    required this.id,
+    required this.nameAr,
+    required this.nameEn,
+  });
+
+  final int? id;
+  final String? nameAr;
+  final String? nameEn;
+
+  factory GroupPlanStatusDashboard.fromJson(Map<String, dynamic> json) {
+    return GroupPlanStatusDashboard(
+      id: json["id"],
+      nameAr: json["name_ar"],
+      nameEn: json["name_en"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name_ar": nameAr,
+        "name_en": nameEn,
+      };
+
+  @override
+  String toString() {
+    return "$id, $nameAr, $nameEn, ";
   }
 }
 

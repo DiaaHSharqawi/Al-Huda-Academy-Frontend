@@ -83,7 +83,7 @@ class SupervisorGroupPlanDetailsController extends GetxController {
 
       everContentListenChanged();
     } catch (error) {
-      debugPrint("Error SupervisorCreateGroupPlanController onInit : $error");
+      debugPrint("Error SupervisorGroupPlanDetailsController onInit : $error");
     } finally {
       isLoading(false);
     }
