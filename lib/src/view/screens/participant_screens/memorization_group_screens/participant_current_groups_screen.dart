@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_current_groups_controller.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:moltqa_al_quran_frontend/src/controllers/participant_controllers/participant_current_groups_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_image_with_text.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_pagination_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_search_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_show_boxes_drop_down_widget.dart';
-import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/group_screens_widgets/custom_group_card.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
-class SupervisorCurrentGroupsScreen
-    extends GetView<SupervisorCurrentGroupsController> {
-  const SupervisorCurrentGroupsScreen({super.key});
+class ParticipantCurrentGroupsScreen
+    extends GetView<ParticipantCurrentGroupsController> {
+  const ParticipantCurrentGroupsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +25,23 @@ class SupervisorCurrentGroupsScreen
         backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: SizedBox(
               width: double.infinity,
               child: Obx(
-                () => controller.isLoading.value
-                    ? Center(
-                        child: Lottie.asset(
-                          'assets/images/loaderLottie.json',
-                          width: 600,
-                          height: 600,
-                        ),
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                () {
+                  if (controller.isLoading.value) {
+                    return const CustomLoadingWidget(
+                      width: 600.0,
+                      height: 600.0,
+                      imagePath: AppImages.loadingImage,
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildSupervisorCurrentGroupsText(),
@@ -53,6 +58,9 @@ class SupervisorCurrentGroupsScreen
                           ),
                         ],
                       ),
+                    );
+                  }
+                },
               ),
             ),
           ),
@@ -66,31 +74,37 @@ class SupervisorCurrentGroupsScreen
     return Column(
       children: [
         Obx(() {
-          if (controller.supervisorGroupsList.isEmpty) {
+          if (controller.participantGroupsList.isEmpty) {
             return const Center(
-              child: CustomGoogleTextWidget(
-                text: 'لا يوجد بيانات لعرضها',
+              child: CustomImageWithText(
+                imageProvider: AssetImage(AppImages.quranImage3),
+                text: 'لم تقم بالانضمام إلى أي حلقة بعد',
+                width: 300.0,
+                height: 300.0,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
               ),
             );
           }
           return ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            itemCount: controller.supervisorGroupsList.length,
+            itemCount: controller.participantGroupsList.length,
             itemBuilder: (context, index) {
-              if (index < controller.supervisorGroupsList.length) {
+              if (index < controller.participantGroupsList.length) {
                 return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     width: double.infinity,
                     child: CustomGroupCard(
-                      groupName:
-                          controller.supervisorGroupsList[index].groupName!,
-                      groupDescription: controller
-                          .supervisorGroupsList[index].groupDescription!,
+                      groupName: controller.participantGroupsList[index]
+                          .memorizationGroup!.groupName!,
+                      groupDescription: controller.participantGroupsList[index]
+                          .memorizationGroup?.groupDescription!,
                       onDetailsPressed: () {
                         debugPrint("Details pressed");
                         controller.navigateToGroupDetailsScreen(
-                          controller.supervisorGroupsList[index].id!.toString(),
+                          controller.participantGroupsList[index].id!
+                              .toString(),
                         );
                       },
                     ));
@@ -104,7 +118,7 @@ class SupervisorCurrentGroupsScreen
           );
         }),
         Obx(
-          () => controller.supervisorGroupsList.isEmpty
+          () => controller.participantGroupsList.isEmpty
               ? const SizedBox.shrink()
               : Column(
                   children: [
@@ -113,7 +127,7 @@ class SupervisorCurrentGroupsScreen
                       dropDownItems: controller.dropDownItems,
                       limit: controller.limit,
                       queryParams: controller.queryParams,
-                      fetcherFunction: controller.fetchSupervisorGroups,
+                      fetcherFunction: controller.fetchparticipantGroups,
                     ),
                     _buildPagination(),
                   ],
@@ -128,17 +142,19 @@ class SupervisorCurrentGroupsScreen
       queryParams: controller.queryParams,
       currentPage: controller.currentPage,
       totalPages: controller.totalPages,
-      dataFetchingFunction: controller.fetchSupervisorGroups,
+      dataFetchingFunction: controller.fetchparticipantGroups,
       primaryColor: AppColors.primaryColor,
       textColor: AppColors.white,
     );
   }
 
   Widget _buildSupervisorCurrentGroupsText() {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: CustomGoogleTextWidget(
-        text: 'الحلقات الحالية',
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      width: double.infinity,
+      child: const CustomGoogleTextWidget(
+        text: 'حلقاتي الحالية',
+        textAlign: TextAlign.center,
         fontSize: 22.0,
         fontWeight: FontWeight.bold,
         color: AppColors.blackColor,
@@ -147,32 +163,10 @@ class SupervisorCurrentGroupsScreen
   }
 
   Widget _buildSearchField(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: CustomTextFormField(
-              onChanged: (String value) async {
-                if (value.isEmpty) {
-                  debugPrint("Search query is empty");
-                }
-                controller.searchQuery.value = value;
-              },
-              iconName: Icons.search,
-              textFormHintText: "ابحث عن حلقة",
-              controller: controller.searchController,
-              textFormFieldValidator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "الرجاء إدخال كلمة البحث";
-                }
-                return null;
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-            ),
-          ),
-        ],
-      ),
+    return CustomSearchField(
+      queryParams: controller.queryParams,
+      searchController: controller.searchController,
+      searchQuery: controller.searchQuery,
     );
   }
 

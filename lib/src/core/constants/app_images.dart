@@ -16,4 +16,6 @@ class AppImages {
   static const speech = "$rootImages/speech.png";
 
   static const iman = "$rootImages/iman.png";
+
+  static const quranImage3 = "$rootImages/quran_image_3.png";
 }

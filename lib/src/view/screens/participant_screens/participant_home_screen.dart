@@ -231,6 +231,9 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
         color: AppColors.blackColor,
         size: 40.0,
       ),
+      onTap: () {
+        controller.navigateToCurrentGroupsScreen();
+      },
     );
   }
 

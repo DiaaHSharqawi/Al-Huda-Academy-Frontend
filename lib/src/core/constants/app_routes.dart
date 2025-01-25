@@ -62,6 +62,7 @@ class AppRoutes {
       "/participant/search-group";
   static String participantSearchedGroupDetails =
       "/participant/searched-group-details";
+  static String participantCurrentGroupsScreen = "/participant/current-groups";
 
   // Admin Screens
   static String admin = "/admin";

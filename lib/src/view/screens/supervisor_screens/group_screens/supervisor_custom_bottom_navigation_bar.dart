@@ -62,6 +62,7 @@ class SupervisorCustomBottomNavigationBar
         ],
       ),
       child: BottomNavigationBar(
+        backgroundColor: Colors.white,
         selectedItemColor: AppColors.primaryColor,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
