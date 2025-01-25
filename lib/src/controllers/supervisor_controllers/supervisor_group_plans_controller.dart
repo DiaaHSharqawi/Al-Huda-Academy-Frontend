@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_plans_service.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/enums/sort_order_enum.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_plan/group_plan_response_model.dart';
 
 class SupervisorGroupPlansController extends GetxController {
@@ -25,6 +26,13 @@ class SupervisorGroupPlansController extends GetxController {
   var queryParams = <String, dynamic>{}.obs;
 
   var groupId = "".obs;
+
+  var fromDateController = Rxn<DateTime>();
+  var toDateController = Rxn<DateTime>();
+
+  var sortOrder = SortOrder.ascending.obs;
+
+  var isFilterApplied = false.obs;
 
   @override
   void onInit() async {
@@ -118,6 +126,40 @@ class SupervisorGroupPlansController extends GetxController {
     debugPrint("Result back to group plans: $result");
 
     // refresh the group plans list
+    await fetchGroupPlans();
+  }
+
+  void applyFilters() {
+    debugPrint("Apply filters");
+
+    isFilterApplied(true);
+
+    if (fromDateController.value != null) {
+      queryParams["fromDate"] = fromDateController.value;
+    }
+
+    if (toDateController.value != null) {
+      queryParams["toDate"] = toDateController.value;
+    }
+
+    if (sortOrder.value != SortOrder.notSelected) {
+      queryParams["sortOrder"] =
+          sortOrder.value == SortOrder.ascending ? "asc" : "desc";
+    }
+  }
+
+  Future<void> clearFilters() async {
+    debugPrint("Clear filters");
+    isFilterApplied(false);
+
+    fromDateController.value = null;
+    toDateController.value = null;
+    sortOrder.value = SortOrder.descending;
+
+    queryParams.remove("fromDate");
+    queryParams.remove("toDate");
+    queryParams.remove("sortOrder");
+
     await fetchGroupPlans();
   }
 }

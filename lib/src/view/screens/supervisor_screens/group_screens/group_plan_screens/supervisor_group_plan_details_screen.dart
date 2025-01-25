@@ -163,7 +163,7 @@ class SupervisorGroupPlanDetailsScreen
           onPressed: () async {
             debugPrint("edit Group Plan Button Pressed");
 
-            _handelEditGroupPlan(context);
+            _buildConfirmSaveEditGroupPlanDialog(context);
           },
           loadingWidget: controller.isLoading.value
               ? const CircularProgressIndicator(
@@ -172,6 +172,19 @@ class SupervisorGroupPlanDetailsScreen
               : null,
           isEnabled: !controller.isLoading.value,
         );
+      },
+    );
+  }
+
+  Future<void> _buildConfirmSaveEditGroupPlanDialog(BuildContext context) {
+    return CustomAwesomeDialog.showAwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      title: 'تأكيد الحفظ',
+      description: 'هل أنت متأكد من حفظ التعديلات',
+      btnCancelOnPress: () {},
+      btnOkOnPress: () {
+        _handelEditGroupPlan(context);
       },
     );
   }
@@ -269,7 +282,7 @@ class SupervisorGroupPlanDetailsScreen
             debugPrint(
                 "remove Review Content: ${controller.selectedReviewContnet}");
 
-            _handelDeleteGroupPlan(context);
+            _buildConfirmDeleteGroupPlanDialog(context);
           },
           loadingWidget: controller.isLoading.value
               ? const CircularProgressIndicator(
@@ -282,6 +295,18 @@ class SupervisorGroupPlanDetailsScreen
     );
   }
 
+  Future<void> _buildConfirmDeleteGroupPlanDialog(BuildContext context) {
+    return CustomAwesomeDialog.showAwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      title: 'تأكيد الحذف',
+      description: 'هل أنت متأكد من حذف الخطة',
+      btnCancelOnPress: () {},
+      btnOkOnPress: () {
+        _handelDeleteGroupPlan(context);
+      },
+    );
+  }
 // ----- Start of memorize Section -----
 
   Widget _buildGroupContentToMemorizeSection() {

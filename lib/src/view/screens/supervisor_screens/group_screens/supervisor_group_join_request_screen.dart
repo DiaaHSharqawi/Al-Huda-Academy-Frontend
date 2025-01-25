@@ -26,6 +26,7 @@ class SupervisorGroupJoinRequestScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

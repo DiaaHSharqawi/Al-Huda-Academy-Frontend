@@ -69,7 +69,8 @@ class CustomSelectedGroupContent extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.edit, color: Colors.blue),
                         onPressed: () {
-                          debugPrint("content ${content.runtimeType}");
+                          debugPrint("content $content");
+
                           showEditMemorizeDialog((content));
                         },
                       ),
