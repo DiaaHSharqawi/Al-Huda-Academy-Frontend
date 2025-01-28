@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_group_plan_details_controller.dart';
-import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_group_plan_details_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/group_services/group_plan_services/supervisor_group_plan_details_service.dart';
 
 class SupervisorGroupPlanDetailsBinding extends Bindings {
   @override

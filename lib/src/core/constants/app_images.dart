@@ -18,4 +18,6 @@ class AppImages {
   static const iman = "$rootImages/iman.png";
 
   static const quranImage3 = "$rootImages/quran_image_3.png";
+
+  static const creeper = "$rootImages/creeper.png";
 }

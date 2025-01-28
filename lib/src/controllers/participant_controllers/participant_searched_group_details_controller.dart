@@ -106,6 +106,8 @@ class ParticipantSearchedGroupDetailsController extends GetxController {
   }
 
   void navigateToSearchGroupScreen() {
-    Get.back();
+    Get.back(
+      result: true,
+    );
   }
 }

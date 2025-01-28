@@ -152,7 +152,9 @@ class SupervisorGroupDashboardScreen
               controller.navigateToGroupPlanDetails(controller.groupId.value,
                   controller.groupDashboard.value!.groupPlans!.id!);
             } else {
-              controller.navigateToCreateGroupPlanScreen();
+              controller.navigateToCreateGroupPlanScreen(
+                DateTime.now(),
+              );
             }
           },
         ),

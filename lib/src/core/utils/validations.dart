@@ -51,6 +51,14 @@ class Validations {
     ])(details);
   }
 
+  static String? validateGrade(String? grade) {
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "يجب ان تختار الدرجة",
+      ),
+    ])(grade);
+  }
+
   static Map<String, String?>? validateAll(Map<String, String?> values) {
     Map<String, String?> errors = {};
 
@@ -83,8 +91,16 @@ class Validations {
         errors['selectedQuranMemorizingAmountId'] =
             selectedQuranMemorizingAmountIdError;
       }
-    }
 
-    return errors.isNotEmpty ? errors : null;
+      if (values['grade'] != null) {
+        final gradeError = validateGrade(values['grade']);
+        if (gradeError != null) {
+          errors['grade'] = gradeError;
+        }
+      }
+
+      return errors.isNotEmpty ? errors : null;
+    }
+    return null;
   }
 }

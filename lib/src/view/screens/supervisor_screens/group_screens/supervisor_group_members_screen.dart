@@ -172,7 +172,18 @@ class SupervisorGroupMembersScreen
                               controller.groupMembersList[index].participant!
                                   .profileImage!,
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              debugPrint("Participant tapped");
+
+                              controller.navigateToGroupMemberFollowUpRecords(
+                                groupId: controller
+                                    .groupMembersList[index].groupId!
+                                    .toString(),
+                                groupMemberId: controller
+                                    .groupMembersList[index].id!
+                                    .toString(),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(

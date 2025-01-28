@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/create_group_supervisor_binding.dart';
+import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/group_member_follow_up_records_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/group_plan_screens_binding/supervisor_create_group_plan_screen_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_current_groups_binding.dart';
@@ -12,6 +13,7 @@ import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/middlewares/verify_token_jwt_middle_ware.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/create_group_screens/supervisor_create_group_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/group_member_follow_up_records_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/group_plan_screens/supervisor_create_group_plan_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_current_groups_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_group_dashboard_screen.dart';
@@ -94,6 +96,13 @@ class SupervisorPages {
       page: () => const SupervisorGroupPlanDetailsScreen(),
       transition: Transition.cupertino,
       binding: SupervisorGroupPlanDetailsBinding(),
+      middlewares: [VerifyTokenJwtMiddleWare()],
+    ),
+    GetPage(
+      name: AppRoutes.groupMemberFollowUpRecords,
+      page: () => const GroupMemberFollowUpRecordsScreen(),
+      transition: Transition.leftToRightWithFade,
+      binding: GroupMemberFollowUpRecordsBinding(),
       middlewares: [VerifyTokenJwtMiddleWare()],
     ),
   ];

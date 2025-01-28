@@ -133,11 +133,12 @@ class SupervisorGroupDashboardController extends GetxController {
     await fetchSupervisorGroupDashboard();
   }
 
-  Future<void> navigateToCreateGroupPlanScreen() async {
+  Future<void> navigateToCreateGroupPlanScreen(DateTime dateTime) async {
     var result = await Get.toNamed(
       AppRoutes.createGroupPlanScreen,
       arguments: {
         "groupId": groupId.value,
+        "selectedDate": dateTime.toString(),
       },
     );
 
