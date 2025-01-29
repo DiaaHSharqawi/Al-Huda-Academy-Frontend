@@ -15,6 +15,8 @@ import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_form_field.
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/utils/validations.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/create_group_members_follow_up_records_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/delete_group_members_follow_up_records_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/update_group_members_follow_up_records_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/member_follow_up_records_widgets/custom_group_member_plan_content.dart';
@@ -85,19 +87,39 @@ class GroupMemberFollowUpRecordsScreen
             const SizedBox(
               height: 32.0,
             ),
-            _buildReviewSection(),
-            const SizedBox(
-              height: 32.0,
-            ),
-            _buildGradeOfReview(),
-            const SizedBox(
-              height: 32.0,
-            ),
-            _buildMemorizeSection(),
-            const SizedBox(
-              height: 32.0,
-            ),
-            buildGradeOfMemorize(),
+            Obx(() {
+              debugPrint(
+                  "Selected Attendance Status: ${controller.selectedAttendanceStatusId.value?.id}");
+
+              return (controller.selectedAttendanceStatusId.value?.id
+                              .toString() !=
+                          controller.absentAttendanceStatusId.value) &&
+                      (controller.selectedAttendanceStatusId.value?.id
+                              .toString() !=
+                          controller.absentWithExcuseStatusId.value)
+                  ? Column(
+                      children: [
+                        _buildReviewSection(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildGradeOfReview(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        _buildMemorizeSection(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        buildGradeOfMemorize(),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink();
+            }),
+            _buildNoteFormTextField(),
             const SizedBox(
               height: 32.0,
             ),
@@ -106,10 +128,137 @@ class GroupMemberFollowUpRecordsScreen
               height: 32.0,
             ),
             _buildEditGroupMembersFollowUpRecordsButton(context),
+            const SizedBox(
+              height: 18.0,
+            ),
+            _buildDeleteGroupMembersFollowUpRecordsButton(context),
           ],
         );
       },
     );
+  }
+
+  Widget _buildNoteFormTextField() {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          const SizedBox(
+            width: double.infinity,
+            child: CustomGoogleTextWidget(
+              text: "ملاحظات",
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: AppColors.blackColor,
+              textAlign: TextAlign.start,
+            ),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          CustomTextFormField(
+            controller: controller.noteController,
+            keyboardType: TextInputType.multiline,
+            textFormHintText: "أدخل التفاصيل",
+            onChanged: (value) {
+              controller.noteController.text = value;
+            },
+            maxLines: 3,
+            textFormFieldValidator: null,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            isEnabled: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeleteGroupMembersFollowUpRecordsButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Obx(
+        () {
+          return controller.groupMemberFollowUpRecords.value != null
+              ? CustomButton(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.red,
+                  buttonText: 'حذف البيانات',
+                  buttonTextColor: Colors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  onPressed: () async {
+                    _buildConfirmationDeleteDialog(context);
+                  },
+                  loadingWidget: controller.isLoading.value
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : null,
+                  isEnabled: !controller.isLoading.value,
+                )
+              : const SizedBox.shrink();
+        },
+      ),
+    );
+  }
+
+  Future<void> _buildConfirmationDeleteDialog(BuildContext context) async {
+    await CustomAwesomeDialog.showAwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      title: "تأكيد الحذف",
+      description: "هل تريد تأكيد حذف البيانات ؟",
+      btnOkOnPress: () async {
+        _handelDeleteGroupMembersFollowUpRecords(context);
+      },
+      btnCancelOnPress: () {},
+    );
+  }
+
+  void _handelDeleteGroupMembersFollowUpRecords(BuildContext context) async {
+    try {
+      DeleteGroupMembersFollowUpRecordsResponseModel
+          deleteGroupMembersFollowUpRecordsResponse =
+          await controller.deleteGroupMemberFollowUpRecords();
+      if (!context.mounted) return;
+
+      if (deleteGroupMembersFollowUpRecordsResponse.statusCode == 200) {
+        await CustomAwesomeDialog.showAwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          title: "تم حذف سجل المتابعة بنجاح",
+          description: deleteGroupMembersFollowUpRecordsResponse.message!,
+          btnOkOnPress: () {},
+        );
+
+        // refresh the data
+        controller.isEdited.value = false;
+        controller.isEditingGradeOfReview.value = false;
+        controller.isEditingGradeOfMemorize.value = false;
+        controller.groupMemberFollowUpRecords.value = null;
+        controller.selectedAttendanceStatusId.value = null;
+        controller.fetchGroupMemberFollowUpRecords();
+      } else {
+        await CustomAwesomeDialog.showAwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          title: "خطأ",
+          description: deleteGroupMembersFollowUpRecordsResponse.message!,
+          btnOkOnPress: () {},
+        );
+      }
+    } catch (e) {
+      debugPrint('Error deleting group member follow-up records: $e');
+      if (!context.mounted) return;
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        title: "خطأ",
+        description: e.toString(),
+        btnOkOnPress: () {},
+      );
+    }
   }
 
   Widget _buildEditGroupMembersFollowUpRecordsButton(BuildContext context) {
@@ -127,7 +276,7 @@ class GroupMemberFollowUpRecordsScreen
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   onPressed: () async {
-                    controller.isEditingGradeOfReview.value = true;
+                    _buildConfirmationEditDialog(context);
                   },
                   loadingWidget: controller.isLoading.value
                       ? const CircularProgressIndicator(
@@ -141,6 +290,66 @@ class GroupMemberFollowUpRecordsScreen
         },
       ),
     );
+  }
+
+  void _buildConfirmationEditDialog(BuildContext context) {
+    CustomAwesomeDialog.showAwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      title: "تأكيد التعديل",
+      description: "هل تريد تأكيد تعديل البيانات ؟",
+      btnOkOnPress: () async {
+        _handelEditGroupMembersFollowUpRecords(context);
+      },
+      btnCancelOnPress: () {},
+    );
+  }
+
+  void _handelEditGroupMembersFollowUpRecords(BuildContext context) async {
+    try {
+      UpdateGroupMembersFollowUpRecordsResponseModel
+          updateGroupMembersFollowUpRecordsResponseModel =
+          await controller.updateGroupMemberFollowUpRecords();
+
+      if (!context.mounted) return;
+
+      if (updateGroupMembersFollowUpRecordsResponseModel.statusCode == 200) {
+        await CustomAwesomeDialog.showAwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          title: "تم تعديل سجل المتابعة بنجاح",
+          description: updateGroupMembersFollowUpRecordsResponseModel.message!,
+          btnOkOnPress: () {},
+        );
+
+        // refresh the data
+        controller.isEdited.value = false;
+        controller.isEditingGradeOfReview.value = false;
+        controller.isEditingGradeOfMemorize.value = false;
+        controller.groupMemberFollowUpRecords.value = null;
+
+        controller.fetchGroupMemberFollowUpRecords();
+      } else {
+        await CustomAwesomeDialog.showAwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          title: "خطأ",
+          description: updateGroupMembersFollowUpRecordsResponseModel.message!,
+          btnOkOnPress: () {},
+        );
+      }
+    } catch (e) {
+      debugPrint('Error updating group member follow-up records: $e');
+      if (!context.mounted) return;
+
+      await CustomAwesomeDialog.showAwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        title: "خطأ",
+        description: e.toString(),
+        btnOkOnPress: () {},
+      );
+    }
   }
 
   Widget _buildCreateGroupMembersFollowUpRecordsButton(BuildContext context) {
@@ -298,6 +507,8 @@ class GroupMemberFollowUpRecordsScreen
               ? AutovalidateMode.always
               : AutovalidateMode.onUserInteraction,
           onChanged: (value) {
+            debugPrint("Value: $value");
+
             controller.gradeOfMemorizeController.text = value;
           },
           isEnabled: controller.isEditingGradeOfMemorize.value,
@@ -390,10 +601,13 @@ class GroupMemberFollowUpRecordsScreen
         children: [
           CustomGroupMemberPlanContent(
             title: "بيانات المراجعة",
-            content: controller.groupMemberFollowUpRecords.value?.groupPlan!
-                    .contentToReviews
-                    .map((content) => content.toJson())
-                    .toList() ??
+            content: (controller.groupMemberFollowUpRecords.value?.groupPlan!
+                        .contentToReviews
+                        .map((content) => content.toJson())
+                        .toList() ??
+                    controller.groupPlan.value?.contentToReviews.map((content) {
+                      return content.toJson();
+                    }).toList()) ??
                 [],
           ),
         ],
@@ -418,11 +632,15 @@ class GroupMemberFollowUpRecordsScreen
       contentChild: Column(
         children: [
           CustomGroupMemberPlanContent(
-            title: "بيانات المراجعة",
-            content: controller.groupMemberFollowUpRecords.value?.groupPlan!
-                    .contentToMemorizes
-                    .map((content) => content.toJson())
-                    .toList() ??
+            title: "بيانات الحفظ",
+            content: (controller.groupMemberFollowUpRecords.value?.groupPlan!
+                        .contentToMemorizes
+                        .map((content) => content.toJson())
+                        .toList() ??
+                    controller.groupPlan.value?.contentToMemorizes
+                        .map((content) {
+                      return content.toJson();
+                    }).toList()) ??
                 [],
           ),
         ],
@@ -504,11 +722,16 @@ class GroupMemberFollowUpRecordsScreen
               () {
                 final selectedDate = controller.selectedDate.value;
 
-                return CustomGoogleTextWidget(
-                  text: DateFormat.yMMMMEEEEd('ar').format(selectedDate!),
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.blackColor,
+                return GestureDetector(
+                  onTap: () {
+                    _showDayDatesGroupPlanDialog();
+                  },
+                  child: CustomGoogleTextWidget(
+                    text: DateFormat.yMMMMEEEEd('ar').format(selectedDate!),
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.blackColor,
+                  ),
                 );
               },
             ),
@@ -539,6 +762,67 @@ class GroupMemberFollowUpRecordsScreen
           ],
         ),
       ],
+    );
+  }
+
+  void _showDayDatesGroupPlanDialog() {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: Get.context!,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          height: 400.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const CustomGoogleTextWidget(
+                text: "اختر التاريخ",
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: AppColors.blackColor,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: controller.groupPlanDates.length,
+                  itemBuilder: (context, index) {
+                    final date = controller.groupPlanDates[index].dayDate!;
+                    final month = DateFormat.MMMM('ar').format(date);
+                    final day = DateFormat.d('ar').format(date);
+                    return ListTile(
+                      title: CustomGoogleTextWidget(
+                        text: "$month $day",
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackColor,
+                      ),
+                      onTap: () {
+                        debugPrint("Selected Date: $date");
+
+                        controller.selectedDate.value = date;
+                        controller.queryParams['dayDate'] = date;
+                        controller.fetchGroupMemberFollowUpRecords();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+              Image.asset(
+                'assets/images/schedule.png',
+                width: 100.0,
+                height: 100.0,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

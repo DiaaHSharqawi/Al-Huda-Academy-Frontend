@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class GroupMemberFollowUpRecordsResponseModel {
   GroupMemberFollowUpRecordsResponseModel({
+    required this.groupPlan,
     required this.groupMemberFollowUpRecordsMetadata,
     required this.statusCode,
     required this.success,
@@ -14,6 +15,7 @@ class GroupMemberFollowUpRecordsResponseModel {
   final GroupMemberFollowUpRecord? groupMemberFollowUpRecords;
   final int statusCode;
   final GroupMemberFollowUpRecordsMetadata? groupMemberFollowUpRecordsMetadata;
+  final GroupPlan? groupPlan;
 
   factory GroupMemberFollowUpRecordsResponseModel.fromJson(
       Map<String, dynamic> json, int statusCode) {
@@ -22,6 +24,9 @@ class GroupMemberFollowUpRecordsResponseModel {
       statusCode: statusCode,
       success: json["success"],
       message: json["message"],
+      groupPlan: json["groupPlan"] == null
+          ? null
+          : GroupPlan.fromJson(json["groupPlan"]),
       groupMemberFollowUpRecordsMetadata:
           json["groupMemberFollowUpRecordsMetadata"] == null
               ? null
@@ -40,6 +45,10 @@ class GroupMemberFollowUpRecordsResponseModel {
       "success": success,
       "message": message,
       "groupMemberFollowUpRecords": groupMemberFollowUpRecords?.toJson(),
+      "statusCode": statusCode,
+      "groupMemberFollowUpRecordsMetadata":
+          groupMemberFollowUpRecordsMetadata?.toJson(),
+      "groupPlan": groupPlan?.toJson(),
     };
   }
 
@@ -70,7 +79,7 @@ class GroupMemberFollowUpRecord {
   final double? gradeOfMemorization;
   final double? gradeOfReview;
   final int? attendanceStatusId;
-  final dynamic note;
+  final String note;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final GroupMemberFollowUpRecordsAttendanceStatus? attendanceStatus;
@@ -280,12 +289,10 @@ class Navigation {
     debugPrint('Previous ---> : ${json["previous"]}');
     debugPrint('Next ---> : ${json["next"]}');
 
-    debugPrint('Previous ---> : ${DateTime.tryParse(json["previous"] ?? "")}');
-    debugPrint('Next ---> : ${DateTime.tryParse(json["next"] ?? "")}');
-
     return Navigation(
-      previous: DateTime.tryParse(json["previous"] ?? ""),
-      next: DateTime.tryParse(json["next"] ?? ""),
+      previous:
+          json["previous"] == null ? null : DateTime.tryParse(json["previous"]),
+      next: json["next"] == null ? null : DateTime.tryParse(json["next"]),
     );
   }
 

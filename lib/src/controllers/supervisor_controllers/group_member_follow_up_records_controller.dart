@@ -5,7 +5,9 @@ import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/group_memb
 import 'package:moltqa_al_quran_frontend/src/core/utils/validations.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/attendance_status/attendance_status_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/create_group_members_follow_up_records_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/delete_group_members_follow_up_records_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/group_member_follow_up_records_response_model.dart';
+import 'package:moltqa_al_quran_frontend/src/data/model/group_member_follow_up_records/update_group_members_follow_up_records_response_model.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/group_plan_dates/group_plan_dates_response_model.dart';
 
 class GroupMemberFollowUpRecordsController extends GetxController {
@@ -22,9 +24,10 @@ class GroupMemberFollowUpRecordsController extends GetxController {
 
   var groupId = "".obs;
   var groupMemberId = "".obs;
+  var recordId = "".obs;
 
   var totalFollowUpRecords = 0.obs;
-  var totalGroupPlans = 0.obs;
+  // var totalGroupPlans = 0.obs;
 
   var dayDateToUse = Rxn<DateTime>();
 
@@ -33,6 +36,8 @@ class GroupMemberFollowUpRecordsController extends GetxController {
 
   final List<AttendanceStatus> attendanceStatusList = [];
   var selectedAttendanceStatusId = Rxn<AttendanceStatus>();
+
+  var groupPlan = Rxn<GroupPlan>();
 
   final List<GroupPlanDate> groupPlanDates = [];
 
@@ -44,7 +49,12 @@ class GroupMemberFollowUpRecordsController extends GetxController {
 
   TextEditingController gradeOfMemorizeController = TextEditingController();
 
+  TextEditingController noteController = TextEditingController();
+
   var queryParams = <String, dynamic>{}.obs;
+
+  var absentAttendanceStatusId = "".obs;
+  var absentWithExcuseStatusId = "".obs;
 
   @override
   Future<void> onInit() async {
@@ -94,6 +104,11 @@ class GroupMemberFollowUpRecordsController extends GetxController {
           "selectedAttendanceStatusId: ${selectedAttendanceStatusId.value}");
       isEdited(true);
     });
+
+    noteController.addListener(() {
+      debugPrint("Note Changed: ${noteController.text}");
+      isEdited(true);
+    });
   }
 
   var groupMemberFollowUpRecords = Rxn<GroupMemberFollowUpRecord>();
@@ -135,6 +150,12 @@ class GroupMemberFollowUpRecordsController extends GetxController {
 
           selectedAttendanceStatusId.value = matchingStatus;
 
+          recordId.value = groupMemberFollowUpRecordsResponseModel
+              .groupMemberFollowUpRecords!.id
+              .toString();
+
+          debugPrint("recordId: ${recordId.value}");
+
           gradeOfReviewController.text = groupMemberFollowUpRecordsResponseModel
                   .groupMemberFollowUpRecords?.gradeOfReview
                   ?.toString() ??
@@ -142,6 +163,16 @@ class GroupMemberFollowUpRecordsController extends GetxController {
 
           debugPrint(
               "gradeOfReviewController.text: ${gradeOfReviewController.text}");
+
+          debugPrint(
+              "hiiiii --->: ${groupMemberFollowUpRecordsResponseModel.groupMemberFollowUpRecords?.note}");
+
+          noteController.text = groupMemberFollowUpRecordsResponseModel
+                  .groupMemberFollowUpRecords?.note
+                  .toString() ??
+              '';
+
+          debugPrint("noteController.text: ${noteController.toString()}");
 
           gradeOfMemorizeController.text =
               groupMemberFollowUpRecordsResponseModel
@@ -155,6 +186,10 @@ class GroupMemberFollowUpRecordsController extends GetxController {
           gradeOfMemorizeController.text = "";
           gradeOfReviewController.text = "";
 
+          noteController.text = "";
+
+          groupPlan.value = groupMemberFollowUpRecordsResponseModel.groupPlan;
+
           isEditingGradeOfReview(true);
           isEditingGradeOfMemorize(true);
         }
@@ -166,11 +201,6 @@ class GroupMemberFollowUpRecordsController extends GetxController {
             .groupMemberFollowUpRecordsMetadata?.totalFollowUpRecords);
 
         debugPrint("Total Follow Up Records: ${totalFollowUpRecords.value}");
-
-        totalGroupPlans(groupMemberFollowUpRecordsResponseModel
-            .groupMemberFollowUpRecordsMetadata?.totalGroupPlans!);
-
-        debugPrint("Total Group Plans: ${totalGroupPlans.value}");
 
         // --------
         debugPrint("=-=-");
@@ -230,6 +260,7 @@ class GroupMemberFollowUpRecordsController extends GetxController {
       groupMemberFollowUpRecords(null);
     } finally {
       isLoading(false);
+      isEdited(false);
     }
   }
 
@@ -242,6 +273,22 @@ class GroupMemberFollowUpRecordsController extends GetxController {
 
     if (attendanceStatusListResponse.isNotEmpty) {
       attendanceStatusList.addAll(attendanceStatusListResponse);
+
+      absentAttendanceStatusId = attendanceStatusListResponse
+          .firstWhere((element) => element.nameEn == "absent")
+          .id
+          .toString()
+          .obs;
+
+      debugPrint("absentAttendanceStatusId: $absentAttendanceStatusId");
+
+      absentWithExcuseStatusId = attendanceStatusListResponse
+          .firstWhere((element) => element.nameEn == "absent with excuse")
+          .id
+          .toString()
+          .obs;
+
+      debugPrint("absentWithExcuseStatusId: $absentWithExcuseStatusId");
     }
   }
 
@@ -269,6 +316,12 @@ class GroupMemberFollowUpRecordsController extends GetxController {
         'gradeOfMemorizeController: ${gradeOfMemorizeController.text.toString()}');
     debugPrint(
         'attendanceStatusId: ${selectedAttendanceStatusId.value?.id.toString()}');
+
+    if ([absentAttendanceStatusId.value, absentWithExcuseStatusId.value]
+        .contains(selectedAttendanceStatusId.value?.id.toString())) {
+      gradeOfReviewController.text = "0";
+      gradeOfMemorizeController.text = "0";
+    }
 
     final error = Validations.validateAll({
       'gradeOfReview': gradeOfReviewController.text,
@@ -326,7 +379,7 @@ class GroupMemberFollowUpRecordsController extends GetxController {
           'grade_of_review': gradeOfReviewController.text,
           'attendance_status_id':
               selectedAttendanceStatusId.value?.id.toString(),
-          // 'note': '',
+          'note': noteController.text,
         },
       );
 
@@ -346,6 +399,135 @@ class GroupMemberFollowUpRecordsController extends GetxController {
     }
   }
 
+  Future<UpdateGroupMembersFollowUpRecordsResponseModel>
+      updateGroupMemberFollowUpRecords() async {
+    debugPrint(" ----> updateGroupMemberFollowUpRecords");
+
+    isSubmitting(true);
+
+    debugPrint(
+        'gradeOfReviewController: ${gradeOfReviewController.text.toString().runtimeType}');
+    debugPrint(
+        'gradeOfMemorizeController: ${gradeOfMemorizeController.text.toString()}');
+    debugPrint(
+        'attendanceStatusId: ${selectedAttendanceStatusId.value?.id.toString()}');
+
+    final error = Validations.validateAll({
+      'gradeOfReview': gradeOfReviewController.text,
+      'gradeOfMemorize': gradeOfMemorizeController.text,
+      'attendanceStatusId':
+          selectedAttendanceStatusId.value?.id.toString() ?? "",
+    });
+
+    debugPrint("error: $error");
+
+    if (error != null) {
+      return UpdateGroupMembersFollowUpRecordsResponseModel(
+        success: false,
+        statusCode: 500,
+        message: error.values.join(",\n "),
+      );
+    }
+
+    isLoading(true);
+    try {
+      debugPrint("groupPlanDates: $groupPlanDates");
+
+      debugPrint("selectedDate: ${selectedDate.value}");
+
+      var groupPlanId = groupPlanDates
+              .firstWhere(
+                (element) =>
+                    element.dayDate?.day == selectedDate.value?.day &&
+                    element.dayDate?.month == selectedDate.value?.month &&
+                    element.dayDate?.year == selectedDate.value?.year,
+              )
+              .id
+              ?.toString() ??
+          '';
+
+      debugPrint("groupPlanId ----> : $groupPlanId");
+
+      debugPrint({
+        "group_plan_id": groupPlanId,
+        'grade_of_memorization': gradeOfMemorizeController.text,
+        'grade_of_review': gradeOfReviewController.text,
+        'attendance_status_id': selectedAttendanceStatusId.value?.id.toString(),
+        // 'note': '',
+      }.toString());
+
+      UpdateGroupMembersFollowUpRecordsResponseModel
+          updateGroupMembersFollowUpRecordsResponseModel =
+          await _groupMemberFollowUpRecordsService
+              .updateGroupMembersFollowUpRecords(
+        data: {
+          'recordId': recordId.value,
+          'groupId': groupId.value,
+          'groupMemberId': groupMemberId.value,
+          'grade_of_memorization': gradeOfMemorizeController.text,
+          'grade_of_review': gradeOfReviewController.text,
+          'attendance_status_id':
+              selectedAttendanceStatusId.value?.id.toString(),
+          'note': noteController.text,
+        },
+      );
+
+      isEdited(false);
+
+      return updateGroupMembersFollowUpRecordsResponseModel;
+    } catch (error) {
+      debugPrint("Error updateGroupMemberFollowUpRecords: $error");
+
+      return UpdateGroupMembersFollowUpRecordsResponseModel(
+        success: false,
+        statusCode: 500,
+        message: "Error: $error",
+      );
+    } finally {
+      isLoading(false);
+      isSubmitting(false);
+    }
+  }
+
+//----------
+  Future<DeleteGroupMembersFollowUpRecordsResponseModel>
+      deleteGroupMemberFollowUpRecords() async {
+    debugPrint(" ----> deleteGroupMemberFollowUpRecords");
+
+    isSubmitting(true);
+
+    isLoading(true);
+    try {
+      DeleteGroupMembersFollowUpRecordsResponseModel
+          deleteGroupMembersFollowUpRecordsResponseModel =
+          await _groupMemberFollowUpRecordsService
+              .deleteGroupMembersFollowUpRecords(
+        data: {
+          'recordId': recordId.value,
+          'groupId': groupId.value,
+          'groupMemberId': groupMemberId.value,
+        },
+      );
+
+      isEdited(false);
+
+      return deleteGroupMembersFollowUpRecordsResponseModel;
+    } catch (error) {
+      debugPrint(
+          "Error deleteGroupMembersFollowUpRecordsResponseModel: $error");
+
+      return DeleteGroupMembersFollowUpRecordsResponseModel(
+        success: false,
+        statusCode: 500,
+        message: "Error: $error",
+      );
+    } finally {
+      isLoading(false);
+      isSubmitting(false);
+    }
+  }
+
+//----
   void navigateToGroupMemberScreen() {
     Get.back(
       result: true,
