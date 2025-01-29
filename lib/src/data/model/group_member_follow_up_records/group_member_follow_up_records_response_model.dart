@@ -67,8 +67,8 @@ class GroupMemberFollowUpRecord {
   final int? id;
   final int? groupMemberId;
   final int? groupPlanId;
-  final int? gradeOfMemorization;
-  final int? gradeOfReview;
+  final double? gradeOfMemorization;
+  final double? gradeOfReview;
   final int? attendanceStatusId;
   final dynamic note;
   final DateTime? createdAt;
@@ -78,12 +78,13 @@ class GroupMemberFollowUpRecord {
 
   factory GroupMemberFollowUpRecord.fromJson(Map<String, dynamic> json) {
     debugPrint('Parsing GroupMemberFollowUpRecord from JSON');
+    debugPrint(json.toString());
     return GroupMemberFollowUpRecord(
       id: json["id"],
       groupMemberId: json["group_member_id"],
       groupPlanId: json["group_plan_id"],
-      gradeOfMemorization: json["grade_of_memorization"],
-      gradeOfReview: json["grade_of_review"],
+      gradeOfMemorization: json["grade_of_memorization"]?.toDouble(),
+      gradeOfReview: json["grade_of_review"]?.toDouble(),
       attendanceStatusId: json["attendance_status_id"],
       note: json["note"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
@@ -226,13 +227,13 @@ class GroupMemberFollowUpRecordsMetadata {
   GroupMemberFollowUpRecordsMetadata({
     required this.totalFollowUpRecords,
     required this.totalGroupPlans,
-    required this.newestDayDate,
+    required this.dayDateToUse,
     required this.navigation,
   });
 
   final int? totalFollowUpRecords;
   final int? totalGroupPlans;
-  final DateTime? newestDayDate;
+  final dynamic dayDateToUse;
   final Navigation? navigation;
 
   factory GroupMemberFollowUpRecordsMetadata.fromJson(
@@ -241,7 +242,7 @@ class GroupMemberFollowUpRecordsMetadata {
     return GroupMemberFollowUpRecordsMetadata(
       totalFollowUpRecords: json["totalFollowUpRecords"],
       totalGroupPlans: json["totalGroupPlans"],
-      newestDayDate: DateTime.tryParse(json["newestDayDate"] ?? ""),
+      dayDateToUse: DateTime.tryParse(json["dayDateToUse"] ?? ""),
       navigation: json["navigation"] == null
           ? null
           : Navigation.fromJson(json["navigation"]),
@@ -253,15 +254,15 @@ class GroupMemberFollowUpRecordsMetadata {
     return {
       "totalFollowUpRecords": totalFollowUpRecords,
       "totalGroupPlans": totalGroupPlans,
-      "newestDayDate":
-          "${newestDayDate?.year.toString().padLeft(4, '0')}-${newestDayDate?.month.toString().padLeft(2, '0')}-${newestDayDate?.day.toString().padLeft(2, '0')}",
+      "dayDateToUse":
+          "${dayDateToUse?.year.toString().padLeft(4, '0')}-${dayDateToUse?.month.toString().padLeft(2, '0')}-${dayDateToUse?.day.toString().padLeft(2, '0')}",
       "navigation": navigation?.toJson(),
     };
   }
 
   @override
   String toString() {
-    return "$totalFollowUpRecords, $totalGroupPlans, $newestDayDate, $navigation, ";
+    return "$totalFollowUpRecords, $totalGroupPlans, $dayDateToUse, $navigation, ";
   }
 }
 
@@ -271,14 +272,20 @@ class Navigation {
     required this.next,
   });
 
-  final DateTime? previous;
+  final dynamic previous;
   final dynamic next;
 
   factory Navigation.fromJson(Map<String, dynamic> json) {
     debugPrint('Parsing Navigation from JSON');
+    debugPrint('Previous ---> : ${json["previous"]}');
+    debugPrint('Next ---> : ${json["next"]}');
+
+    debugPrint('Previous ---> : ${DateTime.tryParse(json["previous"] ?? "")}');
+    debugPrint('Next ---> : ${DateTime.tryParse(json["next"] ?? "")}');
+
     return Navigation(
       previous: DateTime.tryParse(json["previous"] ?? ""),
-      next: json["next"],
+      next: DateTime.tryParse(json["next"] ?? ""),
     );
   }
 

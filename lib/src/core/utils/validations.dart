@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:form_builder_validators/form_builder_validators.dart";
 
 class Validations {
@@ -51,16 +52,50 @@ class Validations {
     ])(details);
   }
 
-  static String? validateGrade(String? grade) {
+  static String? validateGradeOfReview(String? gradeOfReview) {
     return FormBuilderValidators.compose([
       FormBuilderValidators.required(
-        errorText: "يجب ان تختار الدرجة",
+        errorText: "يجب ان تختار درجة المراجعة",
       ),
-    ])(grade);
+      FormBuilderValidators.numeric(
+        errorText: 'يجب ان تكون درجة المراجعة عدداً صحيحاً',
+      ),
+      FormBuilderValidators.between(0, 100,
+          errorText: "يجب ان تكون درجة المراجعة بين 0 و 100"),
+    ])(gradeOfReview != null ? num.tryParse(gradeOfReview) : null);
+  }
+
+  static String? validateAttendanceStatusId(String? attendanceStatusId) {
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "يجب ان تختار حالة الحضور",
+      ),
+      (value) {
+        if (value == '') {
+          return "يجب ان تختار حالة الحضور";
+        }
+        return null;
+      }
+    ])(attendanceStatusId);
+  }
+
+  static String? validateGradeOfMemorize(String? gradeOfMemorize) {
+    return FormBuilderValidators.compose([
+      FormBuilderValidators.required(
+        errorText: "يجب ان تختار درجة الحفظ",
+      ),
+      FormBuilderValidators.numeric(
+        errorText: 'يجب ان تكون درجة الحفظ عدداً صحيحاً',
+      ),
+      FormBuilderValidators.between(0, 100,
+          errorText: "يجب ان تكون درجة الحفظ بين 0 و 100"),
+    ])(gradeOfMemorize != null ? num.tryParse(gradeOfMemorize) : null);
   }
 
   static Map<String, String?>? validateAll(Map<String, String?> values) {
     Map<String, String?> errors = {};
+
+    debugPrint("Values: $values");
 
     if (values['partsMemorized'] != null) {
       final partsMemorizedError =
@@ -87,20 +122,37 @@ class Validations {
       final selectedQuranMemorizingAmountIdError =
           validateSelectedQuranMemorizingAmountId(
               values['selectedQuranMemorizingAmountId']);
+
       if (selectedQuranMemorizingAmountIdError != null) {
         errors['selectedQuranMemorizingAmountId'] =
             selectedQuranMemorizingAmountIdError;
       }
-
-      if (values['grade'] != null) {
-        final gradeError = validateGrade(values['grade']);
-        if (gradeError != null) {
-          errors['grade'] = gradeError;
-        }
-      }
-
-      return errors.isNotEmpty ? errors : null;
     }
-    return null;
+
+    if (values['gradeOfReview'] != null) {
+      debugPrint("Grade of review validate : ${values['gradeOfReview']}");
+
+      final gradeError = validateGradeOfReview(values['gradeOfReview']);
+      if (gradeError != null) {
+        errors['gradeOfReview'] = gradeError;
+      }
+    }
+
+    if (values['gradeOfMemorize'] != null) {
+      final gradeError = validateGradeOfMemorize(values['gradeOfMemorize']);
+      if (gradeError != null) {
+        errors['gradeOfMemorize'] = gradeError;
+      }
+    }
+
+    if (values['attendanceStatusId'] != null) {
+      final attendanceStatusIdError =
+          validateAttendanceStatusId(values['attendanceStatusId']);
+      if (attendanceStatusIdError != null) {
+        errors['attendanceStatusId'] = attendanceStatusIdError;
+      }
+    }
+
+    return errors.isNotEmpty ? errors : null;
   }
 }

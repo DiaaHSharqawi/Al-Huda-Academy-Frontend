@@ -18,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLines;
   final bool? enableBorder;
   final TextInputType? keyboardType;
+  final bool isEnabled;
 
   const CustomTextFormField({
     super.key,
@@ -34,6 +35,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.enableBorder = true,
     this.keyboardType,
+    this.isEnabled = true,
   });
 
   @override
@@ -46,9 +48,11 @@ class CustomTextFormField extends StatelessWidget {
 
     final TextDirection textFormDirection =
         isArabic ? TextDirection.ltr : TextDirection.rtl;
+
     final TextDirection hintTextDirection = textFormDirection;
 
     return TextFormField(
+      enabled: isEnabled,
       keyboardType: keyboardType,
       onChanged: onChanged,
       maxLines: maxLines,
