@@ -489,7 +489,6 @@ class GroupMemberFollowUpRecordsController extends GetxController {
     }
   }
 
-//----------
   Future<DeleteGroupMembersFollowUpRecordsResponseModel>
       deleteGroupMemberFollowUpRecords() async {
     debugPrint(" ----> deleteGroupMemberFollowUpRecords");
@@ -527,7 +526,6 @@ class GroupMemberFollowUpRecordsController extends GetxController {
     }
   }
 
-//----
   void navigateToGroupMemberScreen() {
     Get.back(
       result: true,

@@ -102,7 +102,7 @@ class ParticipantCurrentGroupsScreen
                           .memorizationGroup?.groupDescription!,
                       onDetailsPressed: () {
                         debugPrint("Details pressed");
-                        controller.navigateToGroupDetailsScreen(
+                        controller.navigateToParticipantGroupDashboardScreen(
                           controller.participantGroupsList[index].id!
                               .toString(),
                         );

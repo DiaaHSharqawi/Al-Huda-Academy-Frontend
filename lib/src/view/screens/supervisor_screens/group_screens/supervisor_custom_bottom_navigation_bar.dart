@@ -21,6 +21,8 @@ class SupervisorCustomBottomNavigationBar
 
   bool get isArabic => appService.isRtl.value;
 
+  final int currentIndex = 0;
+
   Future<void> onTap(int index) async {
     if (index == 1) {
       Get.toNamed(AppRoutes.athkarCategories);
@@ -78,10 +80,11 @@ class SupervisorCustomBottomNavigationBar
           fontWeight: FontWeight.bold,
           color: Colors.grey,
         ),
-        currentIndex: 1,
+        currentIndex: currentIndex,
         onTap: (index) {
-          //controller.currentIndex.value = index;
-          onTap(index);
+          debugPrint("Current index: $index");
+
+          currentIndex == index ? null : onTap(currentIndex);
         },
         items: const [
           BottomNavigationBarItem(
@@ -89,12 +92,16 @@ class SupervisorCustomBottomNavigationBar
             label: 'الرئيسية',
           ),
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.book),
-            label: 'الأذكار',
+            icon: Icon(LineIcons.barChartAlt),
+            label: 'الإحصائيات',
           ),
           BottomNavigationBarItem(
             icon: Icon(LineIcons.users),
-            label: 'الرقابة الابوية',
+            label: 'الرسائل',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(LineIcons.user),
+            label: 'الحساب',
           ),
         ],
       ),

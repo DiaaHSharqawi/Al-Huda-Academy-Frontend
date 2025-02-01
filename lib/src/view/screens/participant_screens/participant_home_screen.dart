@@ -18,6 +18,7 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: CustomAppBar(
           preferredSize: const Size.fromHeight(150.0),
           appBarChilds: Padding(

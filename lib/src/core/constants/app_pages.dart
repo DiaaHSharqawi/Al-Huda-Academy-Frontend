@@ -13,7 +13,7 @@ class AppPages {
     ...AthkarPages.pages,
     ...EntryScreensPages.pages,
     ...FamilyLinksPages.pages,
-    ...AuthenticationPages.pages, // contain register pages also
+    ...AuthenticationPages.pages,
     ...SupervisorPages.pages,
     ...AdminPages.pages,
     ...ParticipantPages.pages,

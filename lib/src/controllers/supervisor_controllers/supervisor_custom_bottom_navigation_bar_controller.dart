@@ -1,4 +1,4 @@
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/supervisor/supervisor_custom_bottom_navigation_bar_service.dart';
 
 class SupervisorCustomBottomNavigationBarController extends GetxController {
@@ -7,5 +7,8 @@ class SupervisorCustomBottomNavigationBarController extends GetxController {
       _supervisorCustomBottomNavigationBarService;
 
   SupervisorCustomBottomNavigationBarController(
-      this._supervisorCustomBottomNavigationBarService);
+    this._supervisorCustomBottomNavigationBarService,
+  );
+
+  var currentIndex = 0.obs;
 }
