@@ -16,10 +16,4 @@ class SupervisorController extends GetxController {
     debugPrint("navigateToSupervisorGroupDashboard");
     Get.toNamed(AppRoutes.supervisorGroupDashboard);
   }
-
-  void navigateToSupervisorMeetingDashboard() {
-    debugPrint("navigateToSupervisorMeetingDashboard");
-
-    Get.toNamed(AppRoutes.supervisorMeetingDashboard);
-  }
 }

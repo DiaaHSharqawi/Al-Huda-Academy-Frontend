@@ -56,7 +56,6 @@ class AppRoutes {
   static String supervisorGroupPlanDetails = "/supervisor/group-plan/details";
   static String groupMemberFollowUpRecords =
       "/supervisor/group-member/follow-up-records";
-  static String supervisorMeetingDashboard = "/supervisor/meeting-dashboard";
 
   // Participant Screens
   static String participant = "/participant";

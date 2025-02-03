@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/create_group_supervisor_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/group_member_follow_up_records_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/group_plan_screens_binding/supervisor_create_group_plan_screen_binding.dart';
-import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/meeting_screens_binding/supervisor_meeting_dashboard_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_current_groups_binding.dart';
 import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/supervisor_group_dashboard_binding.dart';
@@ -14,6 +13,7 @@ import 'package:moltqa_al_quran_frontend/src/binding/supervisor_screens_binding/
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/middlewares/verify_token_jwt_middle_ware.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/create_group_screens/supervisor_create_group_screen.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/create_group_screens/supervisor_create_memorization_group_content_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/group_member_follow_up_records_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/group_plan_screens/supervisor_create_group_plan_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_current_groups_screen.dart';
@@ -23,7 +23,6 @@ import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/gro
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/group_plan_screens/supervisor_group_plans_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/group_plan_screens/supervisor_group_plan_details_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_memorization_groups_dashboard_screen.dart';
-import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/meeting_screens/supervisor_meeting_dashboard_screen.dart';
 import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/supervisor_home_screen.dart';
 
 class SupervisorPages {
@@ -50,6 +49,12 @@ class SupervisorPages {
       transitionDuration: const Duration(milliseconds: 500),
       binding: SupervisorCreateGroupScreenBinding(),
       middlewares: [VerifyTokenJwtMiddleWare()],
+    ),
+    GetPage(
+      name: AppRoutes.supervisorCreateMemorizationGroupContentScreen,
+      page: () => const SupervisorCreateMemorizationGroupContentScreen(),
+      transition: Transition.fadeIn,
+      binding: SupervisorCreateGroupScreenBinding(),
     ),
     GetPage(
       name: AppRoutes.supervisorCurrentGroupsScreen,
@@ -106,13 +111,6 @@ class SupervisorPages {
       transition: Transition.leftToRightWithFade,
       binding: GroupMemberFollowUpRecordsBinding(),
       middlewares: [VerifyTokenJwtMiddleWare()],
-    ),
-    GetPage(
-      name: AppRoutes.supervisorMeetingDashboard,
-      page: () => const SupervisorMeetingDashboardScreen(),
-      transition: Transition.downToUp,
-      middlewares: [VerifyTokenJwtMiddleWare()],
-      binding: SupervisorMeetingDashboardBinding(),
     ),
   ];
 }

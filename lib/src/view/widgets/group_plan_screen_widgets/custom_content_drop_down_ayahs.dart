@@ -24,11 +24,16 @@ class CustomContentDropDownAyahs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("selectedAyahId: $selectedAyahId");
+    debugPrint("selectedSurah: $selectedSurah");
+
     List<String> items = List<String>.generate(
         groupContentList
             .firstWhereOrNull((e) => e.id == selectedSurah)!
             .endAyah!,
         (index) => (index + 1).toString());
+
+    debugPrint("items: $items");
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

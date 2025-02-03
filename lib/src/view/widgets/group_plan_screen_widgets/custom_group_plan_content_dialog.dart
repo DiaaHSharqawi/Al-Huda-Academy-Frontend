@@ -155,9 +155,9 @@ class CustomGroupPlanContentDialog extends StatelessWidget {
 
               selectedReviewContnet.refresh();
 
-              selectedSurahId.value = 1;
-              selectedStartAyahId.value = 1;
-              selectedEndAyahId.value = 1;
+              selectedSurahId.value = groupContentList.first.id!;
+              selectedStartAyahId.value = groupContentList.first.startAyah!;
+              selectedEndAyahId.value = groupContentList.first.startAyah!;
 
               Get.back();
             } else {
@@ -173,9 +173,9 @@ class CustomGroupPlanContentDialog extends StatelessWidget {
 
               selectedReviewContnet.refresh();
 
-              selectedSurahId.value = 1;
-              selectedStartAyahId.value = 1;
-              selectedEndAyahId.value = 1;
+              selectedSurahId.value = groupContentList.first.id!;
+              selectedStartAyahId.value = groupContentList.first.startAyah!;
+              selectedEndAyahId.value = groupContentList.first.startAyah!;
 
               Get.back();
             }

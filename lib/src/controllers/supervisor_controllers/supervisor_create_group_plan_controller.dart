@@ -68,16 +68,16 @@ class SupervisorCreateGroupPlanController extends GetxController {
   }
 
   void resetSelectedMemorizedContent() {
-    selectedMemorizeSurah(1);
+    selectedMemorizeSurah(groupContentList.first.id);
 
-    selectedMemorizeFromAyah(1);
+    selectedMemorizeFromAyah(groupContentList.first.startAyah);
     selectedMemorizeToAyah(1);
   }
 
   void resetSelectedReviewContent() {
-    selectedReviewSurah(1);
+    selectedReviewSurah(groupContentList.first.id);
 
-    selectedReviewFromAyah(1);
+    selectedReviewFromAyah(groupContentList.first.startAyah);
     selectedReviewToAyah(1);
   }
 
@@ -187,6 +187,13 @@ class SupervisorCreateGroupPlanController extends GetxController {
 
       if (groupContentResponseList.isNotEmpty) {
         groupContentList.addAll(groupContentResponseList);
+
+        selectedReviewSurah.value = groupContentResponseList.first.id!;
+        debugPrint("selectedReviewSurah: ${selectedReviewSurah.value}");
+
+        selectedMemorizeSurah.value = groupContentResponseList.first.id!;
+
+        debugPrint("selectedMemorizeSurah: ${selectedMemorizeSurah.value}");
       }
     } catch (error) {
       debugPrint("Error fetching group content: $error");

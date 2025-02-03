@@ -374,6 +374,8 @@ class SupervisorCreateGroupPlanScreen
 
     controller.resetSelectedReviewContent();
 
+    debugPrint("selectedReviewSurah: ${controller.selectedReviewSurah}");
+
     Get.dialog(
       CustomGroupPlanContentDialog(
         title: "إضافة مراجعة",

@@ -210,6 +210,9 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
             context,
             DialogType.success,
             resetPasswordResponse.message!,
+            btnOkOnPress: () {
+              controller.navigateToLoginScreen();
+            },
           );
           controller.navigateToLoginScreen();
           break;
@@ -220,6 +223,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
           DialogType.error,
           SendPasswordResetCodeScreenLanguageConstants
               .pleaseMakeSureToFillAllFields.tr,
+          btnOkOnPress: () {},
         );
         break;
       default:
@@ -227,13 +231,14 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
           context,
           DialogType.error,
           resetPasswordResponse.message!,
+          btnOkOnPress: () {},
         );
         break;
     }
   }
 
-  void _showDialog(
-      BuildContext context, DialogType type, String message) async {
+  void _showDialog(BuildContext context, DialogType type, String message,
+      {VoidCallback? btnOkOnPress}) async {
     return CustomAwesomeDialog.showAwesomeDialog(
       context: context,
       dialogType: type,
@@ -241,7 +246,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
           ? AuthValidationsLanguageConstants.success.tr
           : AuthValidationsLanguageConstants.error.tr,
       description: message,
-      btnOkOnPress: () {},
+      btnOkOnPress: btnOkOnPress,
       btnCancelOnPress: null,
     );
   }

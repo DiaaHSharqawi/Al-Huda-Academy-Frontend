@@ -67,7 +67,6 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
                         const SizedBox(
                           height: 16.0,
                         ),
-                        _buildMeetingsSection(),
                       ],
                     ),
                   ),
@@ -127,59 +126,6 @@ class SupervisorHomeScreen extends GetView<SupervisorController> {
       ),
       onTap: () {
         controller.navigateToSupervisorGroupDashboard();
-      },
-    );
-  }
-
-  Widget _buildMeetingsSection() {
-    return Column(
-      children: [
-        _buildMeetingsHeaderText(),
-        const SizedBox(
-          height: 16.0,
-        ),
-        _buildMeetingsCard(),
-        const SizedBox(
-          height: 16.0,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMeetingsHeaderText() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: const CustomGoogleTextWidget(
-        text: 'الاجتماعات',
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildMeetingsCard() {
-    return CustomCard(
-      paddingListTile: 24.0,
-      marginListTile: 32.0,
-      gFListTileColor: Colors.amber.withAlpha(240),
-      cardText: "ادارة الاجتماعات",
-      cardTextSize: 18.0,
-      cardInnerBoxShadowColor: Colors.black,
-      cardTextColor: AppColors.blackColor,
-      avatarCard: const GFAvatar(
-        backgroundImage: AssetImage('assets/images/meetings.png'),
-        backgroundColor: Colors.transparent,
-        shape: GFAvatarShape.standard,
-        size: 50.0,
-      ),
-      icon: const Icon(
-        Icons.arrow_forward_ios,
-        color: AppColors.blackColor,
-        size: 40.0,
-      ),
-      onTap: () {
-        controller.navigateToSupervisorMeetingDashboard();
       },
     );
   }

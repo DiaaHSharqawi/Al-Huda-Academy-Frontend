@@ -24,6 +24,8 @@ class SupervisorCustomBottomNavigationBar
   final int currentIndex = 0;
 
   Future<void> onTap(int index) async {
+    debugPrint("Current on tap index: $index");
+
     if (index == 1) {
       Get.toNamed(AppRoutes.athkarCategories);
     } else if (index == 2) {
@@ -81,10 +83,10 @@ class SupervisorCustomBottomNavigationBar
           color: Colors.grey,
         ),
         currentIndex: currentIndex,
-        onTap: (index) {
+        onTap: (index) async {
           debugPrint("Current index: $index");
 
-          currentIndex == index ? null : onTap(currentIndex);
+          await onTap(index);
         },
         items: const [
           BottomNavigationBarItem(
@@ -92,12 +94,12 @@ class SupervisorCustomBottomNavigationBar
             label: 'الرئيسية',
           ),
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.barChartAlt),
-            label: 'الإحصائيات',
+            icon: Icon(LineIcons.book),
+            label: 'الاذكار',
           ),
           BottomNavigationBarItem(
-            icon: Icon(LineIcons.users),
-            label: 'الرسائل',
+            icon: Icon(LineIcons.feather),
+            label: 'الرقابة الابوية',
           ),
           BottomNavigationBarItem(
             icon: Icon(LineIcons.user),
