@@ -9,6 +9,7 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_fonts.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/family_link/family_link_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/data/model/family_link/get_childs_by_parent_id_response.dart';
 
 class SupervisorCustomBottomNavigationBar
@@ -42,6 +43,52 @@ class SupervisorCustomBottomNavigationBar
       } else if (response?.statusCode == 404) {
         Get.toNamed('/family-link/add-participant');
       }
+    }
+
+    if (index == 3) {
+      Get.bottomSheet(
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 10.0),
+              CustomGoogleTextWidget(
+                text: appService.user.value!.getFullName!,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 10.0),
+              ListTile(
+                leading: const Icon(Icons.notifications),
+                title: const CustomGoogleTextWidget(
+                  text: "الاشعارات",
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                onTap: () {
+                  Get.toNamed(AppRoutes.notification);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const CustomGoogleTextWidget(
+                  text: "تسجيل الخروج",
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                onTap: () {
+                  // Handle logout tap
+                },
+              ),
+            ],
+          ),
+        ),
+      );
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,6 +8,8 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
 import 'package:moltqa_al_quran_frontend/src/core/localization/change_localization.dart';
 import 'package:moltqa_al_quran_frontend/src/core/localization/translation.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
+import 'package:moltqa_al_quran_frontend/src/view/widgets/notifications_widgets/custom_notifications_dialog.dart';
 import 'package:toastification/toastification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -43,8 +46,62 @@ void main() async {
   runApp(const AlHudaAcademy());
 }
 
-class AlHudaAcademy extends StatelessWidget {
+Future<void> showNotificationDialog(
+  String title,
+  String body,
+  RxBool isNotificationDialogShown,
+) async {
+  await CustomAwesomeDialog.showAwesomeDialog(
+    context: Get.overlayContext!,
+    dialogType: DialogType.info,
+    title: title,
+    description: body,
+    btnOkOnPress: () {
+      isNotificationDialogShown.value = false;
+      Get.back();
+      Get.toNamed(AppRoutes.notification);
+    },
+    btnOkText: "تفاصيل",
+    btnCancelOnPress: () {
+      isNotificationDialogShown.value = false;
+    },
+  );
+
+  isNotificationDialogShown.value = false;
+}
+
+class AlHudaAcademy extends StatefulWidget {
   const AlHudaAcademy({super.key});
+
+  @override
+  AlHudaAcademyState createState() => AlHudaAcademyState();
+}
+
+class AlHudaAcademyState extends State<AlHudaAcademy> {
+  final isNotificationDialogShown = false.obs;
+
+  @override
+  @override
+  void initState() {
+    super.initState();
+    // Register the notification listener only once
+    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        debugPrint("Notification received: ${event.notification.title}");
+
+        debugPrint("isNotificationDialogShown: $isNotificationDialogShown");
+
+        if (!isNotificationDialogShown.value) {
+          isNotificationDialogShown.value = true;
+          await showNotificationDialog(
+            event.notification.title!,
+            event.notification.body!,
+            isNotificationDialogShown,
+          );
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

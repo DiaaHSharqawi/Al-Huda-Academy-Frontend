@@ -2,6 +2,7 @@ class AppRoutes {
   // Entry Screens
   static String splach = "/";
   static String language = "/language";
+  static String notification = "/notification";
 
   // Authentication Screens
 

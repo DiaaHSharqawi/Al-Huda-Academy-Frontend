@@ -15,7 +15,10 @@ class CustomBox extends StatelessWidget {
 
   final List<Widget>? boxChildren;
 
+  final FontWeight? fontWeight;
+
   const CustomBox({
+    this.fontWeight = FontWeight.normal,
     super.key,
     this.boxChildren,
     this.textAlign,
@@ -77,7 +80,7 @@ class CustomBox extends StatelessWidget {
                     Flexible(
                       child: CustomGoogleTextWidget(
                         text: text,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: fontWeight ?? FontWeight.normal,
                         color: textColor,
                         fontSize: textSize!,
                         textAlign: textAlign,
