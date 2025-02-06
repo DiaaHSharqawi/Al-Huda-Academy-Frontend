@@ -214,7 +214,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
               controller.navigateToLoginScreen();
             },
           );
-          controller.navigateToLoginScreen();
+
           break;
         }
       case 422:

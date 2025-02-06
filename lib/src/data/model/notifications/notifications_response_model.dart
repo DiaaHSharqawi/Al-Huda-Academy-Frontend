@@ -31,7 +31,7 @@ class NotificationsResponseModel {
         "success": success,
         "message": message,
         "meta": meta?.toJson(),
-        "userNotifications": userNotifications.map((x) => x?.toJson()).toList(),
+        "userNotifications": userNotifications.map((x) => x.toJson()).toList(),
       };
 
   @override

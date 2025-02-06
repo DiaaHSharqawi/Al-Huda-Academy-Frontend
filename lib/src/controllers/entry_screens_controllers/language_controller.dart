@@ -9,6 +9,10 @@ class LanguageController extends GetxController {
     Get.offNamed(AppRoutes.login);
   }
 
+  void navigateToStartedPages() {
+    Get.offNamed(AppRoutes.startPages);
+  }
+
   Future<void> changeLanguage(String languageCode) async {
     appService.changeLanguage(languageCode);
     await initializeDateFormatting(languageCode, null);

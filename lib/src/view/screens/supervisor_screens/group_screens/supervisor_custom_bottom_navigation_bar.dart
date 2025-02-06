@@ -22,7 +22,7 @@ class SupervisorCustomBottomNavigationBar
 
   bool get isArabic => appService.isRtl.value;
 
-  final int currentIndex = 0;
+  final int currentIndex = 1;
 
   Future<void> onTap(int index) async {
     debugPrint("Current on tap index: $index");

@@ -37,14 +37,22 @@ class AthkarCategoriesController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    await fetchAthkarCategories();
-    ever(query, (callback) {
-      if (query.value.isEmpty) {
-        athkarsCategories.clear();
-        page.value = 1;
-        fetchAthkarCategories();
-      }
-    });
+    try {
+      isLoading(true);
+
+      await fetchAthkarCategories();
+      ever(query, (callback) {
+        if (query.value.isEmpty) {
+          athkarsCategories.clear();
+          page.value = 1;
+          fetchAthkarCategories();
+        }
+      });
+    } catch (e) {
+      debugPrint("Error in AthkarCategoriesController onInit: $e");
+    } finally {
+      isLoading(false);
+    }
   }
 
   var athkarsCategories = <AthkarCategories>[].obs;

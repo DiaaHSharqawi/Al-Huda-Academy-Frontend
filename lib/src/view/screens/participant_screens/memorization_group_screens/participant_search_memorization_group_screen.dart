@@ -619,7 +619,7 @@ class ParticipantSearchMemorizationGroupScreen
     return const Column(
       children: [
         CustomGoogleTextWidget(
-          text: "البحث عن أستاذ وحلقة مناسبة",
+          text: "البحث عن حلقة مناسبة",
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
           color: AppColors.blackColor,

@@ -9,7 +9,6 @@ import 'package:moltqa_al_quran_frontend/src/core/localization/change_localizati
 import 'package:moltqa_al_quran_frontend/src/core/localization/translation.dart';
 import 'package:moltqa_al_quran_frontend/src/core/services/app_service.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_awesome_dialog.dart';
-import 'package:moltqa_al_quran_frontend/src/view/widgets/notifications_widgets/custom_notifications_dialog.dart';
 import 'package:toastification/toastification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -113,7 +112,7 @@ class AlHudaAcademyState extends State<AlHudaAcademy> {
         locale: localizationController.initialLanguage,
         translations: AppTranslation(),
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.language,
+        initialRoute: AppRoutes.splach,
         getPages: [
           ...AppPages.pages,
         ],

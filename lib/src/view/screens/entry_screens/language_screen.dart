@@ -68,7 +68,7 @@ class LanguageScreen extends GetView<LanguageController> {
         fontSize: 20.0,
         onPressed: () {
           controller.changeLanguage(languageCode);
-          controller.navigateToLoginScreen();
+          controller.navigateToStartedPages();
           // todo:  return it back to navigate to login screen
           //Get.toNamed(AppRoutes.athkarCategories);
         },

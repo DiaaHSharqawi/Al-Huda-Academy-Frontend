@@ -256,8 +256,8 @@ class AdminSupervisorRequestRegistrationDetailsScreen
               CustomAwesomeDialog.showAwesomeDialog(
                 context: Get.context!,
                 dialogType: DialogType.success,
-                title: "تم قبول الطلب بنجاح",
-                description: "تم قبول الطلب بنجاح",
+                title: "تم رفض الطلب بنجاح",
+                description: "تم رفض الطلب بنجاح",
                 btnOkOnPress: () {
                   controller.navigateToAdminSupervisorRequests();
                 },

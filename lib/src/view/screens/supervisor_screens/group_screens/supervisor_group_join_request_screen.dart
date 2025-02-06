@@ -451,6 +451,8 @@ class SupervisorGroupJoinRequestScreen
   }
 
   void _handelRejectRequest(BuildContext context) async {
+    debugPrint("Rejecting group join request");
+
     RejectSupervisorGroupJoinRequestResponseModel
         rejectSupervisorGroupJoinRequestResponseModel =
         await controller.rejectGroupJoinRequest();

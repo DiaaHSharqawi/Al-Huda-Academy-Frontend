@@ -167,7 +167,7 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
   Widget _buildSearchForSupervisorAndJoinMemorizationGroup() {
     return CustomCard(
       gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
-      cardText: 'البحث عن مشرف والانضمام لحلقة تحفيظ',
+      cardText: 'البحث عن حلقة تحفيظ',
       cardTextSize: 18.0,
       cardInnerBoxShadowColor: AppColors.primaryColor,
       cardTextColor: AppColors.blackColor,
