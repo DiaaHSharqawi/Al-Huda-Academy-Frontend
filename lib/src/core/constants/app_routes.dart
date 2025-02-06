@@ -2,6 +2,8 @@ class AppRoutes {
   // Entry Screens
   static String splach = "/";
   static String language = "/language";
+  static String startPages = "/start-pages";
+  static String notification = "/notification";
 
   // Authentication Screens
 
@@ -51,6 +53,11 @@ class AppRoutes {
   static String supervisorGroupDashboardScreen = "/supervisor/group/dashboard";
   static String supervisorGroupJoinRequest = "/supervisor/group/join-request";
   static String supervisorGroupMembership = "/supervisor/group/membership";
+  static String supervisorGroupPlanScreen = "/supervisor/group-plan";
+  static String createGroupPlanScreen = "/supervisor/group-plan/create";
+  static String supervisorGroupPlanDetails = "/supervisor/group-plan/details";
+  static String groupMemberFollowUpRecords =
+      "/supervisor/group-member/follow-up-records";
 
   // Participant Screens
   static String participant = "/participant";
@@ -59,6 +66,8 @@ class AppRoutes {
       "/participant/search-group";
   static String participantSearchedGroupDetails =
       "/participant/searched-group-details";
+  static String participantCurrentGroupsScreen = "/participant/current-groups";
+  static String participantGroupDashboard = "/participant/group-dashboard";
 
   // Admin Screens
   static String admin = "/admin";

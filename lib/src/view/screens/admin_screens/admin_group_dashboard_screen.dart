@@ -31,7 +31,7 @@ class AdminGroupDashboardScreen extends GetView<AdminGroupDashboardController> {
                   // _buildRequestsForcreatingMemorizationGroupCard(),
                   // _buildCreateANewGroupCard(),
 
-                  //  _buildCreateAWeeklyPlan(),
+                  //  _buildCreateAPlan(),
                   const SizedBox(
                     height: 16.0,
                   ),

@@ -18,11 +18,13 @@ class SupervisorGroupDashboardController extends GetxController {
   void onInit() async {
     super.onInit();
 
+    debugPrint("get arguments: ${Get.arguments.toString()}");
+
     debugPrint("onInit");
 
     try {
       debugPrint("get arguments: ${Get.arguments.toString()}");
-      groupId.value = Get.arguments;
+      groupId.value = Get.arguments!;
 
       debugPrint("Group ID: ${groupId.value}");
 
@@ -45,19 +47,17 @@ class SupervisorGroupDashboardController extends GetxController {
         {},
       );
 
+      debugPrint("groupDashboardResponseModel: $groupDashboardResponseModel");
+
       if (groupDashboardResponseModel.statusCode == 200) {
         groupDashboard.value = groupDashboardResponseModel.groupDashboard;
-
-        // Do something
       } else {
-        // Handle the error
         debugPrint(
             "Error fetching supervisor group dashboard data : ${groupDashboardResponseModel.message}");
 
         groupDashboard.value = null;
       }
     } catch (e) {
-      // Handle the error
       debugPrint("Error fetching supervisor group dashboard data : $e");
       groupDashboard.value = null;
     } finally {
@@ -89,5 +89,62 @@ class SupervisorGroupDashboardController extends GetxController {
       AppRoutes.supervisorGroupMembership,
       arguments: groupId,
     );
+  }
+
+  Future<void> navigateToGroupPlanScreen(String groupId) async {
+    debugPrint("Navigate to Group  Plan Screen");
+    debugPrint("Group ID: $groupId");
+
+    var result = await Get.toNamed(
+      AppRoutes.supervisorGroupPlanScreen,
+      arguments: {
+        "groupId": groupId,
+      },
+    );
+
+    debugPrint("result *--->: $result");
+
+    debugPrint("shouldRefreshData ");
+
+    if (result != null) {
+      groupDashboard.value = null;
+      await fetchSupervisorGroupDashboard();
+    }
+  }
+
+  Future<void> navigateToGroupPlanDetails(String groupId, groupPlanId) async {
+    debugPrint("Navigate to Group Plan Details Screen");
+    debugPrint("Group ID: $groupId");
+    debugPrint("Group Plan ID: $groupPlanId");
+
+    var result = await Get.toNamed(
+      AppRoutes.supervisorGroupPlanDetails,
+      arguments: {
+        "groupId": groupId.toString(),
+        "planId": groupPlanId.toString(),
+      },
+    );
+
+    debugPrint("result *--->: $result");
+
+    debugPrint("shouldRefreshData ");
+
+    groupDashboard.value = null;
+    await fetchSupervisorGroupDashboard();
+  }
+
+  Future<void> navigateToCreateGroupPlanScreen(DateTime dateTime) async {
+    var result = await Get.toNamed(
+      AppRoutes.createGroupPlanScreen,
+      arguments: {
+        "groupId": groupId.value,
+        "selectedDate": dateTime.toString(),
+      },
+    );
+
+    debugPrint("Result back to group plans: $result");
+
+    // refresh the dashboard
+    await fetchSupervisorGroupDashboard();
   }
 }

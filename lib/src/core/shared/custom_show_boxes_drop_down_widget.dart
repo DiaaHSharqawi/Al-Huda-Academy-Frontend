@@ -4,6 +4,7 @@ import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
 
 class CustomDropdownWidget extends StatelessWidget {
+  final RxInt currentPage;
   final RxInt limit;
   final Map<String, dynamic> queryParams;
   final Future<void> Function() fetcherFunction;
@@ -15,6 +16,7 @@ class CustomDropdownWidget extends StatelessWidget {
     required this.limit,
     required this.queryParams,
     required this.fetcherFunction,
+    required this.currentPage,
   });
 
   @override
@@ -47,6 +49,9 @@ class CustomDropdownWidget extends StatelessWidget {
               if (newValue != null) {
                 limit.value = newValue;
                 queryParams['limit'] = limit.value;
+
+                // Reset the current page to 1
+                currentPage.value = 1;
 
                 await fetcherFunction();
               }

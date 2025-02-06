@@ -103,12 +103,12 @@ class RoleSelectionRegisterScreen extends GetView<RegisterController> {
         buttonTextColor: Colors.white,
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
-        onPressed: () {
+        onPressed: () async {
           controller.isSubmitting(true);
 
           if (!context.mounted) return;
           if (controller.selectedRole.value == Role.notSelected) {
-            CustomAwesomeDialog.showAwesomeDialog(
+            await CustomAwesomeDialog.showAwesomeDialog(
               context: context,
               dialogType: DialogType.info,
               title: 'يرجى اختيار النوع للاستمرار',

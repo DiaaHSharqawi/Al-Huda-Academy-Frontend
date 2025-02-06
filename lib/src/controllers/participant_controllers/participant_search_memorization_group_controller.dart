@@ -297,11 +297,15 @@ class ParticipantSearchMemorizationGroupController extends GetxController {
     selectedJuzzas.clear();
   }
 
-  void navigateToGroupDetailsScreen(String groupId) {
+  Future<void> navigateToGroupDetailsScreen(String groupId) async {
     debugPrint("groupId when called: $groupId");
-    Get.toNamed(
+    var result = await Get.toNamed(
       AppRoutes.participantSearchedGroupDetails,
       arguments: groupId,
     );
+
+    if (result != null) {
+      fetchMemorizationGroup();
+    }
   }
 }

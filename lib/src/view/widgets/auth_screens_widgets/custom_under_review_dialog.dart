@@ -11,10 +11,10 @@ class CustomSupervisorAccountUnderReviewDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!controller.dialogShown.value) {
         controller.dialogShown.value = true;
-        CustomAwesomeDialog.showAwesomeDialog(
+        await CustomAwesomeDialog.showAwesomeDialog(
           context: context,
           dialogType: DialogType.info,
           title: 'تحت المراجعة',

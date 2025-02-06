@@ -10,4 +10,16 @@ class AppImages {
   static const userAvatarImage = "$rootImages/userAvatar.png";
 
   static const loadingImage = "$rootImages/loaderLottie.json";
+
+  static const patternImage = "$rootImages/pattern.png";
+
+  static const speech = "$rootImages/speech.png";
+
+  static const iman = "$rootImages/iman.png";
+
+  static const quranImage3 = "$rootImages/quran_image_3.png";
+
+  static const creeper = "$rootImages/creeper.png";
+
+  static const notificationImage = "$rootImages/quran_image_4.png";
 }

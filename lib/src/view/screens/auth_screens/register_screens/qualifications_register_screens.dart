@@ -491,7 +491,7 @@ class QualificationsRegisterScreens extends GetView<RegisterController> {
               Object result = controller.validateQualifications();
               debugPrint("Result: $result");
               if (result is Map && result['status'] == false) {
-                CustomAwesomeDialog.showAwesomeDialog(
+                await CustomAwesomeDialog.showAwesomeDialog(
                   context: context,
                   dialogType: DialogType.error,
                   title: 'خطأ',

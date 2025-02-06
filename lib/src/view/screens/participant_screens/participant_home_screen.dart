@@ -18,6 +18,7 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: CustomAppBar(
           preferredSize: const Size.fromHeight(150.0),
           appBarChilds: Padding(
@@ -166,7 +167,7 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
   Widget _buildSearchForSupervisorAndJoinMemorizationGroup() {
     return CustomCard(
       gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
-      cardText: 'البحث عن مشرف والانضمام لحلقة تحفيظ',
+      cardText: 'البحث عن حلقة تحفيظ',
       cardTextSize: 18.0,
       cardInnerBoxShadowColor: AppColors.primaryColor,
       cardTextColor: AppColors.blackColor,
@@ -231,6 +232,9 @@ class ParticipantHomeScreen extends GetView<ParticipantController> {
         color: AppColors.blackColor,
         size: 40.0,
       ),
+      onTap: () {
+        controller.navigateToCurrentGroupsScreen();
+      },
     );
   }
 

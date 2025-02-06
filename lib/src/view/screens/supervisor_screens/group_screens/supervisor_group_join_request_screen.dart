@@ -26,6 +26,7 @@ class SupervisorGroupJoinRequestScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -114,8 +115,10 @@ class SupervisorGroupJoinRequestScreen
                             textSize: 18.0,
                             textColor: AppColors.blackColor,
                             boxColor: AppColors.primaryColor.withOpacity(0.2),
-                            imagePath: controller.groupJoinRequestsList[index]
-                                .participant?.profileImage!,
+                            imageProvider: NetworkImage(
+                              controller.groupJoinRequestsList[index]
+                                  .participant!.profileImage!,
+                            ),
                             onTap: () {
                               controller.selectedParticipantId.value =
                                   controller.groupJoinRequestsList[index]
@@ -143,6 +146,7 @@ class SupervisorGroupJoinRequestScreen
                 : Column(
                     children: [
                       CustomDropdownWidget(
+                        currentPage: controller.currentPage,
                         dropDownItems: controller.dropDownItems,
                         limit: controller.limit,
                         queryParams: controller.queryParams,
@@ -394,8 +398,9 @@ class SupervisorGroupJoinRequestScreen
     await controller.fetchGroupJoinRequests();
   }
 
-  Future<void> _buildAcceptRequestConfirmationDialog(BuildContext context) {
-    return CustomAwesomeDialog.showAwesomeDialog(
+  Future<void> _buildAcceptRequestConfirmationDialog(
+      BuildContext context) async {
+    await CustomAwesomeDialog.showAwesomeDialog(
       context: context,
       dialogType: DialogType.info,
       title: "تأكيد قبول الطلب",
@@ -417,7 +422,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Group join request accepted successfully");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.success,
         title: "تم قبول الطلب",
@@ -435,7 +440,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Failed to accept group join request");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.error,
         title: "فشل في قبول الطلب",
@@ -446,6 +451,8 @@ class SupervisorGroupJoinRequestScreen
   }
 
   void _handelRejectRequest(BuildContext context) async {
+    debugPrint("Rejecting group join request");
+
     RejectSupervisorGroupJoinRequestResponseModel
         rejectSupervisorGroupJoinRequestResponseModel =
         await controller.rejectGroupJoinRequest();
@@ -455,7 +462,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Group join request rejected successfully");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.success,
         title: "تم رفض الطلب",
@@ -473,7 +480,7 @@ class SupervisorGroupJoinRequestScreen
 
       debugPrint("Failed to accept group join request");
 
-      CustomAwesomeDialog.showAwesomeDialog(
+      await CustomAwesomeDialog.showAwesomeDialog(
         context: context,
         dialogType: DialogType.error,
         title: "فشل في قبول الطلب",

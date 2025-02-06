@@ -79,7 +79,7 @@ class ParticipantSearchedGroupDetailsScreen
     );
   }
 
-  Future _showDialog(BuildContext context) {
+  Future<void> _showDialog(BuildContext context) {
     const dialogType = DialogType.info;
     const title = 'طلب الإنضمام';
     const description = 'هل تريد تقديم طلب للإنضمام إلى هذه المجموعة؟';

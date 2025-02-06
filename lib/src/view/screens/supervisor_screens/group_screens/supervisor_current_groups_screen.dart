@@ -109,6 +109,7 @@ class SupervisorCurrentGroupsScreen
               : Column(
                   children: [
                     CustomDropdownWidget(
+                      currentPage: controller.currentPage,
                       dropDownItems: controller.dropDownItems,
                       limit: controller.limit,
                       queryParams: controller.queryParams,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:intl/intl.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/supervisor_controllers/supervisor_group_dashboard_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
@@ -19,6 +20,7 @@ class SupervisorGroupDashboardScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -46,6 +48,10 @@ class SupervisorGroupDashboardScreen
                           ),
                           _buildGroupMembersCard(),
                           const SizedBox(
+                            height: 48.0,
+                          ),
+                          _buildGroupPlanSection(),
+                          const SizedBox(
                             height: 64.0,
                           ),
                           _buildGroupJoinRequestSection(),
@@ -60,6 +66,99 @@ class SupervisorGroupDashboardScreen
         ),
         bottomNavigationBar: SupervisorCustomBottomNavigationBar(),
       ),
+    );
+  }
+
+  Widget _buildGroupPlanSection() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildGroupPlanHeader(),
+        const SizedBox(
+          height: 16.0,
+        ),
+        _buildGroupPlan(),
+      ],
+    );
+  }
+
+  Widget _buildGroupPlanHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const CustomGoogleTextWidget(
+          text: "خطط الحلقة",
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          color: AppColors.blackColor,
+        ),
+        const SizedBox(
+          width: 8.0,
+        ),
+        GestureDetector(
+          onTap: () {
+            controller.navigateToGroupPlanScreen(controller.groupId.value);
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomGoogleTextWidget(
+                text: "عرض الكل",
+                fontSize: 16.0,
+                color: AppColors.primaryColor,
+              ),
+              SizedBox(
+                width: 16.0,
+              ),
+              FaIcon(
+                FontAwesomeIcons.arrowLeft,
+                color: AppColors.primaryColor,
+                size: 25.0,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGroupPlan() {
+    return Column(
+      children: [
+        CustomCard(
+          paddingListTile: 24.0,
+          marginListTile: 32.0,
+          gFListTileColor: const Color(0xFFF9FBF7).withOpacity(0.8),
+          cardText: controller.groupDashboard.value!.groupPlans?.dayDate != null
+              ? "خطة اليوم : ${DateFormat.yMMMMEEEEd('ar').format(controller.groupDashboard.value!.groupPlans!.dayDate!)}"
+              : "لم يتم اضافة خطة لليوم بعد",
+          cardTextSize: 18.0,
+          cardInnerBoxShadowColor: Colors.lime,
+          cardTextColor: AppColors.blackColor,
+          avatarCard: const FaIcon(
+            FontAwesomeIcons.calendarPlus,
+            color: Colors.black87,
+            size: 30.0,
+          ),
+          icon: const Icon(
+            Icons.arrow_forward_ios,
+            color: AppColors.blackColor,
+            size: 30.0,
+          ),
+          onTap: () {
+            if (controller.groupDashboard.value!.groupPlans != null) {
+              controller.navigateToGroupPlanDetails(controller.groupId.value,
+                  controller.groupDashboard.value!.groupPlans!.id!);
+            } else {
+              controller.navigateToCreateGroupPlanScreen(
+                DateTime.now(),
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -129,64 +228,6 @@ class SupervisorGroupDashboardScreen
       ),
     );
   }
-
-/*
-  Widget _buildGroupJoinRequestList() {
-    return SizedBox(
-      height: 240.0,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Obx(() {
-              if (controller
-                  .groupDashboard.value!.groupJoinRequestsDashboard.isEmpty) {
-                return const Center(
-                  heightFactor: 4.0,
-                  child: CustomGoogleTextWidget(
-                    text: 'لا يوجد اي طلبات انضمام حالياً',
-                    fontSize: 18.0,
-                    color: AppColors.blackColor,
-                  ),
-                );
-              } else {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller
-                      .groupDashboard.value!.groupJoinRequestsDashboard.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      child: CustomGroupJoinRequest(
-                        height: 120.0,
-                        text: controller
-                            .groupDashboard
-                            .value!
-                            .groupJoinRequestsDashboard[index]
-                            .participant!
-                            .fullName!,
-                        textSize: 18.0,
-                        textColor: AppColors.blackColor,
-                        boxColor: AppColors.primaryColor.withOpacity(0.2),
-                        imagePath: controller
-                            .groupDashboard
-                            .value!
-                            .groupJoinRequestsDashboard[index]
-                            .participant!
-                            .profileImage!,
-                        onTap: () {},
-                      ),
-                    );
-                  },
-                );
-              }
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-*/
 
   Widget _buildGroupJoinRequestHeader() {
     return Row(

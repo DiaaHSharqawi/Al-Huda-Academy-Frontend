@@ -94,7 +94,7 @@ class CredentialDetailsRegisterScreen extends GetView<RegisterController> {
                 controller.navigateToQualificationsScreen();
               } else {
                 if (!context.mounted) return;
-                CustomAwesomeDialog.showAwesomeDialog(
+                await CustomAwesomeDialog.showAwesomeDialog(
                   context: context,
                   dialogType: DialogType.error,
                   title: 'خطأ',

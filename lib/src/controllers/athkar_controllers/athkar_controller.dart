@@ -15,7 +15,7 @@ class AthkarController extends GetxController {
   var athkarCategoryName = ''.obs;
   var isLoading = false.obs;
 
-  var totalNumberOfAthkar = 0.obs;
+  var totalNumberOfAthkar = 1.obs;
   var currentAthkarIndex = 0.obs;
 
   var maxNumberofCounts = 0.obs;
@@ -58,9 +58,6 @@ class AthkarController extends GetxController {
         debugPrint("No Athkar found");
         athkars.clear();
       }
-
-      //  debugPrint(
-      // 'Athkar Categories: ${athkars.map((e) => 'Category: ${e.category}, ID: ${e.athkarCategotyId}').toList()}');
     } catch (e) {
       debugPrint("Error fetching athkar categories: $e");
     } finally {

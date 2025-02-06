@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/athkar_controllers/athkar_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
-import 'package:moltqa_al_quran_frontend/src/core/shared/custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_button.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class AthkarScreen extends GetView<AthkarController> {
@@ -40,62 +40,59 @@ class AthkarScreen extends GetView<AthkarController> {
     debugPrint("Athkar screen building ${Get.arguments}");
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        appBar: _buildAppBar(),
-        body: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Obx(
-            () {
-              return controller.isLoading.value
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 16.0),
-                        _buildLinearProgressBar(),
-                        const SizedBox(height: 16.0),
-                        Expanded(
-                          flex: 3,
-                          child: ListView(
-                            primary: false,
-                            shrinkWrap: false,
-                            children: [
-                              _buildThekerDetails(),
-                              const SizedBox(height: 32.0),
-                            ],
+          backgroundColor: Colors.grey.shade100,
+          appBar: _buildAppBar(),
+          body: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Obx(
+              () {
+                return controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 16.0),
+                          _buildLinearProgressBar(),
+                          const SizedBox(height: 16.0),
+                          Expanded(
+                            flex: 3,
+                            child: ListView(
+                              primary: false,
+                              shrinkWrap: false,
+                              children: [
+                                _buildThekerDetails(),
+                                const SizedBox(height: 32.0),
+                              ],
+                            ),
                           ),
-                        ),
-                        _buildMediaPlayer(),
-                        Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: _buildCircularProgressIndicator(),
-                              ),
-                              const SizedBox(height: 32.0),
-                              Expanded(
-                                flex: 2,
-                                child: _buildNextPreviousButtons(),
-                              ),
-                            ],
+                          _buildMediaPlayer(),
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: _buildCircularProgressIndicator(),
+                                ),
+                                const SizedBox(height: 32.0),
+                                Expanded(
+                                  flex: 2,
+                                  child: _buildNextPreviousButtons(),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-            },
+                        ],
+                      );
+              },
+            ),
           ),
-        ),
-        bottomNavigationBar: const SafeArea(
-          child: CustomBottomNavigationBar(),
-        ),
-      ),
+          bottomNavigationBar: SupervisorCustomBottomNavigationBar()),
     );
   }
 

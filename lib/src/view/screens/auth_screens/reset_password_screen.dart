@@ -181,7 +181,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
               } catch (error) {
                 debugPrint(error.toString());
                 if (!context.mounted) return;
-                await _showDialog(context, DialogType.error, error.toString());
+                _showDialog(context, DialogType.error, error.toString());
               }
 
               controller.isSubmitting.value = false;
@@ -206,42 +206,47 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
     switch (resetPasswordResponse!.statusCode) {
       case (200):
         {
-          await _showDialog(
+          _showDialog(
             context,
             DialogType.success,
             resetPasswordResponse.message!,
+            btnOkOnPress: () {
+              controller.navigateToLoginScreen();
+            },
           );
-          controller.navigateToLoginScreen();
+
           break;
         }
       case 422:
-        await _showDialog(
+        _showDialog(
           context,
           DialogType.error,
           SendPasswordResetCodeScreenLanguageConstants
               .pleaseMakeSureToFillAllFields.tr,
+          btnOkOnPress: () {},
         );
         break;
       default:
-        await _showDialog(
+        _showDialog(
           context,
           DialogType.error,
           resetPasswordResponse.message!,
+          btnOkOnPress: () {},
         );
         break;
     }
   }
 
-  Future<void> _showDialog(
-      BuildContext context, DialogType type, String message) async {
-    await CustomAwesomeDialog.showAwesomeDialog(
+  void _showDialog(BuildContext context, DialogType type, String message,
+      {VoidCallback? btnOkOnPress}) async {
+    return CustomAwesomeDialog.showAwesomeDialog(
       context: context,
       dialogType: type,
       title: type == DialogType.success
           ? AuthValidationsLanguageConstants.success.tr
           : AuthValidationsLanguageConstants.error.tr,
       description: message,
-      btnOkOnPress: () {},
+      btnOkOnPress: btnOkOnPress,
       btnCancelOnPress: null,
     );
   }

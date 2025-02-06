@@ -154,15 +154,15 @@ class SupervisorCurrentGroupsController extends GetxController {
     }
   }
 
-  void navigateToGroupDetailsScreen(
+  Future<void> navigateToGroupDetailsScreen(
     String groupId,
-  ) {
+  ) async {
     debugPrint("navigateToGroupDetailsScreen");
 
     debugPrint("groupId");
     debugPrint(groupId);
 
-    Get.toNamed(
+    await Get.toNamed(
       AppRoutes.supervisorGroupDashboardScreen,
       arguments: groupId,
     );

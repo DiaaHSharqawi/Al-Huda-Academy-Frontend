@@ -10,8 +10,11 @@ class AppService extends GetxService {
   var isRtl = false.obs;
 
   var user = Rxn<UserInformation>();
+  get userValue => user.value;
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  var accessToken = ''.obs;
 
   Future<AppService> init() async {
     await GetStorage.init();
@@ -37,7 +40,10 @@ class AppService extends GetxService {
 
   Future<void> loadUserFromToken() async {
     String? token = await getToken();
-    if (token != null && JwtDecoder.isExpired(token) == false) {
+
+    accessToken.value = token!;
+
+    if (JwtDecoder.isExpired(token) == false) {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       debugPrint("Decoded Token: $decodedToken");
       user.value = UserInformation.fromJson(

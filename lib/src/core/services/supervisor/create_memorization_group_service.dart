@@ -57,8 +57,8 @@ class CreateMemorizationGroupService extends GetxService {
           'participants_gender_id': createModelMap['participants_gender_id'],
           'group_goal_id': createModelMap['group_goal_id'],
           'teaching_method_id': createModelMap['teaching_method_id'],
-          'quran_memorizing_amount_id':
-              createModelMap['quran_memorizing_amount_id'],
+          'group_completion_rate_id':
+              createModelMap['group_completion_rate_id'],
           'surah_ids': createModelMap['surah_ids'],
           'juza_ids': createModelMap['juza_ids'],
           'extracts': createModelMap['extracts'],

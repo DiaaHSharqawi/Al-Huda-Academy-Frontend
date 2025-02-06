@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moltqa_al_quran_frontend/src/controllers/athkar_controllers/athkar_categories_controller.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_colors.dart';
+import 'package:moltqa_al_quran_frontend/src/core/constants/app_images.dart';
 import 'package:moltqa_al_quran_frontend/src/core/constants/app_routes.dart';
-import 'package:moltqa_al_quran_frontend/src/core/shared/custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_category.dart';
+import 'package:moltqa_al_quran_frontend/src/core/shared/custom_loading_widget.dart';
 import 'package:moltqa_al_quran_frontend/src/core/shared/custom_text_widget.dart';
+import 'package:moltqa_al_quran_frontend/src/view/screens/supervisor_screens/group_screens/supervisor_custom_bottom_navigation_bar.dart';
 import 'package:moltqa_al_quran_frontend/src/view/widgets/home_screens_widgets/custom_app_bar.dart';
 
 class AthkarCategoriesScreen extends GetView<AthkarCategoriesController> {
@@ -32,19 +34,27 @@ class AthkarCategoriesScreen extends GetView<AthkarCategoriesController> {
           ),
           child: const SizedBox.expand(),
         ),
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 16.0,
-            ),
-            _buildSearchBar(),
-            const SizedBox(
-              height: 16.0,
-            ),
-            _buildAthkarCategoriesList(),
-          ],
-        ),
-        bottomNavigationBar: const CustomBottomNavigationBar(),
+        body: Obx(() {
+          return controller.isLoading.value
+              ? const CustomLoadingWidget(
+                  width: 600.0,
+                  height: 600.0,
+                  imagePath: AppImages.loadingImage,
+                )
+              : Column(
+                  children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    _buildSearchBar(),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    _buildAthkarCategoriesList(),
+                  ],
+                );
+        }),
+        bottomNavigationBar: SupervisorCustomBottomNavigationBar(),
       ),
     );
   }

@@ -21,6 +21,7 @@ class SupervisorGroupMembersScreen
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -47,7 +48,7 @@ class SupervisorGroupMembersScreen
                           const SizedBox(height: 16.0),
                           _buildSearchField(context),
                           Container(
-                            margin: const EdgeInsets.only(top: 64.0),
+                            margin: const EdgeInsets.only(top: 28.0),
                             child: _buildGroupMembersList(context),
                           ),
                         ],
@@ -167,9 +168,22 @@ class SupervisorGroupMembersScreen
                             textSize: 18.0,
                             textColor: AppColors.blackColor,
                             boxColor: AppColors.primaryColor.withOpacity(0.2),
-                            imagePath: controller.groupMembersList[index]
-                                .participant?.profileImage!,
-                            onTap: () {},
+                            imageProvider: NetworkImage(
+                              controller.groupMembersList[index].participant!
+                                  .profileImage!,
+                            ),
+                            onTap: () {
+                              debugPrint("Participant tapped");
+
+                              controller.navigateToGroupMemberFollowUpRecords(
+                                groupId: controller
+                                    .groupMembersList[index].groupId!
+                                    .toString(),
+                                groupMemberId: controller
+                                    .groupMembersList[index].id!
+                                    .toString(),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -186,6 +200,7 @@ class SupervisorGroupMembersScreen
                 : Column(
                     children: [
                       CustomDropdownWidget(
+                        currentPage: controller.currentPage,
                         dropDownItems: controller.dropDownItems,
                         limit: controller.limit,
                         queryParams: controller.queryParams,
